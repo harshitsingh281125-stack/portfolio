@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Tokens — PLAN.md §1.1
+   Every value below was computed with a WCAG contrast script, not estimated.
+   Ratios are recorded beside each token so a future change has to argue with
+   a number. Body text targets 4.5:1; large/bold text 3:1.
+   ========================================================================== */
+
+:root {
+  /* Surfaces */
+  --surface:        #F7F8F8;
+  --panel:          #FFFFFF;
+  --border:         #DCE0E1;
+  --border-strong:  #C4CACC;
+
+  /* Content — ratios vs --surface */
+  --content:        #1A1F22;  /* 15.63:1 */
+  --content-muted:  #5B6569;  /*  5.62:1 */
+  --content-faint:  #667175;  /*  4.72:1 */
+
+  /* Signals. Colour appears ONLY on elements carrying evidence. */
+  --verified:       #0F6B3D;  /*  6.19:1 */
+  --verified-soft:  rgba(15, 107, 61, 0.10);
+  --unverified:     #8A5A00;  /*  5.57:1 */
+  --unverified-soft:rgba(138, 90, 0, 0.10);
+  --behind:         #A8201A;  /*  6.84:1 */
+  --behind-soft:    rgba(168, 32, 26, 0.09);
+
+  /* Accent — deliberately rare. Not used for links. */
+  --accent:         #1B4FD8;  /*  6.25:1 */
+  --accent-soft:    rgba(27, 79, 216, 0.10);
+
+  --focus:          #1B4FD8;
+}
+
+/* No theme toggle by design (PLAN.md §1.6, dark-mode.md): the system decides. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface:        #101416;
+    --panel:          #181D20;
+    --border:         #262C30;
+    --border-strong:  #394247;
+
+    --content:        #E8ECEE;  /* 15.58:1 */
+    --content-muted:  #9BA5AA;  /*  7.37:1 */
+    --content-faint:  #8A9499;  /*  5.98:1 */
+
+    --verified:       #4CC98A;  /*  8.85:1 */
+    --verified-soft:  rgba(76, 201, 138, 0.13);
+    --unverified:     #E5A93C;  /*  8.88:1 */
+    --unverified-soft:rgba(229, 169, 60, 0.13);
+    --behind:         #F0736A;  /*  6.50:1 */
+    --behind-soft:    rgba(240, 115, 106, 0.13);
+
+    --accent:         #8AB0F5;  /*  8.48:1 */
+    --accent-soft:    rgba(138, 176, 245, 0.14);
+
+    --focus:          #8AB0F5;
+  }
+}
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--content);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prose is the serif; the interface is the sans. One job each. */
+  .prose-serif {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: 1.0625rem;   /* 17px */
+    line-height: 1.65;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: var(--content);
+  }
+
+  /* Visible keyboard focus everywhere, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Motion is one orchestrated moment (the tour stage) and nothing else.
+     Anything that does animate must stop here. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Skip link: present in the DOM, revealed on focus. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: var(--panel);
+    color: var(--content);
+    border: 1px solid var(--border-strong);
+    border-radius: 0 0 8px 0;
+    font-size: 0.9375rem;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+}
