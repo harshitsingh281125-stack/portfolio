@@ -109,6 +109,16 @@ meta      13 / 1.45  IBM Plex Mono   500   0.02em     badges, paths, counts
 Everything scales with the browser's font-size setting (rem throughout, no `px` on text). Layouts
 must survive 200% zoom with hierarchy intact.
 
+**How the three faces load** (settled in Phase 2, by measurement, and not to be "tidied" back).
+Source Serif 4 is the **variable** cut — one file covering 400 and 600 — and it is the **only**
+preloaded face; IBM Plex Sans and Mono carry `preload: false`. Five preloaded font files were
+arriving as one bandwidth-bound clump, the serif landed last, and since the serif sets the body
+prose it took LCP with it: the Prep page opened at Lighthouse **90** with **83% of LCP spent in
+render delay**. Preloading only the serif and taking its variable cut moved that page to **96** and
+halved total blocking time. The cost is real and accepted: nav, buttons and badges show a fallback
+for a beat longer, and the home page paid 3 points (98 → 95) because its mono evidence chips now
+swap later. Both pages clear the ≥95 gate.
+
 ### 1.3 Layout
 
 One column, `max-width: 68ch` for prose, widening to a 2-column grid only above 1024px where the
@@ -328,18 +338,29 @@ Each ~600–900 words, one Decision block, links to the code. **Confirm or swap 
 Each phase ends at a **QA gate**: `npm run build` clean, Lighthouse ≥95 on all four, axe with zero
 violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-only.
 
-| # | Phase | Output | Depends on |
-|---|---|---|---|
-| **0** | Scaffold | Next 15 + TS + Tailwind, token layer, three fonts self-hosted, base layout, nav, footer, a11y floor, deployed skeleton | — |
-| **1** | Home | Hero, evidence chips, two project cards, experience, contact | 0 · inputs §6 |
-| **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 |
-| **3** | DevLinks case study | Second page on the same template | 2 |
-| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 |
-| **5** | Notes | Index + 3 posts | 2 |
-| **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all |
-| **7** | Ship | Custom domain, DNS, final cross-browser + mobile pass | 6 · manual §5 |
+| # | Phase | Output | Depends on | Status |
+|---|---|---|---|---|
+| **0** | Scaffold | Next 15 + TS + Tailwind, token layer, three fonts self-hosted, base layout, nav, footer, a11y floor, ~~deployed skeleton~~ | — | **Done** 2026-09-20 · `93730c8`. The deploy did not happen — see O1 below. |
+| **1** | Home | Hero, evidence chips, two project cards, experience, contact | 0 · inputs §6 | **Done** 2026-09-20 · `53c9f5a`. Gate: axe 0, Lighthouse 95/100/100/100. |
+| **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 | **Done** 2026-09-20 · `5664727`. Gate: axe 0, Lighthouse 96/100/100/100. |
+| **3** | DevLinks case study | Second page on the same template | 2 | **Next** |
+| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | Not started. Buttons are behind `tours.enabled`. |
+| **5** | Notes | Index + 3 posts | 2 | Not started. Nav entry behind `routes.notes`. |
+| **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
+| **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
 
-**Parallel track (yours, can start now):** demo accounts + seeding + DevLinks deploy — §5.
+The gate is run by [`scripts/qa.mjs`](./scripts/qa.mjs) — axe across light, dark, 320px, 200% zoom
+and reduced-motion, a horizontal-scroll check, and a fetch of every external link on the page.
+Lighthouse is a separate command, documented in that file's header.
+
+**Parallel track (yours):** ~~DevLinks deploy~~ done · demo accounts half done — see M4.
+
+### Open items the phases depend on
+
+| # | Item | Why it matters |
+|---|---|---|
+| **O1** | **The site itself is not deployed anywhere.** Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
+| **O2** | DevLinks has no printed demo login, so its live-demo button drops a reviewer on a signup wall. | Prep's card prints one (M4). The asymmetry is visible on the home page. |
 
 ---
 
@@ -349,14 +370,14 @@ Ordered by when they block me.
 
 | # | Step | Blocks | Notes |
 |---|---|---|---|
-| M1 | **Make both repos public** | Phase 1 | Every "view code" link and every provenance badge on the site resolves to GitHub. If the repos stay private the entire thesis collapses. Check for secrets in history first — `Prep/.env.local` and `PP/.env.local` exist locally; confirm they were never committed. |
-| M2 | **Confirm Prep's deploy is live** and its Supabase project isn't paused | Phase 1 | Free-tier Supabase pauses after ~7 days idle. A recruiter hitting a paused DB sees a broken app. |
-| M3 | **Deploy DevLinks** | Phase 3 | Your README lists production deploy as unverified. Vercel + the three `VITE_*` env vars. |
-| M4 | **Create the two demo accounts** | Phase 2 | I write the seed scripts; you run them against your Supabase projects and hand me the credentials to print on the site. Prep's demo should land mid-plan: week 3, reviews due, BEHIND PACE showing. |
-| M5 | ~~**Resume PDF onto disk**~~ — landed at `public/Harshit_Resume_2026.pdf`, linked from nav and footer | Phase 1 | I have it as a chat attachment, not a file. Drop it at `Portfolio/public/resume.pdf`. I recommend a **phone-free variant** for the public web copy. |
-| M6 | **Domain** | Phase 7 | Buy + point DNS at Vercel, or say the word and we ship on `*.vercel.app`. |
+| ~~M1~~ | ~~**Make both repos public**~~ | Phase 1 | **Done.** Both return 200 anonymously, and every provenance link on the site was fetched at its exact line range before shipping. |
+| ~~M2~~ | ~~**Confirm Prep's deploy is live**~~ | Phase 1 | **Done** 2026-09-20: `prep-seven-theta.vercel.app` redirects to `/login` and serves 200. Free-tier Supabase still pauses after ~7 days idle, so this needs re-checking before anyone is sent the link. |
+| ~~M3~~ | ~~**Deploy DevLinks**~~ | Phase 3 | **Done** 2026-09-20. It was deployed but blank: the legacy `routes` config in `vercel.json` disables Vercel's filesystem step, so `/assets/*.js` was served `index.html` and Firefox rejected the module script as `NS_ERROR_CORRUPTED_CONTENT`. Fixed by reverting to `rewrites`. Live at `dev-links-rouge.vercel.app`. |
+| M4 | **Create the two demo accounts** — *half done* | Phase 2 | **Prep: done.** `qa-a@prep.com` is printed on the home card and the case study. Two caveats: it is a QA account on the live Supabase, so anyone who reads the page can mutate its rows; and its data is whatever QA left behind, not the mid-plan state this row asks for (week 3, reviews due, BEHIND PACE showing) — which is the state that makes the dashboard's honesty visible. **DevLinks: not done** (O2). |
+| ~~M5~~ | ~~**Resume PDF onto disk**~~ | Phase 1 | **Done:** `public/Harshit_Resume_2026.pdf`, linked from nav and footer, committed to the public repo. Two things it changes: it says **362 tests** where the site now says 364 (the suite grew — the PDF is the one to correct), and it **names the employer**, which §3.1 deliberately does not. The omission now costs credibility without buying privacy. The phone-free variant was not taken. |
+| ~~M6~~ | ~~**Domain**~~ | Phase 7 | **Decided** (§6.6): shipping on `*.vercel.app`, no custom domain. Superseded by O1 — there is still no Vercel project. |
 | M7 | *(optional)* **Record a 30s fallback video** per app | Phase 6 | Insurance for when a deploy is cold or the AI key is exhausted. |
-| M8 | *(optional)* **Tidy both repo landing pages** | Phase 7 | GitHub description, topics, and — per your own review — delete `PP/INTERVIEW_PREP.md` from the public repo. A reviewer who clicks through lands on the README, so it is part of the site. |
+| M8 | *(optional)* **Tidy both repo landing pages** | Phase 7 | GitHub description and topics. The `INTERVIEW_PREP.md` worry is moot — it is **untracked** in DevLinks and was never pushed, along with `PORTFOLIO_REVIEW.md` and `.codex`. A reviewer who clicks through lands on the README, so it is part of the site. |
 
 ---
 
