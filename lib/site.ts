@@ -13,7 +13,7 @@ export const site = {
   github: "https://github.com/harshitsingh281125-stack",
   linkedin: "https://www.linkedin.com/in/harshit-singh-8900691a8/",
   leetcode: "https://leetcode.com/u/gbXitzr3rZ/",
-  resume: "/resume.pdf",
+  resume: "/Harshit_Resume_2026.pdf",
 } as const;
 
 export const repos = {
@@ -38,13 +38,14 @@ export const tours = { enabled: false } as const;
 
 /**
  * Routes that do not exist yet. Same rule as the demo flag: the site does not
- * hand anyone a link that 404s, not even while it is being built. Phase 2
- * flips caseStudies, Phase 5 flips notes.
+ * hand anyone a link that 404s, not even while it is being built. Phase 3
+ * flips devlinks, Phase 5 flips notes.
  */
-export const routes = { caseStudies: false, notes: false } as const;
+export const routes = { notes: false } as const;
+export const caseStudy: Record<string, boolean> = { prep: true, devlinks: false };
 
-/** M5: the résumé is not on disk yet, so the site does not offer it. */
-export const resume = { href: site.resume, enabled: false } as const;
+/** Landed 2026-09-20 at public/Harshit_Resume_2026.pdf. */
+export const resume = { href: site.resume, enabled: true } as const;
 
 /**
  * Read-only demo logins, printed so a reviewer never meets a signup wall.

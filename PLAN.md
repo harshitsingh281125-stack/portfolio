@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phase 0 and Phase 1 complete (2026-09-20). Phase 2 is next.
+**Status:** Phases 0–2 complete (2026-09-20). Phase 3 (the DevLinks case study) is next.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -353,7 +353,7 @@ Ordered by when they block me.
 | M2 | **Confirm Prep's deploy is live** and its Supabase project isn't paused | Phase 1 | Free-tier Supabase pauses after ~7 days idle. A recruiter hitting a paused DB sees a broken app. |
 | M3 | **Deploy DevLinks** | Phase 3 | Your README lists production deploy as unverified. Vercel + the three `VITE_*` env vars. |
 | M4 | **Create the two demo accounts** | Phase 2 | I write the seed scripts; you run them against your Supabase projects and hand me the credentials to print on the site. Prep's demo should land mid-plan: week 3, reviews due, BEHIND PACE showing. |
-| M5 | **Resume PDF onto disk** | Phase 1 | I have it as a chat attachment, not a file. Drop it at `Portfolio/public/resume.pdf`. I recommend a **phone-free variant** for the public web copy. |
+| M5 | ~~**Resume PDF onto disk**~~ — landed at `public/Harshit_Resume_2026.pdf`, linked from nav and footer | Phase 1 | I have it as a chat attachment, not a file. Drop it at `Portfolio/public/resume.pdf`. I recommend a **phone-free variant** for the public web copy. |
 | M6 | **Domain** | Phase 7 | Buy + point DNS at Vercel, or say the word and we ship on `*.vercel.app`. |
 | M7 | *(optional)* **Record a 30s fallback video** per app | Phase 6 | Insurance for when a deploy is cold or the AI key is exhausted. |
 | M8 | *(optional)* **Tidy both repo landing pages** | Phase 7 | GitHub description, topics, and — per your own review — delete `PP/INTERVIEW_PREP.md` from the public repo. A reviewer who clicks through lands on the README, so it is part of the site. |

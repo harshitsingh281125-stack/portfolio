@@ -120,6 +120,8 @@ export function Claim({
  * and nowhere else — the boldness is spent in one place.
  */
 export function Decision({
+  id,
+  name,
   chose,
   over,
   because,
@@ -128,6 +130,12 @@ export function Decision({
   source,
   children,
 }: {
+  /** Anchor target for the decision rail. */
+  id?: string;
+  /** Short name, for the rail and for screen readers. Never rendered as a
+      heading: the visible label is identical on every block by design, and
+      four identical headings would be four useless landmarks. */
+  name?: string;
   chose: string;
   over: string;
   because: ReactNode;
@@ -138,11 +146,15 @@ export function Decision({
   children?: ReactNode;
 }) {
   return (
-    <aside className="my-8 rounded-lg border border-edge bg-panel p-5 sm:p-6">
+    <aside
+      id={id}
+      aria-label={name ? `Decision: ${name}` : "The decision worth defending"}
+      className="my-8 scroll-mt-8 rounded-lg border border-edge bg-panel p-5 sm:p-6"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-edge pb-3">
-        <h3 className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
+        <p className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
           The decision worth defending
-        </h3>
+        </p>
         {rule ? (
           <span className="font-mono text-meta font-medium text-accent">{rule}</span>
         ) : null}

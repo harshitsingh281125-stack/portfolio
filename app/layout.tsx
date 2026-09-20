@@ -5,11 +5,19 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
+/**
+ * Only the serif is preloaded. It sets the body prose, which is the LCP element
+ * on every case study, and five preloaded font files were arriving as one
+ * bandwidth-bound clump: the serif landed late and took LCP with it (83% render
+ * delay, measured). The interface and evidence faces load a beat later, which
+ * costs a brief fallback on nav and labels and buys the prose its paint.
+ */
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
+  preload: false,
 });
 
 const mono = IBM_Plex_Mono({
@@ -17,11 +25,15 @@ const mono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
   variable: "--font-mono",
   display: "swap",
+  preload: false,
 });
 
+/**
+ * The variable cut, not two static weights: one file covers 400 and 600, so the
+ * face that sets the LCP paragraph arrives in a single request.
+ */
 const serif = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["400", "600"],
   variable: "--font-serif",
   display: "swap",
 });

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { resume, routes, site } from "@/lib/site";
+import { caseStudy, resume, routes, site } from "@/lib/site";
 
 /**
  * Nav renders only what exists. A portfolio that ships a 404 in its own header
@@ -9,7 +9,7 @@ import { resume, routes, site } from "@/lib/site";
  */
 export function SiteHeader() {
   const links = [
-    routes.caseStudies ? { href: "/work/prep", label: "Work", external: false } : null,
+    caseStudy.prep ? { href: "/work/prep", label: "Work", external: false } : null,
     routes.notes ? { href: "/notes", label: "Notes", external: false } : null,
     resume.enabled ? { href: resume.href, label: "Résumé", external: true } : null,
   ].filter((l): l is { href: string; label: string; external: boolean } => l !== null);

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Claim } from "@/components/Provenance";
-import { routes, tours } from "@/lib/site";
+import { caseStudy, tours } from "@/lib/site";
 import type { Project } from "@/lib/projects";
 
 /**
@@ -46,7 +46,7 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <article className="flex flex-col rounded-lg border border-edge bg-panel p-5 sm:p-6">
       <h3 className="text-h3 font-semibold text-content">
-        {routes.caseStudies ? (
+        {caseStudy[slug] ? (
           <Link href={`/work/${slug}`} className="text-content no-underline hover:underline">
             {name}
           </Link>
@@ -83,7 +83,7 @@ export function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        {routes.caseStudies ? (
+        {caseStudy[slug] ? (
           <Action href={`/work/${slug}`}>Case study</Action>
         ) : null}
         {demo.enabled ? (
