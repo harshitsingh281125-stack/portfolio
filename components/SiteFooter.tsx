@@ -1,4 +1,4 @@
-import { site } from "@/lib/site";
+import { resume, site } from "@/lib/site";
 
 const links = [
   { label: "Email", href: `mailto:${site.email}`, text: site.email },
@@ -6,6 +6,8 @@ const links = [
   { label: "GitHub", href: site.github, text: "github.com/harshitsingh281125-stack" },
   { label: "LinkedIn", href: site.linkedin, text: "linkedin.com/in/harshit-singh-8900691a8" },
   { label: "LeetCode", href: site.leetcode, text: "leetcode.com/u/gbXitzr3rZ" },
+  // M5: appears when the file is actually on disk, not before.
+  ...(resume.enabled ? [{ label: "Résumé", href: resume.href, text: "résumé (PDF)" }] : []),
 ];
 
 export function SiteFooter() {

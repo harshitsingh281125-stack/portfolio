@@ -45,7 +45,7 @@ export function ProvenanceBadge({
 
   const badge = (
     <span
-      className={`inline-flex items-center gap-1.5 rounded px-1.5 py-0.5 font-mono text-meta font-medium ${s.className}`}
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded px-1.5 py-0.5 font-mono text-meta font-medium ${s.className}`}
     >
       <span aria-hidden="true" className="text-[0.6em] leading-none">
         ●
@@ -56,10 +56,10 @@ export function ProvenanceBadge({
 
   if (status === "unverified" || !href) {
     return (
-      <span className="inline-flex items-center gap-2" title={title}>
+      <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1" title={title}>
         {badge}
         {source ? (
-          <span className="font-mono text-meta text-content-faint">{source}</span>
+          <span className="font-mono text-meta text-content-faint [overflow-wrap:anywhere]">{source}</span>
         ) : null}
       </span>
     );
@@ -68,13 +68,13 @@ export function ProvenanceBadge({
   return (
     <a
       href={href}
-      className="inline-flex items-center gap-2 no-underline"
+      className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 no-underline"
       target="_blank"
       rel="noreferrer"
     >
       {badge}
       {source ? (
-        <span className="font-mono text-meta text-content-faint underline underline-offset-2 decoration-edge-strong">
+        <span className="font-mono text-meta text-content-faint underline underline-offset-2 decoration-edge-strong [overflow-wrap:anywhere]">
           {source}
         </span>
       ) : null}

@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** awaiting approval. No code written yet.
+**Status:** Phase 0 and Phase 1 complete (2026-09-20). Phase 2 is next.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -26,7 +26,7 @@ That is not a metaphor. It is the literal design system:
 
 | On the site | Means |
 |---|---|
-| `362 tests` with a green **VERIFIED** dot | Links to `tests/unit` + `tests/e2e`; the count is `grep`-able |
+| `364 tests` with a green **VERIFIED** dot | Links to `tests/unit` + `tests/e2e`; the count is `grep`-able |
 | `~60K lines removed` with an amber **UNVERIFIED** dot | True, from private employer work, not publicly checkable — and the site says so |
 
 Nobody else's portfolio does this, because nobody else's *products* are about provenance. It is
@@ -366,7 +366,7 @@ Ordered by when they block me.
 |---|---|
 | 1 | LinkedIn `linkedin.com/in/harshit-singh-8900691a8` · GitHub `github.com/harshitsingh281125-stack` · LeetCode `leetcode.com/u/gbXitzr3rZ` |
 | 2 | **Both repos are public.** Provenance badges can link to real files. |
-| 3 | DevLinks is deployed but the link is broken; owner will debug. → live-demo CTA is behind a feature flag, off until fixed. Card ships with `[code]` + `[▶ tour]` only. |
+| 3 | ~~DevLinks is deployed but the link is broken~~ → **fixed 2026-09-20**: the deployed `vercel.json` used legacy `routes`, which disables Vercel's filesystem step, so `/assets/*.js` was served `index.html`. Live at `dev-links-rouge.vercel.app`; the demo flag is on. |
 | 4 | Prep is live at `prep-seven-theta.vercel.app`, Supabase awake. |
 | 5 | Show **email and phone**: `harshit.singh281125@gmail.com`, `+91 78392 48591` (rendered as a `tel:` link). Public exposure of the number was raised and accepted. |
 | 6 | Ship on `*.vercel.app`. No custom domain for now. |
@@ -384,5 +384,5 @@ Everything is first person throughout, so no pronouns for the owner appear anywh
 | **A third Next + Tailwind + Supabase-adjacent repo reads as samey** | The design layer is where this is won — the provenance system, the Decision block and the four tours are things a template cannot produce. |
 | **Case studies are long; recruiters skim** | Your chosen "full depth behind a read more": scannable summary up top, decision log expandable underneath. A recruiter gets 30 seconds of signal, an engineer gets everything. |
 | **A demo is down when someone clicks it** | M2 + M4, and optionally M7's video. |
-| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written. 362 = 283 + 79 exactly; 202 = 35 + 35 + 84 + 48; 84 `TAG_RULES`; 10 tables; 7 authenticated routes; 10 screens. Anything unverifiable gets the amber badge. |
+| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written, and **re-measured from the runners at Phase 1**: Prep is **364** (`vitest run` -> 283, `playwright test --list` -> 81 — the suite grew past the 79 recorded here); 202 = 48 + 35 + 35 + 84, confirmed by `grep -c 'https\?://' supabase/migrations/*.sql`; 84 `TAG_RULES`; 10 tables. DevLinks' unit suite is **596**, not the 487 in `PORTFOLIO_REVIEW.md`. Anything unverifiable gets the amber badge. |
 | **Scope creep into a sixth and seventh section** | The phase table is the contract. New ideas go to a backlog section, not into a phase. |

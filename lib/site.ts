@@ -22,13 +22,37 @@ export const repos = {
 } as const;
 
 /**
- * Live-demo links are flags, not constants. A portfolio that advertises a
- * broken demo is worse than one that advertises none: the DevLinks deploy is
- * known-broken, so its button stays off until the deploy is verified.
+ * Flags, not constants. This site's whole argument is that it does not make a
+ * claim it cannot back, and a dead link is a claim that failed. Anything that
+ * depends on an artefact outside this repo — a deploy, a PDF, a tour that is
+ * not built yet — stays off until the artefact is verified to exist.
  */
 export const demos = {
   prep: { url: "https://prep-seven-theta.vercel.app", enabled: true },
-  devlinks: { url: "", enabled: false },
+  /** Blank page fixed 2026-09-20: Vercel was serving index.html for /assets/*.js. */
+  devlinks: { url: "https://dev-links-rouge.vercel.app", enabled: true },
+} as const;
+
+/** Tours are Phase 4. The buttons appear when the routes do. */
+export const tours = { enabled: false } as const;
+
+/**
+ * Routes that do not exist yet. Same rule as the demo flag: the site does not
+ * hand anyone a link that 404s, not even while it is being built. Phase 2
+ * flips caseStudies, Phase 5 flips notes.
+ */
+export const routes = { caseStudies: false, notes: false } as const;
+
+/** M5: the résumé is not on disk yet, so the site does not offer it. */
+export const resume = { href: site.resume, enabled: false } as const;
+
+/**
+ * Read-only demo logins, printed so a reviewer never meets a signup wall.
+ * These are throwaway QA accounts on the project's own Supabase — they are
+ * meant to be public, and nothing in them is private.
+ */
+export const demoLogins = {
+  prep: { email: "qa-a@prep.com", password: "QA!Password" },
 } as const;
 
 /** Source links for provenance badges. Blob paths resolve to real files. */
