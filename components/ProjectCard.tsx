@@ -41,7 +41,7 @@ function Action({
 }
 
 export function ProjectCard({ project }: { project: Project }) {
-  const { name, slug, summary, decisions, repo, demo, login, stat } = project;
+  const { name, slug, summary, decisions, repo, demo, login, entry, stat } = project;
 
   return (
     <article className="flex flex-col rounded-lg border border-edge bg-panel p-5 sm:p-6">
@@ -100,6 +100,22 @@ export function ProjectCard({ project }: { project: Project }) {
           </Action>
         ) : null}
       </div>
+
+      {/* How a reviewer gets past the front door. A printed login where the
+          product has no anonymous path; a real public URL where it does, which
+          is strictly better — nothing to leak, nothing to mutate. */}
+      {demo.enabled && entry ? (
+        <p className="mt-3 font-mono text-meta text-content-faint">
+          <a
+            href={entry.href}
+            className="text-content-faint underline underline-offset-2 decoration-edge-strong hover:decoration-content"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {entry.label}
+          </a>
+        </p>
+      ) : null}
 
       {demo.enabled && login ? (
         <p className="mt-3 font-mono text-meta text-content-faint">

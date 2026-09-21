@@ -29,8 +29,21 @@ export const repos = {
  */
 export const demos = {
   prep: { url: "https://prep-seven-theta.vercel.app", enabled: true },
-  /** Blank page fixed 2026-09-20: Vercel was serving index.html for /assets/*.js. */
-  devlinks: { url: "https://dev-links-rouge.vercel.app", enabled: true },
+  /**
+   * Blank page fixed 2026-09-20: Vercel was serving index.html for /assets/*.js.
+   *
+   * publicEntry resolves O2 without a demo login. The seeded collections are
+   * published, and the public read path is anonymous — verified 2026-09-20 by
+   * querying the live REST API as an anon key: slug react-debugging returns
+   * is_public true with 8 bookmarks. A reviewer sees real rows without meeting
+   * a signup wall, and there is no shared password to leak or QA account for a
+   * stranger to mutate.
+   */
+  devlinks: {
+    url: "https://dev-links-rouge.vercel.app",
+    publicEntry: "/public/collections/react-debugging",
+    enabled: true,
+  },
 } as const;
 
 /** Tours are Phase 4. The buttons appear when the routes do. */
@@ -39,10 +52,10 @@ export const tours = { enabled: false } as const;
 /**
  * Routes that do not exist yet. Same rule as the demo flag: the site does not
  * hand anyone a link that 404s, not even while it is being built. Phase 3
- * flips devlinks, Phase 5 flips notes.
+ * flipped devlinks; Phase 5 flips notes.
  */
 export const routes = { notes: false } as const;
-export const caseStudy: Record<string, boolean> = { prep: true, devlinks: false };
+export const caseStudy: Record<string, boolean> = { prep: true, devlinks: true };
 
 /** Landed 2026-09-20 at public/Harshit_Resume_2026.pdf. */
 export const resume = { href: site.resume, enabled: true } as const;

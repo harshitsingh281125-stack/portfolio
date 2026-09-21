@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–2 complete (2026-09-20). Phase 3 (the DevLinks case study) is next.
+**Status:** Phases 0–3 complete (Phase 3 on 2026-09-21). Phase 4 (the four tours) is next.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -307,6 +307,38 @@ Two open weaknesses your review names — no rate limit on `/api/metadata`, no l
 go in "what I'd do differently", stated plainly. Naming your own gap before the interviewer does is
 worth more than the fix.
 
+**As built, 2026-09-21.** Three Decision blocks, per §1.4:
+
+1. **Validate every hop** — `redirect: 'manual'` plus re-entering the *same* `validateUrlString` on
+   each 3xx, and `dns.lookup(host, { all: true })` so the judgement lands on the resolved addresses
+   rather than on the string. ([metadata.ts:204-226](../PP/src/server/metadata.ts#L204-L226) —
+   the range in the original draft above, `119-167`, was wrong; every citation on the page was
+   re-checked against the committed blob and then fetched live on GitHub.)
+2. **Normalize in the database** — the sharper version of the draft's "canonicalize, then let a
+   unique constraint catch it". `normalize_bookmark_url()` is an `immutable` SQL function on a
+   `before insert or update` trigger, so the key is computed by the engine that enforces it and no
+   client can disagree; the `23505` path then returns `{ kind: 'duplicate', existing }` as a
+   *success* shape and skips list invalidation, because nothing was created.
+3. **Regexes, not a model** — the same instinct as Prep's tier split pointed the other way: the
+   frequent call gets no inference at all.
+
+Four regrets, not two. The review's rate limit and virtualization are there, and two more found
+while reading the code for this page: the endpoint is **unauthenticated** as well as unthrottled,
+and there is a **DNS-rebinding gap** between `dns.lookup()` and `fetch()`, which each resolve
+independently — so the guard is good against the ordinary case and beatable by someone who owns a
+nameserver. The page says so rather than letting the diagram imply otherwise. The fourth is the
+normalization rule existing twice, in SQL and in a hand-translated `canonicalizeUrl()`.
+
+**The 596 is disclosed, not quoted.** `vitest run` gives 596, and 259 of those assert the 84-rule
+tag table — so the page states both numbers in the same breath. Quoting the 596 alone is exactly
+the move this site exists to refuse.
+
+**Diagram at 320px.** `MetadataTraceDiagram` is a 720-unit drawing; scaled into a 288px phone its
+13px labels land near 5px. Below `34rem` the figure scrolls sideways instead of shrinking further,
+in a `tabindex={0}` `role="group"` container so the region is keyboard-pannable (axe: *"scrollable
+region must have keyboard access"*). **The Prep page's `ArchitectureDiagram` has the same geometry
+and has not had this treatment** — noted as B1 rather than fixed, since it is Phase 2 work.
+
 ### 3.4 Tours
 
 | Route | Source | Work |
@@ -343,8 +375,8 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **0** | Scaffold | Next 15 + TS + Tailwind, token layer, three fonts self-hosted, base layout, nav, footer, a11y floor, ~~deployed skeleton~~ | — | **Done** 2026-09-20 · `93730c8`. The deploy did not happen — see O1 below. |
 | **1** | Home | Hero, evidence chips, two project cards, experience, contact | 0 · inputs §6 | **Done** 2026-09-20 · `53c9f5a`. Gate: axe 0, Lighthouse 95/100/100/100. |
 | **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 | **Done** 2026-09-20 · `5664727`. Gate: axe 0, Lighthouse 96/100/100/100. |
-| **3** | DevLinks case study | Second page on the same template | 2 | **Next** |
-| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | Not started. Buttons are behind `tours.enabled`. |
+| **3** | DevLinks case study | Second page on the same template | 2 | **Done** 2026-09-21. Gate: axe 0 across all 5 contexts, Lighthouse 96/100/100/100. |
+| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Next.** Buttons are behind `tours.enabled`. `devlinks-trace` now has a static counterpart to animate — see §3.3. |
 | **5** | Notes | Index + 3 posts | 2 | Not started. Nav entry behind `routes.notes`. |
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
@@ -360,7 +392,7 @@ Lighthouse is a separate command, documented in that file's header.
 | # | Item | Why it matters |
 |---|---|---|
 | **O1** | **The site itself is not deployed anywhere.** Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
-| **O2** | DevLinks has no printed demo login, so its live-demo button drops a reviewer on a signup wall. | Prep's card prints one (M4). The asymmetry is visible on the home page. |
+| ~~**O2**~~ | ~~DevLinks has no printed demo login~~ | **Resolved 2026-09-21, without a login.** The seeded collections are published and the public read path is anonymous — verified against the live REST API with the anon key: `react-debugging` returns `is_public: true` with 8 bookmarks, and the same holds for `css-layout` and `api-auth`. The card and the case study now link straight to `/public/collections/react-debugging`. This is strictly better than a printed password: nothing to leak, and no shared row a stranger can mutate — which is the objection standing against Prep's `qa-a@prep.com` in M4. |
 
 ---
 
@@ -397,6 +429,16 @@ Ordered by when they block me.
 | 10 | **Theme toggle cut.** `prefers-color-scheme` only, per `dark-mode.md` and the "remove one accessory" pass in §1.6. |
 
 Everything is first person throughout, so no pronouns for the owner appear anywhere on the site.
+
+## 6b. Backlog
+
+Not phases. Things found while building a phase that are real but out of its scope (§7:
+*"New ideas go to a backlog section, not into a phase."*).
+
+| # | Item | Found |
+|---|---|---|
+| **B1** | `ArchitectureDiagram` on `/work/prep` is a 700-unit SVG scaled into a 288px phone, putting its labels near 5px. `MetadataTraceDiagram` got a focusable horizontal scroller in Phase 3; Prep's did not. Same fix, one component. | Phase 3 |
+| **B2** | `PP/src/server/metadata.ts` has two uncommitted stray comments in the working tree (lines ~234 and ~240). They are below every range this site cites, so no provenance link is affected, but the repo should be clean before anyone browses it. | Phase 3 |
 
 ## 7. Risks
 

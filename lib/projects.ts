@@ -8,7 +8,8 @@ import { blob, demoLogins, demos, repos } from "./site";
  *             npx playwright test --list -> Total: 81 tests in 11 files
  *             grep -c 'https\?://' supabase/migrations/*.sql -> 202
  *   DevLinks  npx vitest run            -> 596 passed
- *             grep -c 'pattern:' src/server/taggingRules.ts -> 84
+ *             grep -c 'pattern:' src/server/taggingRules.ts -> 85, of which
+ *               one is the TagRule type on L189 -> 84 rules, L191-L297
  *
  * If one of these ever stops matching its command, the number is wrong and
  * the badge beside it is a lie. That is the entire point of the site.
@@ -24,6 +25,12 @@ export type Project = {
   repo: string;
   demo: { url: string; enabled: boolean };
   login?: { email: string; password: string };
+  /**
+   * A path into the live app that needs no account. Preferred over a printed
+   * login wherever the product has a genuine anonymous read path: there is no
+   * shared password to leak and no QA row a stranger can mutate.
+   */
+  entry?: { href: string; label: string };
   stat: { value: string; label: string; href: string; source: string };
 };
 
@@ -55,15 +62,19 @@ export const projects: Project[] = [
       "A bookmark manager whose hard part is the server: it fetches URLs a stranger typed.",
     decisions: [
       "A server that fetches user-supplied URLs is an SSRF engine pointed at your own network — DNS is resolved and private ranges rejected on every redirect hop",
-      "Canonicalize the URL, then let a unique constraint on (user_id, normalized_url) catch the duplicate",
+      "Normalization lives in the database — an immutable SQL function on a trigger writes the column the unique constraint covers, so no client can disagree with it",
       "84 tagging rules run on the server, with no model call in the path",
     ],
     repo: repos.devlinks,
     demo: demos.devlinks,
+    entry: {
+      href: `${demos.devlinks.url}${demos.devlinks.publicEntry}`,
+      label: "a published collection · no login",
+    },
     stat: {
       value: "84",
       label: "deterministic tagging rules, no inference in the hot path",
-      href: blob("devlinks", "src/server/taggingRules.ts", "L191-L310"),
+      href: blob("devlinks", "src/server/taggingRules.ts", "L191-L297"),
       source: "src/server/taggingRules.ts",
     },
   },
