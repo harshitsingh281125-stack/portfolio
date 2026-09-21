@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–5 complete (Phase 5 on 2026-09-21). Phase 6 (polish) is next, blocked on O1 for `metadataBase`.
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21). Phase 7 (ship) is next, and starts with O1: creating the Vercel project, which only you can do.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -447,7 +447,7 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **3** | DevLinks case study | Second page on the same template | 2 | **Done** 2026-09-21 · `64d0d8f`. Gate: axe 0, Lighthouse 96/100/100/100. |
 | **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. `fb4d057`. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
 | **5** | Notes | Index + 3 posts | 2 | **Done** 2026-09-21 · `f1baa69`. Gate: axe 0 on 11 routes and inside all 4 tour documents, Lighthouse 97–98 / 100 / 100 / 100 on the four notes routes. Link check: every GitHub citation 200 (7 returned 429 in the batch and 200 when retried with spacing); LeetCode 403 and LinkedIn 999/429 block automated requests, as they did before this phase. |
-| **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
+| **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | **Done** 2026-09-21. See §4.1. Gate: axe 0 on 10 routes (incl. the 404) and inside all 4 tour documents; reduced-motion stillness 0 everywhere after one fix; Lighthouse 97 / 95–98 / 96 / 98 / 97 / 99 perf on home, Prep, DevLinks, notes, a note, a tour, 100 on the other three categories throughout. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
 
 The gate is run by [`scripts/qa.mjs`](./scripts/qa.mjs) — axe across light, dark, 320px, 200% zoom
@@ -456,11 +456,43 @@ Lighthouse is a separate command, documented in that file's header.
 
 **Parallel track (yours):** ~~DevLinks deploy~~ done · demo accounts half done — see M4.
 
+### 4.1 Phase 6, as built
+
+- **O1 unblocked in code, not by guessing a host.** `siteUrl` in `lib/site.ts` reads
+  `VERCEL_PROJECT_PRODUCTION_URL`, which Vercel sets on every build to the project's production
+  domain, and falls back to `localhost:3002`; `SITE_URL` overrides both. Proved by building with
+  the variable set to a dummy host: canonical, `og:url`, `og:image`, the sitemap and robots all
+  carried it. The hard-coded `harshit.vercel.app` guess is gone.
+- **Metadata** goes through one helper, `lib/meta.ts` → `pageMeta()`. Next merges metadata
+  shallowly, so a page that sets `openGraph` at all replaces the layout's; routing every page
+  through one shape is what stops half the site sharing the home page's `og:title`. Canonical,
+  OG (`article` + `published_time` for notes and case studies), Twitter `summary_large_image`.
+- **OG images**, 11 of them, one `opengraph-image.tsx` per route over a shared renderer in
+  `lib/og.tsx`: the site in miniature, light theme only. A card shows a VERIFIED claim **only where
+  the page it links to proves that number** (364 tests on home and Prep, 84 rules on DevLinks);
+  notes and tours get none. Fonts are vendored as woff in `assets/og/` (fontsource, OFL) because
+  Satori cannot read the woff2 `next/font` downloads, and a CDN fetch would make the build depend
+  on the network. Satori ignores `gap` across a fragment; the claim row uses margins.
+- **Sitemap and robots** are built from the same flags as the nav, so neither can list a route
+  the header would refuse to link. `lastModified` is set only for the notes, which have real
+  dates, rather than stamping every page with the build time.
+- **404** in the site's voice, serving a real 404 status, `noindex`, linking only routes that exist.
+- **B1 closed**: `ArchitectureDiagram` got `MetadataTraceDiagram`'s focusable sideways scroller.
+- **Reduced-motion audit, now permanent in `scripts/qa.mjs`.** axe does not test motion, so the
+  gate's reduced-motion passes only ever proved accessibility, not stillness. The new pass loads
+  every page and every tour document under `reduce`, and fails on any animation still running with
+  a real duration, or on markup that changes over two seconds (a script still driving). It found
+  one: the caret in `devlinks-in-motion` blinked forever, reduced motion or not. That was also a
+  WCAG 2.2.2 failure for everyone, because the tour's pause does not reach a CSS animation. Now
+  four blinks, then steady; none under reduced motion.
+- **Lighthouse variance is real.** `/work/prep` scored 94 once and 95, 96, 98 on reruns (LCP
+  2.3–2.7s, CLS 0). Report the spread, not the best run.
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |
 |---|---|---|
-| **O1** | **The site itself is not deployed anywhere.** Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
+| **O1** | **The site itself is not deployed anywhere.** *No longer blocks Phase 6 — see §4.1: absolute URLs now come from Vercel's build env, so they will be right on the first deploy. The deploy itself is still the first step of Phase 7.* Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
 | ~~**O2**~~ | ~~DevLinks has no printed demo login~~ | **Resolved 2026-09-21, without a login.** The seeded collections are published and the public read path is anonymous — verified against the live REST API with the anon key: `react-debugging` returns `is_public: true` with 8 bookmarks, and the same holds for `css-layout` and `api-auth`. The card and the case study now link straight to `/public/collections/react-debugging`. This is strictly better than a printed password: nothing to leak, and no shared row a stranger can mutate — which is the objection standing against Prep's `qa-a@prep.com` in M4. |
 
 ---
@@ -506,7 +538,7 @@ Not phases. Things found while building a phase that are real but out of its sco
 
 | # | Item | Found |
 |---|---|---|
-| **B1** | `ArchitectureDiagram` on `/work/prep` is a 700-unit SVG scaled into a 288px phone, putting its labels near 5px. `MetadataTraceDiagram` got a focusable horizontal scroller in Phase 3; Prep's did not. Same fix, one component. | Phase 3 |
+| ~~**B1**~~ | **Closed in Phase 6.** `ArchitectureDiagram` on `/work/prep` is a 700-unit SVG scaled into a 288px phone, putting its labels near 5px. `MetadataTraceDiagram` got a focusable horizontal scroller in Phase 3; Prep's did not. Same fix, one component. | Phase 3 |
 | **B2** | `PP/src/server/metadata.ts` has two uncommitted stray comments in the working tree (lines ~234 and ~240). They are below every range this site cites, so no provenance link is affected, but the repo should be clean before anyone browses it. | Phase 3 |
 | **B3** | The tour iframe heights are four measured constants per tour. They are correct today and will be wrong the first time a scene's text changes, and nothing fails loudly when they are — the symptom is a quietly clipped control. A build-time check that renders each tour and asserts the constant still fits would close it. | Phase 4 |
 

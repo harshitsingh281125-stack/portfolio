@@ -31,9 +31,13 @@
   }
   .field .caret {
     display: inline-block; width: 1.5px; height: 15px; background: var(--accent);
-    animation: blink 1s steps(2) infinite; flex: none;
+    /* Four blinks, not infinite: anything that blinks past five seconds needs
+       its own off switch (WCAG 2.2.2), and the tour's pause does not reach a
+       CSS animation. Under reduced motion it does not blink at all. */
+    animation: blink 1s steps(2) 4; flex: none;
   }
   @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .field .caret { animation: none; } }
   .field-label {
     font: 500 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
     letter-spacing: 0.06em; color: var(--content-faint); margin-bottom: 6px;

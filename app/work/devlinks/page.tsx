@@ -5,12 +5,15 @@ import { Claim, Decision, ProvenanceBadge } from "@/components/Provenance";
 import { TourEmbed } from "@/components/TourEmbed";
 import { toursFor } from "@/lib/tours";
 import { blob, demos, repos } from "@/lib/site";
+import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "DevLinks",
   description:
     "A bookmark manager whose hard part is the server: it fetches URLs a stranger typed, which makes it an SSRF engine pointed at your own network.",
-};
+  path: "/work/devlinks",
+  type: "article",
+});
 
 const [inMotion, trace] = toursFor("devlinks");
 

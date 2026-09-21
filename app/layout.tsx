@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
-import { site } from "@/lib/site";
+import { site, siteUrl } from "@/lib/site";
+import { pageMeta } from "@/lib/meta";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
@@ -39,13 +40,17 @@ const serif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
+  ...pageMeta({
+    description:
+      "I build the unglamorous parts of AI products: the gateway, the cap, the fallback, and the citation that can't be faked.",
+    path: "/",
+  }),
   title: {
     default: `${site.name} — ${site.role}`,
     template: `%s — ${site.name}`,
   },
-  description:
-    "I build the unglamorous parts of AI products: the gateway, the cap, the fallback, and the citation that can't be faked.",
-  metadataBase: new URL("https://harshit.vercel.app"),
+  metadataBase: siteUrl,
+  authors: [{ name: site.name, url: site.github }],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

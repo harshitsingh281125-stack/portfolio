@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { TourEmbed } from "@/components/TourEmbed";
 import { tourBySlug, tours } from "@/lib/tours";
 import { caseStudy } from "@/lib/site";
+import { pageMeta } from "@/lib/meta";
 
 /** Four routes, known at build time, so they prerender like everything else. */
 export function generateStaticParams() {
@@ -18,7 +19,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const tour = tourBySlug(slug);
   if (!tour) return {};
-  return { title: tour.title, description: tour.blurb };
+  return pageMeta({ title: tour.title, description: tour.blurb, path: `/tour/${tour.slug}` });
 }
 
 const LINK =

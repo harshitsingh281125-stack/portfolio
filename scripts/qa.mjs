@@ -91,6 +91,31 @@ for (const slug of TOURS) {
   }
 }
 
+// ---- Reduced motion: once settled, nothing may still be moving ----
+// axe does not test motion at all, so the reduced-motion passes above prove
+// only that the page is accessible, not that it is still. Two checks per page
+// and per tour document: no CSS/WAAPI animation still running with a real
+// duration, and no script still rewriting the DOM (the tours' rAF driver would
+// show up here as markup that differs two seconds apart).
+console.log(`\n═══ reduced motion: still after settling ═══`);
+{
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
+  const page = await ctx.newPage();
+  const targets = [...PAGES.map((p) => [p, BASE + p]), ...TOURS.map((t) => [`tour: ${t}`, `${BASE}/tour/${t}.html`])];
+  for (const [label, url] of targets) {
+    await page.goto(url, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1000);
+    const running = await page.evaluate(() => document.getAnimations().filter((a) =>
+      a.playState === "running" && Number(a.effect?.getComputedTiming().duration ?? 0) > 1).length);
+    const before = await page.evaluate(() => document.body.innerHTML);
+    await page.waitForTimeout(2000);
+    const changed = (await page.evaluate(() => document.body.innerHTML)) !== before;
+    failures += running + (changed ? 1 : 0);
+    console.log(`  ${label.padEnd(40)} running: ${running}  dom: ${changed ? "CHANGING" : "still"}`);
+  }
+  await ctx.close();
+}
+
 // Every provenance link on both pages must resolve.
 const ctx = await browser.newContext();
 const page = await ctx.newPage();

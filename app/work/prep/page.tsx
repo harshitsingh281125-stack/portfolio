@@ -6,12 +6,15 @@ import { TourEmbed } from "@/components/TourEmbed";
 import Link from "next/link";
 import { toursFor } from "@/lib/tours";
 import { blob, demoLogins, demos, repos } from "@/lib/site";
+import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Prep",
   description:
     "An AI-native learning OS where a hallucinated citation is not rejected — it is unrepresentable.",
-};
+  path: "/work/prep",
+  type: "article",
+});
 
 const [inMotion, underTheHood] = toursFor("prep");
 

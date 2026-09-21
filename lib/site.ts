@@ -16,6 +16,22 @@ export const site = {
   resume: "/Harshit_Resume_2026.pdf",
 } as const;
 
+/**
+ * The site's own origin, used for metadataBase, canonical URLs, the sitemap and
+ * OG images. Resolves PLAN.md O1 without guessing a hostname: Vercel sets
+ * VERCEL_PROJECT_PRODUCTION_URL on every build (preview builds included) to the
+ * project's production domain, bare, with no scheme. So the first deploy
+ * produces correct absolute URLs under whatever name the project ends up with,
+ * and a later custom domain only means changing the domain on the Vercel
+ * project and redeploying. SITE_URL overrides both, for any other host.
+ */
+export const siteUrl = new URL(
+  process.env.SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3002"),
+);
+
 export const repos = {
   prep: "https://github.com/harshitsingh281125-stack/Prep",
   devlinks: "https://github.com/harshitsingh281125-stack/DevLinks",

@@ -3,11 +3,18 @@ import { Code, P, Section } from "@/components/CaseStudy";
 import { NoteLayout } from "@/components/Note";
 import { ProvenanceBadge } from "@/components/Provenance";
 import { noteBySlug } from "@/lib/notes";
+import { pageMeta } from "@/lib/meta";
 import { blob } from "@/lib/site";
 
 const note = noteBySlug("e2e-suite-spent-real-calls")!;
 
-export const metadata: Metadata = { title: note.title, description: note.dek };
+export const metadata: Metadata = pageMeta({
+  title: note.title,
+  description: note.dek,
+  path: `/notes/${note.slug}`,
+  type: "article",
+  publishedTime: note.date,
+});
 
 export default function E2ESpendNote() {
   return (

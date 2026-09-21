@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { formatDate, notes } from "@/lib/notes";
+import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Notes",
   description:
     "Three things I measured while building Prep, at more length than a case study has room for.",
-};
+  path: "/notes",
+});
 
 export default function NotesIndex() {
   return (

@@ -3,11 +3,18 @@ import { Code, P, Section } from "@/components/CaseStudy";
 import { NoteLayout, Output } from "@/components/Note";
 import { ProvenanceBadge } from "@/components/Provenance";
 import { noteBySlug } from "@/lib/notes";
+import { pageMeta } from "@/lib/meta";
 import { blob } from "@/lib/site";
 
 const note = noteBySlug("similarity-floor")!;
 
-export const metadata: Metadata = { title: note.title, description: note.dek };
+export const metadata: Metadata = pageMeta({
+  title: note.title,
+  description: note.dek,
+  path: `/notes/${note.slug}`,
+  type: "article",
+  publishedTime: note.date,
+});
 
 export default function SimilarityFloorNote() {
   return (
@@ -73,8 +80,8 @@ OFF-domain  "Postgres query planner internals" 0.568 … 0.562   ← above 0.55
       <Section id="margin" heading="The margin shrank when the corpus grew">
         <P>
           Over the next day, in three migrations, the corpus grew from 48
-          frontend documents to 202 across 26 areas: security, TypeScript, testing, databases, algorithms,
-          distributed systems. I re-ran the probe. The best off-domain score had
+          frontend documents to 202 across 26 areas: security, TypeScript,
+          testing, databases, algorithms, distributed systems. I re-ran the probe. The best off-domain score had
           risen from 0.568 to <Code>0.616</Code>, leaving 0.62 with a margin of
           0.004.
         </P>
