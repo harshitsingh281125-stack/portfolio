@@ -419,7 +419,7 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **1** | Home | Hero, evidence chips, two project cards, experience, contact | 0 · inputs §6 | **Done** 2026-09-20 · `53c9f5a`. Gate: axe 0, Lighthouse 95/100/100/100. |
 | **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 | **Done** 2026-09-20 · `5664727`. Gate: axe 0, Lighthouse 96/100/100/100. |
 | **3** | DevLinks case study | Second page on the same template | 2 | **Done** 2026-09-21 · `64d0d8f`. Gate: axe 0, Lighthouse 96/100/100/100. |
-| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
+| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. `fb4d057`. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
 | **5** | Notes | Index + 3 posts | 2 | **Next.** Nav entry behind `routes.notes`. |
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
