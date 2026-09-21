@@ -18,7 +18,7 @@ import { chromium } from "@playwright/test";
 import fs from "node:fs";
 const AXE = fs.readFileSync("node_modules/axe-core/axe.min.js", "utf8");
 const BASE = process.env.QA_BASE ?? "http://localhost:3010";
-const PAGES = (process.env.QA_PAGES ?? "/,/work/prep,/work/devlinks").split(",");
+const PAGES = (process.env.QA_PAGES ?? "/,/work/prep,/work/devlinks,/notes,/notes/similarity-floor,/notes/e2e-suite-spent-real-calls,/notes/allowed-to-say-behind").split(",");
 // The tours are standalone documents inside iframes, and axe does not cross an
 // iframe boundary — the pages above report 0 while the tour inside them is
 // serving violations. So each tour document is also audited directly. Phase 4

@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–4 complete (Phase 4 on 2026-09-21). Phase 5 (the three notes) is next.
+**Status:** Phases 0–5 complete (Phase 5 on 2026-09-21). Phase 6 (polish) is next, blocked on O1 for `metadataBase`.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -406,6 +406,32 @@ its caption and **248 unit + 81 E2E** on screen; both now read 364 / 283 + 81.
 
 Each ~600–900 words, one Decision block, links to the code. **Confirm or swap these in §6.**
 
+**As built, 2026-09-21.** Routes: `/notes/similarity-floor`, `/notes/e2e-suite-spent-real-calls`,
+`/notes/allowed-to-say-behind`, plus the `/notes` index. Nav entry on (`routes.notes`), and the Prep
+case study's Links section points at the index.
+
+*No Decision block in the notes.* §3.5 asked for one each; §1.4 says the block appears on the case
+studies "and nowhere else". §1.4 wins: it is the design system, and two of the three decisions
+(`d-citation`, `d-derived`) already have a block on `/work/prep`. Repeating them would spend the
+signature element twice on the same claim. Each note instead ends with a link back to the
+decision it is the long version of, and cites with `ProvenanceBadge`.
+
+*JSX, not MDX.* Three posts do not justify a content pipeline, and JSX lets a note use the same
+`Code` / `ProvenanceBadge` primitives as the case studies. `lib/notes.ts` holds the metadata;
+`components/Note.tsx` is the template plus `Output`, a focusable scroller for verbatim program
+output (the probe table, `12 * 0.8`).
+
+*The notes go further than the case study, or they would be duplicates.* The floor note adds round
+two (corpus 48 → 202, best off-domain 0.568 → 0.616, margin 0.004, raised to 0.64) with its measured
+cost (182 / 6 / 1 of 189 topics), plus the two times the probe itself went wrong. The E2E note adds
+why each of the three fixes is needed and the pattern: three wrong-server bugs with one cause. The
+pace note adds the `9.600000000000001` boundary bug and why grading never went to a model.
+
+*Citations.* Every line range was checked against **pushed** `main`, not the local checkout: local
+`origin/main` was stale, and after a fetch every cited file matched except `PRD.md`, so the grading
+rationale cites `Architecture.md` L87-92 instead. Markdown files are linked with `?plain=1` so the
+line anchor works.
+
 ---
 
 ## 4. Phases
@@ -420,7 +446,7 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 | **Done** 2026-09-20 · `5664727`. Gate: axe 0, Lighthouse 96/100/100/100. |
 | **3** | DevLinks case study | Second page on the same template | 2 | **Done** 2026-09-21 · `64d0d8f`. Gate: axe 0, Lighthouse 96/100/100/100. |
 | **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. `fb4d057`. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
-| **5** | Notes | Index + 3 posts | 2 | **Next.** Nav entry behind `routes.notes`. |
+| **5** | Notes | Index + 3 posts | 2 | **Done** 2026-09-21. Gate: axe 0 on 11 routes and inside all 4 tour documents, Lighthouse 97–98 / 100 / 100 / 100 on the four notes routes. Link check: every GitHub citation 200 (7 returned 429 in the batch and 200 when retried with spacing); LeetCode 403 and LinkedIn 999/429 block automated requests, as they did before this phase. |
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
 

@@ -52,9 +52,9 @@ export const tours = { enabled: true } as const;
 /**
  * Routes that do not exist yet. Same rule as the demo flag: the site does not
  * hand anyone a link that 404s, not even while it is being built. Phase 3
- * flipped devlinks; Phase 5 flips notes.
+ * flipped devlinks; Phase 5 flipped notes.
  */
-export const routes = { notes: false } as const;
+export const routes = { notes: true } as const;
 export const caseStudy: Record<string, boolean> = { prep: true, devlinks: true };
 
 /** Landed 2026-09-20 at public/Harshit_Resume_2026.pdf. */

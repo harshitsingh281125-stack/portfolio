@@ -3,6 +3,7 @@ import { CaseStudy, Code, P, Section } from "@/components/CaseStudy";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { Claim, Decision, ProvenanceBadge } from "@/components/Provenance";
 import { TourEmbed } from "@/components/TourEmbed";
+import Link from "next/link";
 import { toursFor } from "@/lib/tours";
 import { blob, demoLogins, demos, repos } from "@/lib/site";
 
@@ -298,6 +299,11 @@ export default function PrepCaseStudy() {
             <a href={`${repos.prep}/blob/main/Rules.md`} className={LINK} target="_blank" rel="noreferrer">
               The numbered rules the RULE tags point at
             </a>
+          </li>
+          <li>
+            <Link href="/notes" className={LINK}>
+              Three notes: the similarity floor, the 26 calls, and the pace model
+            </Link>
           </li>
           <li>
             <a href={`${repos.prep}/blob/main/Architecture.md`} className={LINK} target="_blank" rel="noreferrer">
