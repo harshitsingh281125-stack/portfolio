@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CaseStudy, Code, P, Section } from "@/components/CaseStudy";
 import { MetadataTraceDiagram } from "@/components/MetadataTraceDiagram";
 import { Claim, Decision, ProvenanceBadge } from "@/components/Provenance";
+import { TourEmbed } from "@/components/TourEmbed";
+import { toursFor } from "@/lib/tours";
 import { blob, demos, repos } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -9,6 +11,8 @@ export const metadata: Metadata = {
   description:
     "A bookmark manager whose hard part is the server: it fetches URLs a stranger typed, which makes it an SSRF engine pointed at your own network.",
 };
+
+const [inMotion, trace] = toursFor("devlinks");
 
 const rail = [
   { id: "d-ssrf", name: "Validate every hop" },
@@ -69,6 +73,15 @@ export default function DevLinksCaseStudy() {
           a lookup table with a lot of cases, not a hard problem. Quoting the
           596 and stopping would be the kind of claim this site exists to refuse.
         </P>
+      </Section>
+
+      <Section id="tour" heading="Saving a link, end to end">
+        <P>
+          The product first, briefly, so the rest of this page has something to
+          be about. It autoplays, it pauses, and under reduced motion it renders
+          as five stacked panels with no clock running.
+        </P>
+        <TourEmbed tour={inMotion} />
       </Section>
 
       <Section id="decisions" heading="The decisions">
@@ -212,6 +225,7 @@ export default function DevLinksCaseStudy() {
           through it.
         </P>
         <MetadataTraceDiagram />
+        <TourEmbed tour={trace} />
         <P>
           The blocked outcome matters as much as the allowed one: a rejection
           happens before any outbound request exists, and it comes back as{" "}

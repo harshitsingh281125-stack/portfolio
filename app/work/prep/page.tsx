@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CaseStudy, Code, P, Section } from "@/components/CaseStudy";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { Claim, Decision, ProvenanceBadge } from "@/components/Provenance";
+import { TourEmbed } from "@/components/TourEmbed";
+import { toursFor } from "@/lib/tours";
 import { blob, demoLogins, demos, repos } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -9,6 +11,8 @@ export const metadata: Metadata = {
   description:
     "An AI-native learning OS where a hallucinated citation is not rejected — it is unrepresentable.",
 };
+
+const [inMotion, underTheHood] = toursFor("prep");
 
 const rail = [
   { id: "d-ladder", name: "Not textbook SM-2" },
@@ -65,6 +69,16 @@ export default function PrepCaseStudy() {
             source="supabase/migrations"
           />
         </div>
+      </Section>
+
+      <Section id="tour" heading="The product, in about fifty seconds">
+        <P>
+          Before the argument: what the thing actually is. The stage below
+          autoplays and can be paused at any point &mdash; and if your system
+          asks for reduced motion, it renders every scene stacked and settled
+          with no timers at all.
+        </P>
+        <TourEmbed tour={inMotion} />
       </Section>
 
       <Section id="decisions" heading="The decisions">
@@ -210,6 +224,7 @@ export default function PrepCaseStudy() {
           <Code>unverified</Code>, and the screen says so.
         </P>
         <ArchitectureDiagram />
+        <TourEmbed tour={underTheHood} />
       </Section>
 
       <Section id="differently" heading="What I&rsquo;d do differently">

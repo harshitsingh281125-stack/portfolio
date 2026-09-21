@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–3 complete (Phase 3 on 2026-09-21). Phase 4 (the four tours) is next.
+**Status:** Phases 0–4 complete (Phase 4 on 2026-09-21). Phase 5 (the three notes) is next.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -351,6 +351,49 @@ and has not had this treatment** — noted as B1 rather than fixed, since it is 
 `devlinks-trace` is the one that makes the bookmark manager look like engineering. It is the
 highest-value new asset in the whole build.
 
+**As built, 2026-09-21.**
+
+*Architecture.* The tours stay standalone HTML documents under `public/tour/`, embedded in
+iframes, rather than being ported to React. Two reasons, and the second is the real one: they
+carry ~70KB of bespoke keyframe CSS plus a hand-written rAF driver that already handles reduced
+motion and the keyboard, and their scene markup uses flat names — `.card`, `.chip`, `.step` —
+that would collide with the site the moment they shared a document. An iframe is a style boundary
+rather than a naming convention. `/tour/[slug]` prerenders all four from `lib/tours.ts`.
+
+*Shared shell.* `public/tour/tour.css` + `tour.js` now hold the tokens, stage, rail, controls and
+driver for all four. The **retokening** is an aliasing job, not a rewrite: the portfolio's values
+from §1.1 are bound to the names the Prep tours already use (`--text-faint`, `--green`), so 67KB
+of scene CSS kept working untouched. `oklch(1 0 0)` — pure white on `--accent` — became
+`--on-accent`, because the dark accent is a *light* blue and white on it fails contrast.
+
+*The driver gained the scene counter §1.5 asked for*, plus arrow-key navigation on the rail and a
+pause when the stage scrolls out of view. Captions moved out of a JS array and into the markup as
+`.scene-caption`, so they exist without JS and cannot drift from the scene they describe.
+
+*Numbers that had drifted* were corrected in the tours: `prep-in-motion` claimed **329** tests in
+its caption and **248 unit + 81 E2E** on screen; both now read 364 / 283 + 81.
+
+*What the gate caught*, and would have missed:
+
+- **axe does not cross an iframe boundary.** All seven routes reported 0 while the tours inside
+  them were serving violations. Auditing each tour document directly found a missing `lang` on
+  all four files and three scrollable regions with no keyboard access. `scripts/qa.mjs` now audits
+  the tour documents as a separate pass — this is the part of the gate most likely to rot.
+- **Contrast must be measured on settled text.** Auditing 300ms into a fade-in reports colours no
+  reader ever sees; the gate now finishes the animations first, which turned 5 "violations" into 0.
+- **A fixed-height iframe fails silently.** The first heights were estimated from the stage and
+  clipped the pause button off every embed. They are now measured by stepping through every scene
+  at the narrowest supported width, because the stacked layout gets taller as it gets narrower and
+  a pass measured at 380px was short by up to 454px.
+- **Reduced motion does not fit in a frame.** Stacked, a tour runs 2,200–6,600px. Rather than put
+  that inside a fixed box and hand the reduced-motion reader a nested scrollbar in the middle of an
+  argument, the case-study pages **drop the embed entirely** under `prefers-reduced-motion` and
+  show a link to the full-bleed route. Four magic numbers deleted, and a better page for the people
+  who asked for the calmer one.
+- **Lighthouse's legible-font audit was right.** Sub-12px body text in the new tours and in
+  `prep-under-the-hood`'s `.t-note` was bumped to 12px; only the tiny uppercase pane labels stay
+  below, being signposts rather than prose.
+
 ### 3.5 Notes — 3 posts, mined from `memory.md` and `Rules.md`
 
 1. **"The similarity floor is 0.64, and I measured it"** — why 0.55 felt right and was wrong, what
@@ -376,8 +419,8 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **1** | Home | Hero, evidence chips, two project cards, experience, contact | 0 · inputs §6 | **Done** 2026-09-20 · `53c9f5a`. Gate: axe 0, Lighthouse 95/100/100/100. |
 | **2** | Case-study template + Prep | Decision block, provenance badge, sticky decision rail, architecture diagram, full Prep page | 1 | **Done** 2026-09-20 · `5664727`. Gate: axe 0, Lighthouse 96/100/100/100. |
 | **3** | DevLinks case study | Second page on the same template | 2 | **Done** 2026-09-21 · `64d0d8f`. Gate: axe 0, Lighthouse 96/100/100/100. |
-| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Next.** Buttons are behind `tours.enabled`. `devlinks-trace` now has a static counterpart to animate — see §3.3. |
-| **5** | Notes | Index + 3 posts | 2 | Not started. Nav entry behind `routes.notes`. |
+| **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
+| **5** | Notes | Index + 3 posts | 2 | **Next.** Nav entry behind `routes.notes`. |
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | Not started. Blocked on O1 for `metadataBase`. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
 
@@ -439,6 +482,7 @@ Not phases. Things found while building a phase that are real but out of its sco
 |---|---|---|
 | **B1** | `ArchitectureDiagram` on `/work/prep` is a 700-unit SVG scaled into a 288px phone, putting its labels near 5px. `MetadataTraceDiagram` got a focusable horizontal scroller in Phase 3; Prep's did not. Same fix, one component. | Phase 3 |
 | **B2** | `PP/src/server/metadata.ts` has two uncommitted stray comments in the working tree (lines ~234 and ~240). They are below every range this site cites, so no provenance link is affected, but the repo should be clean before anyone browses it. | Phase 3 |
+| **B3** | The tour iframe heights are four measured constants per tour. They are correct today and will be wrong the first time a scene's text changes, and nothing fails loudly when they are — the symptom is a quietly clipped control. A build-time check that renders each tour and asserts the constant still fits would close it. | Phase 4 |
 
 ## 7. Risks
 

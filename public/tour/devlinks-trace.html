@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<title>DevLinks — the request trace</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/tour/tour.css">
+<!--
+  Built in Phase 4 on the shared shell. A two-pane stage: what was sent on the
+  left, what the server did with it on the right.
+
+  This is the tour the DevLinks case study is built around. Every step on the
+  right-hand spine corresponds to real code in src/server/metadata.ts, and the
+  line ranges in the footers were checked against the committed file.
+-->
+<style>
+  /* Two panes: the request on the left, the call stack on the right. */
+  .wrap { max-width: 1020px; }
+  .stage { height: 486px; }
+  .scene {
+    padding: 0; gap: 0;
+    display: grid; grid-template-columns: 36% 64%;
+  }
+  .pane-label {
+    font: 500 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--content-faint); margin-bottom: 10px;
+  }
+  .client {
+    background: var(--surface); border-right: 1px solid var(--border);
+    padding: 18px; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .server { padding: 18px 20px; overflow: hidden; display: flex; flex-direction: column; }
+
+  /* ---- The request, as sent ---- */
+  .req {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 9px; padding: 11px 12px;
+    font: 400 12px/1.6 "IBM Plex Mono", monospace; color: var(--content);
+    overflow-wrap: anywhere;
+  }
+  .req .m { color: var(--accent); font-weight: 600; }
+  .req .k { color: var(--content-faint); }
+  .client-note {
+    margin-top: auto; font: 400 12px/1.65 "IBM Plex Mono", monospace;
+    color: var(--content-faint);
+  }
+  .client-note b { color: var(--content-muted); font-weight: 500; }
+
+  /* ---- The call stack: a spine with rungs ---- */
+  .spine { border-left: 1px solid var(--border); padding-left: 16px; display: flex; flex-direction: column; gap: 13px; }
+  .rung { position: relative; }
+  .rung::before {
+    content: ""; position: absolute; left: -21px; top: 4px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--panel); border: 1.5px solid var(--border-strong);
+  }
+  .rung.hit::before  { background: var(--verified); border-color: var(--verified); }
+  .rung.stop::before { background: var(--behind);   border-color: var(--behind); }
+  .rung.loop::before { background: var(--accent);   border-color: var(--accent); }
+  .rung .call {
+    font: 500 12.5px "IBM Plex Mono", monospace; color: var(--content);
+    overflow-wrap: anywhere;
+  }
+  .rung .call .fn { color: var(--accent); }
+  .rung .why { font-size: 12.5px; line-height: 1.55; color: var(--content-muted); margin-top: 2px; max-width: 58ch; }
+  .rung .why b { color: var(--content); font-weight: 600; }
+  .rung.stop .call { color: var(--behind); }
+  .rung.dim .call, .rung.dim .why { color: var(--content-faint); }
+
+  .addrs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .addr {
+    font: 400 12px "IBM Plex Mono", monospace; padding: 2px 7px; border-radius: 5px;
+    border: 1px solid var(--border); background: var(--panel); color: var(--content-muted);
+  }
+  .addr.bad { border-color: var(--behind); background: var(--behind-soft); color: var(--behind); }
+  .addr.ok  { border-color: var(--verified); background: var(--verified-soft); color: var(--verified); }
+
+  .outcome {
+    margin-top: auto; border-radius: 8px; padding: 9px 11px;
+    font: 500 12px "IBM Plex Mono", monospace;
+  }
+  .outcome.bad { background: var(--behind-soft); border: 1px solid var(--behind); color: var(--behind); }
+  .outcome.ok  { background: var(--verified-soft); border: 1px solid var(--verified); color: var(--verified); }
+  .outcome .sub { display: block; font-weight: 400; margin-top: 3px; opacity: 0.9; }
+
+  .src {
+    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint);
+    margin-top: 9px;
+  }
+
+  @media (max-width: 820px) {
+    .stage { height: 640px; }
+    .scene { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .client { border-right: 0; border-bottom: 1px solid var(--border); padding: 14px; }
+    .client-note { display: none; }
+    .server { padding: 14px; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="logo mono">DL</div>
+    <div>
+      <div class="eyebrow">Request trace · ~50 seconds</div>
+      <h1>What DevLinks does to a URL a stranger typed</h1>
+      <div class="sub">Scheme allowlist · DNS resolved and judged · every redirect hop re-validated · the conflict is the database's answer</div>
+    </div>
+  </header>
+
+  <div class="stage" id="stage" aria-live="polite">
+
+    <!-- Scene 1 -->
+    <section class="scene" data-label="VALIDATE" data-dur="9000">
+      <div class="client">
+        <div class="pane-label">Sent</div>
+        <div class="req in">
+          <span class="m">POST</span> /api/metadata<br>
+          <span class="k">content-type:</span> application/json<br><br>
+          { "url": "https://react.dev/reference/react/useMemo" }
+        </div>
+        <div class="client-note in" style="animation-delay:0.5s">
+          <b>No session is required to reach this route.</b>
+          That is a real gap, named in the case study rather than hidden here.
+        </div>
+      </div>
+      <div class="server">
+        <div class="pane-label">Server</div>
+        <div class="spine">
+          <div class="rung in" style="animation-delay:0.2s">
+            <div class="call"><span class="fn">handleMetadataRequest</span>(req, res)</div>
+            <div class="why">POST only, and the body must carry a string <span class="mono">url</span>. Anything else is a 400 or a 405 before any work happens.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.5s">
+            <div class="call">new <span class="fn">URL</span>(rawUrl)</div>
+            <div class="why">Parsed, not regexed. Then the scheme is checked against an allowlist — <b>http: and https: only</b>, so file:, gopher: and data: never reach a fetch.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.85s">
+            <div class="call">hostname denylist</div>
+            <div class="why"><span class="mono">localhost</span>, <span class="mono">*.local</span>, <span class="mono">*.internal</span>. Cheap, and worth almost nothing on its own — the next rung is the one that matters.</div>
+          </div>
+        </div>
+        <div class="src in" style="animation-delay:1.2s">src/server/metadata.ts · validateUrlString, L140-L183</div>
+      </div>
+      <p class="scene-caption">A string check is where most implementations stop, and it stops nothing: the attacker owns the hostname, so it can be spelled any way that passes. The denylist is here because it is cheap, not because it is the defence.</p>
+    </section>
+
+    <!-- Scene 2 -->
+    <section class="scene" data-label="RESOLVE" data-dur="10000">
+      <div class="client">
+        <div class="pane-label">Sent</div>
+        <div class="req in">
+          { "url": "https://<b>evil.example.com</b>/x" }
+        </div>
+        <div class="client-note in" style="animation-delay:0.5s">
+          A hostname that looks ordinary and resolves wherever its owner points it.
+          <b>DNS is the attacker's input too.</b>
+        </div>
+      </div>
+      <div class="server">
+        <div class="pane-label">Server</div>
+        <div class="spine">
+          <div class="rung dim in" style="animation-delay:0.15s">
+            <div class="call">scheme + denylist</div>
+            <div class="why">Both pass. Nothing about the string is wrong.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.45s">
+            <div class="call"><span class="fn">dns.lookup</span>(host, { all: true })</div>
+            <div class="why">Resolve first, and judge the <b>answer</b>. <span class="mono">all: true</span> because a host can carry several records and the resolver decides the order — one public address must not launder a private one.</div>
+            <div class="addrs">
+              <span class="addr ok in" style="animation-delay:0.9s">93.184.216.34</span>
+              <span class="addr bad in" style="animation-delay:1.15s">10.0.0.12</span>
+            </div>
+          </div>
+          <div class="rung stop in" style="animation-delay:1.5s">
+            <div class="call"><span class="fn">isPrivateIp</span>() → true</div>
+            <div class="why">Loopback, link-local, <span class="mono">10/8</span>, <span class="mono">192.168/16</span>, <span class="mono">172.16–31</span>, and the IPv6 equivalents. One hit is enough.</div>
+          </div>
+        </div>
+        <div class="outcome bad in" style="animation-delay:1.9s">
+          403 · fetchStatus: 'blocked'
+          <span class="sub">No outbound request was ever made.</span>
+        </div>
+        <div class="src in" style="animation-delay:2.1s">src/server/metadata.ts · isPrivateIp, L118-L138</div>
+      </div>
+      <p class="scene-caption">This is the whole reason the endpoint is interesting. The server sits inside a network and can reach the cloud metadata service, anything on loopback, anything on a private range — and it takes its instructions from a text field. Rejecting on the resolved addresses is the only check the attacker does not control.</p>
+    </section>
+
+    <!-- Scene 3 -->
+    <section class="scene" data-label="EVERY HOP" data-dur="11000">
+      <div class="client">
+        <div class="pane-label">Sent</div>
+        <div class="req in">
+          { "url": "https://<b>ok.example.com</b>/r" }
+        </div>
+        <div class="client-note in" style="animation-delay:0.5s">
+          Resolves publicly. Passes every check at the door.
+          <b>Then answers with a redirect.</b>
+        </div>
+      </div>
+      <div class="server">
+        <div class="pane-label">Server</div>
+        <div class="spine">
+          <div class="rung hit in" style="animation-delay:0.15s">
+            <div class="call">validate → <b>pass</b></div>
+            <div class="why">93.184.216.34. Public, ordinary, allowed.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.45s">
+            <div class="call"><span class="fn">fetch</span>(url, { redirect: <b>'manual'</b> })</div>
+            <div class="why">The default is <span class="mono">follow</span>, and the default is the bug: the runtime would take the next hop itself, without asking anyone.</div>
+          </div>
+          <div class="rung loop in" style="animation-delay:0.8s">
+            <div class="call">302 → http://169.254.169.254/</div>
+            <div class="why">The location header is a <b>new URL that nobody has checked</b>. So it goes back through <span class="mono">validateUrlString</span> — the same function, not a cheaper copy of it.</div>
+          </div>
+          <div class="rung stop in" style="animation-delay:1.25s">
+            <div class="call">blocked on the hop</div>
+            <div class="why">Link-local. The cloud metadata address. Refused at hop 1 of a maximum 5.</div>
+          </div>
+        </div>
+        <div class="outcome bad in" style="animation-delay:1.7s">
+          403 · fetchStatus: 'blocked'
+          <span class="sub">Validation is a loop, not an entrance.</span>
+        </div>
+        <div class="src in" style="animation-delay:1.9s">src/server/metadata.ts · fetchWithRedirects, L204-L226</div>
+      </div>
+      <p class="scene-caption">The address you were handed is not the address you end up requesting. Two validators that are meant to agree eventually disagree, and the one on the quieter path is the one missing a case — so the redirect loop calls the same function the front door did.</p>
+    </section>
+
+    <!-- Scene 4 -->
+    <section class="scene" data-label="PARSE" data-dur="9000">
+      <div class="client">
+        <div class="pane-label">Sent</div>
+        <div class="req in">
+          { "url": "https://react.dev/reference/react/useMemo" }
+        </div>
+        <div class="client-note in" style="animation-delay:0.5s">
+          The ordinary case, which had to survive all of the above
+          <b>without becoming slow or fussy.</b>
+        </div>
+      </div>
+      <div class="server">
+        <div class="pane-label">Server</div>
+        <div class="spine">
+          <div class="rung hit in" style="animation-delay:0.15s">
+            <div class="call">200 · text/html</div>
+            <div class="why">Non-HTML is refused here: there is no <span class="mono">&lt;meta&gt;</span> to read in a PDF, and an 8s timeout bounds the whole thing.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.5s">
+            <div class="call">og:title → twitter:title → <span class="fn">&lt;title&gt;</span></div>
+            <div class="why">A cascade with a named outcome: all three of title, description and image present is <span class="mono">success</span>, otherwise <span class="mono">partial</span>.</div>
+          </div>
+          <div class="rung hit in" style="animation-delay:0.85s">
+            <div class="call"><span class="fn">inferSuggestedTags</span>(host, path, title, desc)</div>
+            <div class="why">84 regexes, run in this same request. <b>No model call</b> — tagging is the frequent path, so it gets no inference at all.</div>
+            <div class="addrs">
+              <span class="addr ok in" style="animation-delay:1.2s">react</span>
+              <span class="addr ok in" style="animation-delay:1.35s">performance</span>
+              <span class="addr ok in" style="animation-delay:1.5s">caching</span>
+            </div>
+          </div>
+        </div>
+        <div class="outcome ok in" style="animation-delay:1.8s">
+          200 · fetchStatus: 'success'
+          <span class="sub">documentation · 3 tags · og:image</span>
+        </div>
+        <div class="src in" style="animation-delay:2s">src/server/taggingRules.ts · L191-L297</div>
+      </div>
+      <p class="scene-caption">These three tags are what the rules actually return for this URL — run against the real function, not written for the slide. The cost of that honesty is visible in the other direction too: a topic the table has never heard of gets nothing.</p>
+    </section>
+
+    <!-- Scene 5 -->
+    <section class="scene" data-label="CONFLICT" data-dur="10000">
+      <div class="client">
+        <div class="pane-label">Sent</div>
+        <div class="req in">
+          INSERT bookmarks<br>
+          <span class="k">url:</span> https://WWW.React.dev/…/useMemo?utm_source=x#top
+        </div>
+        <div class="client-note in" style="animation-delay:0.5s">
+          The same page, spelled differently. The client does
+          <b>not</b> ask whether it exists first.
+        </div>
+      </div>
+      <div class="server">
+        <div class="pane-label">Postgres</div>
+        <div class="spine">
+          <div class="rung hit in" style="animation-delay:0.15s">
+            <div class="call">trigger <span class="fn">sync_bookmark_derived_fields</span></div>
+            <div class="why">Runs <span class="mono">before insert or update</span> and overwrites <span class="mono">normalized_url</span> with what the database computes — so the key cannot be smuggled past it.</div>
+            <div class="addrs"><span class="addr ok in" style="animation-delay:0.6s">react.dev/reference/react/usememo</span></div>
+          </div>
+          <div class="rung stop in" style="animation-delay:0.95s">
+            <div class="call">23505 · unique_violation</div>
+            <div class="why"><span class="mono">unique (user_id, normalized_url)</span>. Asking first and inserting second is a race with your own other tab; the constraint answers both at once.</div>
+          </div>
+          <div class="rung loop in" style="animation-delay:1.35s">
+            <div class="call">re-query → { kind: <b>'duplicate'</b>, existing }</div>
+            <div class="why">Returned as a <b>success shape</b>, not an error, and the list is not invalidated — nothing was created. The user gets the bookmark they already had.</div>
+          </div>
+        </div>
+        <div class="outcome ok in" style="animation-delay:1.8s">
+          Shown, not swallowed
+          <span class="sub">"could not save" would be true and useless.</span>
+        </div>
+        <div class="src in" style="animation-delay:2s">bookmarksApi.ts · L186-L217 · migration 000002 · L11-L32</div>
+      </div>
+      <p class="scene-caption">The key a constraint is enforced on should be computed by the engine that enforces it. Put normalization in the client and every client — the app, a script, a psql session — gets a chance to disagree, and uniqueness quietly becomes a suggestion.</p>
+    </section>
+
+  </div>
+
+  <p class="caption" id="caption"></p>
+  <div class="rail" id="rail" role="tablist" aria-label="Trace steps"></div>
+  <div class="controls">
+    <button class="ctl primary" id="playBtn" type="button" aria-pressed="false">Pause</button>
+    <button class="ctl" id="replayBtn" type="button">Replay</button>
+    <p class="counter mono" id="counter" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="/tour/tour.js"></script>
+</html>

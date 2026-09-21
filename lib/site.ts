@@ -46,8 +46,8 @@ export const demos = {
   },
 } as const;
 
-/** Tours are Phase 4. The buttons appear when the routes do. */
-export const tours = { enabled: false } as const;
+/** Phase 4 built all four and /tour/[slug] prerenders each one. */
+export const tours = { enabled: true } as const;
 
 /**
  * Routes that do not exist yet. Same rule as the demo flag: the site does not

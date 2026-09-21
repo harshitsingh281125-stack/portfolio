@@ -18,7 +18,14 @@ import { chromium } from "@playwright/test";
 import fs from "node:fs";
 const AXE = fs.readFileSync("node_modules/axe-core/axe.min.js", "utf8");
 const BASE = process.env.QA_BASE ?? "http://localhost:3010";
-const PAGES = (process.env.QA_PAGES ?? "/,/work/prep").split(",");
+const PAGES = (process.env.QA_PAGES ?? "/,/work/prep,/work/devlinks").split(",");
+// The tours are standalone documents inside iframes, and axe does not cross an
+// iframe boundary — the pages above report 0 while the tour inside them is
+// serving violations. So each tour document is also audited directly. Phase 4
+// found four that way: a missing lang on all four files, and three scrollable
+// regions with no keyboard access.
+const TOURS = (process.env.QA_TOURS ??
+  "prep-in-motion,prep-under-the-hood,devlinks-in-motion,devlinks-trace").split(",");
 const browser = await chromium.launch();
 let failures = 0;
 
@@ -34,6 +41,41 @@ for (const path of PAGES) {
     const ctx = await browser.newContext(opts);
     const page = await ctx.newPage();
     await page.goto(BASE + path, { waitUntil: "networkidle" });
+    await page.addScriptTag({ content: AXE });
+    const res = await page.evaluate(async () =>
+      await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] }));
+    const overflow = await page.evaluate(() =>
+      document.documentElement.scrollWidth > window.innerWidth + 1);
+    failures += res.violations.length + (overflow ? 1 : 0);
+    console.log(`  ${label.padEnd(15)} axe: ${res.violations.length}  h-scroll: ${overflow ? "FAIL" : "ok"}`);
+    for (const v of res.violations) {
+      console.log(`     ✗ [${v.impact}] ${v.id}: ${v.help}`);
+      for (const n of v.nodes.slice(0, 2)) console.log(`         ${n.target.join(" ")}`);
+    }
+    await ctx.close();
+  }
+}
+
+// ---- The tour documents, audited inside their own frame ----
+for (const slug of TOURS) {
+  console.log(`\n═══ tour: ${slug} ═══`);
+  for (const [label, opts] of [
+    ["light", { viewport: { width: 1100, height: 900 }, colorScheme: "light" }],
+    ["dark", { viewport: { width: 1100, height: 900 }, colorScheme: "dark" }],
+    ["mobile 320", { viewport: { width: 320, height: 700 }, colorScheme: "light" }],
+    ["reduced motion", { viewport: { width: 1100, height: 900 }, reducedMotion: "reduce" }],
+  ]) {
+    const ctx = await browser.newContext(opts);
+    const page = await ctx.newPage();
+    await page.goto(`${BASE}/tour/${slug}.html`, { waitUntil: "networkidle" });
+    // Settle the entrance animations first. Contrast is a property of text as
+    // presented; auditing 300ms into a fade-in measures the fade, not the text,
+    // and reports colours no reader ever sees.
+    await page.waitForTimeout(400);
+    await page.evaluate(() => document.getElementById("playBtn")?.click());
+    await page.evaluate(() => document.querySelectorAll(".scene *").forEach((el) =>
+      el.getAnimations().forEach((a) => { try { a.finish(); } catch {} })));
+    await page.waitForTimeout(150);
     await page.addScriptTag({ content: AXE });
     const res = await page.evaluate(async () =>
       await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] }));

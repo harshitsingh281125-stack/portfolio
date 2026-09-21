@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<title>DevLinks in Motion</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/tour/tour.css">
+<!--
+  Built in Phase 4 on the shared shell (/tour/tour.css + /tour/tour.js).
+
+  Every value shown on this stage was produced by the real code rather than
+  invented for the demo. The tags and resource type in scene 3 are what
+  inferSuggestedTags() and inferResourceType() actually return for that URL,
+  and the normalized form in scene 4 is what canonicalizeUrl() actually
+  produces — both checked by running them, not by reading them.
+-->
+<style>
+  .row { display: flex; gap: 14px; align-items: stretch; min-width: 0; }
+  .row > * { min-width: 0; }
+  .grow { flex: 1; }
+
+  /* ---- The save field ---- */
+  .field {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 9px; padding: 9px 12px;
+    font: 400 12.5px "IBM Plex Mono", monospace; color: var(--content);
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  }
+  .field .caret {
+    display: inline-block; width: 1.5px; height: 15px; background: var(--accent);
+    animation: blink 1s steps(2) infinite; flex: none;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .field-label {
+    font: 500 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--content-faint); margin-bottom: 6px;
+  }
+
+  /* ---- The preview card ---- */
+  .preview { display: flex; gap: 12px; align-items: flex-start; }
+  .thumb {
+    width: 96px; height: 62px; border-radius: 7px; flex: none;
+    background: var(--surface); border: 1px solid var(--border);
+    display: grid; place-items: center;
+    font: 500 9.5px "IBM Plex Mono", monospace; color: var(--content-faint);
+  }
+  .p-title { font-size: 13.5px; font-weight: 600; line-height: 1.35; }
+  .p-desc { font-size: 12px; color: var(--content-muted); line-height: 1.5; margin-top: 3px; }
+  .p-domain {
+    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint); margin-top: 5px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .favicon {
+    width: 11px; height: 11px; border-radius: 2px; background: var(--accent); flex: none;
+  }
+
+  /* ---- Field-by-field arrival ---- */
+  .kv { display: grid; grid-template-columns: 96px 1fr; gap: 4px 12px; font-size: 12px; }
+  .kv dt { font: 500 12px "IBM Plex Mono", monospace; color: var(--content-faint); }
+  .kv dd { margin: 0; color: var(--content); font-size: 12px; }
+
+  /* ---- Tags ---- */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font: 500 12px "IBM Plex Mono", monospace; padding: 3px 8px; border-radius: 5px;
+    background: var(--verified-soft); color: var(--verified); border: 1px solid var(--verified);
+  }
+  .tag.type { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+  .rulehit {
+    font: 400 12px/1.7 "IBM Plex Mono", monospace; color: var(--content-faint);
+  }
+  .rulehit b { color: var(--content-muted); font-weight: 500; }
+
+  /* ---- Duplicate flow ---- */
+  .norm {
+    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-muted);
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .norm .strike { color: var(--content-faint); }
+  .norm .out { color: var(--content); }
+  .err {
+    font: 500 12px "IBM Plex Mono", monospace; color: var(--behind);
+    background: var(--behind-soft); border: 1px solid var(--behind);
+    border-radius: 7px; padding: 7px 10px;
+  }
+  .existing {
+    border: 1px solid var(--unverified); background: var(--unverified-soft);
+    border-radius: 9px; padding: 10px 12px;
+  }
+
+  /* ---- Public collection ---- */
+  .pub-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .pub-url {
+    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-muted);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 9px; overflow: hidden;
+    white-space: nowrap; text-overflow: ellipsis;
+  }
+  .bm-list { display: flex; flex-direction: column; gap: 7px; }
+  .bm {
+    display: flex; align-items: center; gap: 9px;
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+    background: var(--panel); font-size: 12.5px;
+  }
+  .bm .d { font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint); margin-left: auto; flex: none; }
+  .note { font-size: 12px; color: var(--content-muted); }
+  .note b { font-weight: 600; color: var(--content); }
+
+  @media (max-width: 700px) {
+    .row { flex-direction: column; }
+    .kv { grid-template-columns: 84px 1fr; }
+    .thumb { display: none; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="logo mono">DL</div>
+    <div>
+      <div class="eyebrow">Guided tour · ~40 seconds</div>
+      <h1>DevLinks — saving a link, end to end</h1>
+      <div class="sub">Metadata fetched server-side · tags inferred by rule · duplicates caught by the database</div>
+    </div>
+  </header>
+
+  <div class="stage" id="stage" aria-live="polite">
+
+    <!-- Scene 1 -->
+    <section class="scene" data-label="PASTE" data-dur="7000">
+      <h2 class="in">One field. Paste a URL.</h2>
+      <p class="lede in" style="animation-delay:0.1s">Everything else on the card is derived — the point is that you never type a title.</p>
+      <div class="card in" style="animation-delay:0.3s">
+        <div class="field-label">Save a link</div>
+        <div class="field">
+          <span>https://react.dev/reference/react/useMemo</span><span class="caret"></span>
+        </div>
+        <div class="note" style="margin-top:10px">
+          The URL goes to <span class="mono">POST /api/metadata</span> — a server route, because
+          the browser cannot fetch a cross-origin page and read its <span class="mono">&lt;title&gt;</span>.
+        </div>
+      </div>
+      <p class="scene-caption">A bookmark manager that makes you type the title is a form. The only input here is the URL; the server does the rest — which is what puts an SSRF surface in the middle of a CRUD app, and why the other tour exists.</p>
+    </section>
+
+    <!-- Scene 2 -->
+    <section class="scene" data-label="PREVIEW" data-dur="8500">
+      <h2 class="in">The preview comes back parsed</h2>
+      <p class="lede in" style="animation-delay:0.1s">Open Graph first, then Twitter cards, then the plain <span class="mono">&lt;title&gt;</span> — whichever exists.</p>
+      <div class="row">
+        <div class="card grow in" style="animation-delay:0.3s">
+          <div class="preview">
+            <div class="thumb">og:image</div>
+            <div>
+              <div class="p-title">useMemo – React</div>
+              <div class="p-desc">useMemo is a React Hook that lets you cache a calculation between re-renders.</div>
+              <div class="p-domain"><span class="favicon"></span>react.dev</div>
+            </div>
+          </div>
+        </div>
+        <div class="card grow in" style="animation-delay:0.6s">
+          <dl class="kv">
+            <dt>title</dt><dd>og:title</dd>
+            <dt>description</dt><dd>og:description</dd>
+            <dt>imageUrl</dt><dd>og:image</dd>
+            <dt>faviconUrl</dt><dd>link[rel*=icon]</dd>
+            <dt>fetchStatus</dt><dd><span class="chip green">success</span></dd>
+          </dl>
+        </div>
+      </div>
+      <div class="note in" style="animation-delay:0.95s">
+        <b>fetchStatus</b> is <span class="mono">success</span> only when title, description and image all arrived.
+        Anything less is <span class="mono">partial</span> — the save still works, the card is just thinner.
+      </div>
+      <p class="scene-caption">The parse is a cascade with a named outcome. A page missing an og:image is not an error and is not silently pretended away: it comes back as partial, and the UI shows a thinner card rather than a broken one.</p>
+    </section>
+
+    <!-- Scene 3 -->
+    <section class="scene" data-label="TAGS" data-dur="8500">
+      <h2 class="in">Tags are inferred by rule, not by a model</h2>
+      <p class="lede in" style="animation-delay:0.1s">84 regexes over hostname, path, title and description. Same URL, same tags, every time.</p>
+      <div class="card in" style="animation-delay:0.3s">
+        <div class="field-label">Suggested</div>
+        <div class="tags">
+          <span class="tag type">documentation</span>
+          <span class="tag">react</span>
+          <span class="tag">performance</span>
+          <span class="tag">caching</span>
+        </div>
+        <div class="rulehit" style="margin-top:11px">
+          <div><b>documentation</b> &nbsp;·&nbsp; hostname is react.dev, a known docs host</div>
+          <div><b>react</b> &nbsp;·&nbsp; /\breact\b/i matched the path and the title</div>
+          <div><b>performance</b> &nbsp;·&nbsp; /\bperformance\b/i matched the description</div>
+          <div><b>caching</b> &nbsp;·&nbsp; /\bcach(?:ing|e)\b/i matched "cache a calculation"</div>
+        </div>
+      </div>
+      <div class="note in" style="animation-delay:0.8s">
+        No second network round trip, no per-save cost, and nothing to re-run when a model changes.
+        The limit is honest: <b>84 rules is a vocabulary, not an understanding</b> — a framework
+        invented next year gets tagged by its hostname or not at all.
+      </div>
+      <p class="scene-caption">Tagging runs on every save, which is the frequent call, so it gets no inference at all. These four are what the rules actually return for this URL — run, not imagined. Suggestions are editable, which is the only reason a lookup table is an acceptable answer here.</p>
+    </section>
+
+    <!-- Scene 4 -->
+    <section class="scene" data-label="DUPLICATE" data-dur="10000">
+      <h2 class="in">The same link again, dressed differently</h2>
+      <p class="lede in" style="animation-delay:0.1s">Different case, a <span class="mono">www</span>, a tracking query, a fragment — one bookmark.</p>
+      <div class="row">
+        <div class="card grow in" style="animation-delay:0.3s">
+          <div class="field-label">Pasted</div>
+          <div class="norm">
+            <span class="strike">https://WWW.React.dev/reference/react/useMemo?utm_source=twitter#top</span>
+            <span>↓ &nbsp;normalize_bookmark_url() — in Postgres, on a trigger</span>
+            <span class="out">react.dev/reference/react/usememo</span>
+          </div>
+        </div>
+        <div class="card grow in" style="animation-delay:0.65s">
+          <div class="err">23505 &nbsp;unique_violation<br>bookmarks_user_id_normalized_url_key</div>
+          <div class="existing" style="margin-top:9px">
+            <div class="mono" style="font-size:10.5px;letter-spacing:0.05em;color:var(--unverified)">ALREADY SAVED</div>
+            <div style="font-size:12.5px;font-weight:600;margin-top:3px">useMemo – React</div>
+            <div class="mono" style="font-size:11px;color:var(--content-muted);margin-top:2px">saved 6 days ago · React Debugging</div>
+          </div>
+        </div>
+      </div>
+      <div class="note in" style="animation-delay:1s">
+        The constraint is the check. The app does not query first and then insert — it inserts, and
+        reads <span class="mono">23505</span> as <b>“show them the one they already have.”</b>
+        Lowercasing the path is deliberate and lossy: two URLs differing only in case are treated as one.
+      </div>
+      <p class="scene-caption">Asking "does this exist?" before inserting is a race with your own other tab. Here the database answers both questions at once: the unique constraint rejects the write, and the error code is specific enough to turn into a useful screen instead of "could not save".</p>
+    </section>
+
+    <!-- Scene 5 -->
+    <section class="scene" data-label="PUBLISH" data-dur="8000">
+      <h2 class="in">A collection can be read without an account</h2>
+      <p class="lede in" style="animation-delay:0.1s">Flip one flag and row-level security opens exactly that collection to anonymous reads.</p>
+      <div class="card in" style="animation-delay:0.3s">
+        <div class="pub-head">
+          <div style="font-size:13.5px;font-weight:600">React Debugging</div>
+          <span class="chip green">public</span>
+        </div>
+        <div class="pub-url" style="margin-top:8px">/public/collections/react-debugging</div>
+        <div class="bm-list" style="margin-top:10px">
+          <div class="bm"><span class="favicon"></span>useMemo – React<span class="d">react.dev</span></div>
+          <div class="bm"><span class="favicon"></span>Fix the slow render before the re-render<span class="d">kentcdodds.com</span></div>
+          <div class="bm"><span class="favicon"></span>Profiler – React<span class="d">react.dev</span></div>
+        </div>
+      </div>
+      <div class="note in" style="animation-delay:0.8s">
+        The policy is on the table, not the handler — <b>an anonymous SELECT succeeds only where
+        <span class="mono">is_public</span> is true</b>. This is a live path, not a mock: the three
+        seeded collections are readable right now with nothing but the anon key.
+      </div>
+      <p class="scene-caption">Sharing is the reason a bookmark manager is worth building rather than using a text file. Making it work by loosening a route handler would leave the rows reachable another way; the rule lives in Postgres, so every client gets it whether it asks for it or not.</p>
+    </section>
+
+  </div>
+
+  <p class="caption" id="caption"></p>
+  <div class="rail" id="rail" role="tablist" aria-label="Tour scenes"></div>
+  <div class="controls">
+    <button class="ctl primary" id="playBtn" type="button" aria-pressed="false">Pause</button>
+    <button class="ctl" id="replayBtn" type="button">Replay</button>
+    <p class="counter mono" id="counter" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="/tour/tour.js"></script>
+</html>

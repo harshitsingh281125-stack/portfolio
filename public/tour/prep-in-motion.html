@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<title>Prep in Motion</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/tour/tour.css">
+<!-- Ported to the portfolio shell in Phase 4. Tokens, stage, scene, rail and controls now come from /tour/tour.css and the driver from /tour/tour.js; what remains below is only this tour's own scene CSS. -->
+<style>
+  /* ---- Scene 1: the problem ---- */
+  .s1-cols { display: flex; gap: 18px; align-items: stretch; }
+  .s1-cols > .card { flex: 1; min-width: 0; }
+  .chatline {
+    font: 400 12px "IBM Plex Mono", monospace; color: var(--text-faint);
+    padding: 6px 0; border-bottom: 1px dashed var(--border);
+  }
+  .chatline:last-child { border-bottom: 0; }
+  .s1-fixes { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .s1-fix { display: flex; gap: 8px; align-items: baseline; font-size: 13px; }
+  .s1-fix .mono { color: var(--green); font-size: 12px; }
+
+  /* ---- Scene 2: pipeline ---- */
+  .s2-answers { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pipe { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pipe-node {
+    background: var(--bg-elevated); border: 1px solid var(--border-strong);
+    border-radius: 10px; padding: 10px 14px; text-align: center;
+  }
+  .pipe-node .t { font-weight: 600; font-size: 13px; }
+  .pipe-node .d { font: 400 10.5px "IBM Plex Mono", monospace; color: var(--text-faint); margin-top: 2px; }
+  .pipe-arrow { color: var(--text-faint); font: 600 14px "IBM Plex Mono", monospace; }
+  .weekrow {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    border: 1px solid var(--border); border-radius: 9px; background: var(--panel);
+    font-size: 13px;
+  }
+  .weekrow .wk { font: 600 11px "IBM Plex Mono", monospace; color: var(--accent); flex: none; }
+  .weekrow .topics { color: var(--text-muted); font-size: 12px; margin-left: auto; }
+  .s2-note { font: 400 11px "IBM Plex Mono", monospace; color: var(--text-faint); }
+  .s2-note b { color: var(--green); font-weight: 600; }
+
+  /* ---- Scene 3: mastery ---- */
+  .topic-card { max-width: 560px; width: 100%; margin: 0 auto; position: relative; }
+  .topic-card .mm { color: var(--text-muted); font-size: 13px; margin: 6px 0 14px; }
+  .kill {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg-sunken); border: 1px solid var(--border);
+    border-radius: 9px; padding: 12px 14px;
+  }
+  .kill svg { color: var(--red); flex: none; }
+  .kill .kc-eyebrow {
+    font: 600 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--red);
+  }
+  .kill .kc-text { font-size: 13px; margin-top: 1px; }
+  .kc-box {
+    width: 28px; height: 28px; border-radius: 7px; flex: none; margin-left: auto;
+    border: 1.5px solid var(--border-strong); display: grid; place-items: center;
+    color: var(--on-accent);
+  }
+  .kc-box svg { opacity: 0; }
+  .scene.on .kc-box { animation: boxcheck 0.4s ease 1.6s both; }
+  .scene.on .kc-box svg { animation: rise 0.3s ease 1.75s both; }
+  @keyframes boxcheck {
+    from { background: transparent; border-color: var(--border-strong); transform: scale(1); }
+    50%  { transform: scale(1.18); }
+    to   { background: var(--green); border-color: var(--green); transform: scale(1); }
+  }
+  .scene.on .topic-card { animation: gocard 0.5s ease 2s both; }
+  @keyframes gocard { to { background: var(--green-soft); border-color: var(--green); } }
+  .mastered-badge {
+    position: absolute; top: 14px; right: 16px;
+    font: 600 10.5px "IBM Plex Mono", monospace; letter-spacing: 0.06em;
+    color: var(--green); border: 1px solid var(--green); background: var(--green-soft);
+    border-radius: 6px; padding: 3px 8px; opacity: 0;
+  }
+  .scene.on .mastered-badge { animation: rise 0.4s ease 2.3s both; }
+
+  /* ---- Scene 4: recall ---- */
+  .recall-card { max-width: 560px; width: 100%; margin: 0 auto; }
+  .recall-q { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 8px 0 14px; }
+  .grade-row { display: flex; gap: 10px; }
+  .btn {
+    border-radius: 9px; padding: 8px 14px; font: 600 13px "IBM Plex Sans", sans-serif;
+    border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text);
+  }
+  .btn.got  { border-color: var(--green); color: var(--green); background: var(--green-soft); }
+  .btn.miss { border-color: var(--red);   color: var(--red);   background: var(--red-soft); }
+  .scene.on .btn.got  { animation: pulse 0.5s ease 1.2s 1; }
+  .scene.on .btn.miss { animation: pulse 0.5s ease 4.6s 1; }
+  @keyframes pulse { 50% { transform: scale(1.07); } }
+  .sched { display: flex; align-items: center; gap: 0; margin-top: 18px; }
+  .sched-node {
+    font: 600 11px "IBM Plex Mono", monospace; color: var(--text-muted);
+    border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 10px;
+    background: var(--bg-elevated); position: relative;
+  }
+  .sched-link { flex: 1; height: 1px; background: var(--border-strong); min-width: 14px; }
+  .scene.on .sched-node.hop1 { animation: nodeon 0.4s ease 1.8s both; }
+  @keyframes nodeon { to { color: var(--green); border-color: var(--green); background: var(--green-soft); } }
+  .scene.on .sched-node.reset { animation: nodered 0.4s ease 5.2s both; }
+  @keyframes nodered { to { color: var(--red); border-color: var(--red); background: var(--red-soft); } }
+  .recall-verdicts { display: flex; flex-direction: column; gap: 5px; margin-top: 14px; }
+  .recall-verdicts div { font: 400 11.5px "IBM Plex Mono", monospace; }
+  .recall-verdicts .v-got  { color: var(--green); opacity: 0; }
+  .recall-verdicts .v-miss { color: var(--red); opacity: 0; }
+  .scene.on .v-got  { animation: rise 0.4s ease 2s both; }
+  .scene.on .v-miss { animation: rise 0.4s ease 5.4s both; }
+
+  /* ---- Scene 5: progress ---- */
+  .banner {
+    display: flex; gap: 10px; align-items: baseline;
+    background: var(--red-soft); border: 1px solid var(--red);
+    border-radius: 10px; padding: 10px 14px;
+  }
+  .banner .b-eyebrow {
+    font: 600 10.5px "IBM Plex Mono", monospace; letter-spacing: 0.06em; color: var(--red); flex: none;
+  }
+  .banner .b-text { font-size: 13px; }
+  .tiles { display: flex; gap: 12px; }
+  .tile {
+    flex: 1; background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 10px; padding: 11px 14px;
+  }
+  .tile .t-label {
+    font: 500 10px "IBM Plex Mono", monospace; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-faint);
+  }
+  .tile .t-value { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tile .t-value.red { color: var(--red); }
+  .tile .t-value.accent { color: var(--accent); }
+  .tile .t-sub { font-size: 11px; color: var(--text-muted); }
+  .charts { display: flex; gap: 16px; align-items: flex-end; }
+  .charts .card { flex: 1; min-width: 0; }
+  .chart-label { font: 500 10px "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-faint); margin-bottom: 6px; }
+  .bars rect.logged { fill: var(--accent); }
+  .bars rect.planned { fill: var(--border-strong); }
+  .scene.on .bars rect { transform-box: fill-box; transform-origin: bottom; animation: grow 0.6s ease both; }
+  .scene.on .bars rect:nth-child(2n) { animation-delay: 0.5s; }
+  .scene.on .bars rect:nth-child(2n+1) { animation-delay: 0.65s; }
+  @keyframes grow { from { transform: scaleY(0); } }
+  .acc-line polyline { stroke: var(--amber); fill: none; stroke-width: 2; stroke-dasharray: 400; }
+  .scene.on .acc-line polyline { animation: draw 1.4s ease 0.8s both; }
+  @keyframes draw { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }
+  .acc-line .grid { stroke: var(--border); stroke-dasharray: 3 4; }
+  .acc-line .axis { stroke: var(--border-strong); }
+  .acc-line circle { fill: var(--amber); }
+  .acc-line text { font: 500 9px "IBM Plex Mono", monospace; fill: var(--text-faint); }
+  .s5-foot { font: 400 11px "IBM Plex Mono", monospace; color: var(--text-faint); }
+
+  /* ---- Scene 6: under the hood ---- */
+  .hood { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hood .card .h-title { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .hood .card .h-title .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+  .hood .card p { color: var(--text-muted); font-size: 12px; margin: 5px 0 0; }
+  .hood .card p b { color: var(--text); font-weight: 600; }
+
+  .ctl:focus-visible, .step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scene .in, .scene.on .in, .scene.on .kc-box, .scene.on .kc-box svg,
+    .scene.on .topic-card, .scene.on .mastered-badge, .scene.on .btn.got,
+    .scene.on .btn.miss, .scene.on .sched-node.hop1, .scene.on .sched-node.reset,
+    .scene.on .v-got, .scene.on .v-miss, .scene.on .bars rect,
+    .scene.on .acc-line polyline { animation: none; }
+    .scene.on .kc-box { background: var(--green); border-color: var(--green); }
+    .scene.on .kc-box svg { opacity: 1; }
+    .scene.on .topic-card { background: var(--green-soft); border-color: var(--green); }
+    .scene.on .mastered-badge, .scene.on .v-got, .scene.on .v-miss { opacity: 1; }
+    .scene.on .sched-node.hop1 { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+    .scene.on .sched-node.reset { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+    .scene { transition: none; }
+  }
+
+  @media (max-width: 700px) {
+    .stage { height: 520px; }
+    .scene { padding: 18px; }
+    .s1-cols, .charts { flex-direction: column; }
+    .hood { grid-template-columns: 1fr; gap: 8px; }
+    .tiles { flex-wrap: wrap; }
+    .tile { min-width: 40%; }
+    .step .l { display: none; }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="logo">P</div>
+    <div>
+      <div class="eyebrow">Guided tour · ~50 seconds</div>
+      <h1>Prep — an AI-native learning OS for interview prep</h1>
+      <div class="sub">Structured roadmaps · persistent notes · spaced-repetition recall · an honest dashboard</div>
+    </div>
+  </header>
+
+  <div class="stage" id="stage" aria-live="polite">
+
+    <!-- Scene 1: the problem -->
+    <section class="scene" data-label="THE PROBLEM" data-dur="8000">
+      <h2 class="in">The problem: AI chat has no memory</h2>
+      <p class="lede in" style="animation-delay:0.1s">Prepping with a chatbot means starting from zero every single session.</p>
+      <div class="s1-cols">
+        <div class="card in" style="animation-delay:0.3s">
+          <span class="chip plain">NEW CHAT · AGAIN</span>
+          <div class="chatline" style="margin-top:10px">&gt; pasting context.md… (3rd time this week)</div>
+          <div class="chatline">&gt; "so where were we on system design?"</div>
+          <div class="chatline">&gt; yesterday's notes: lost in scroll</div>
+          <div class="chatline" style="color:var(--red)">no memory · no review schedule · no pace check</div>
+        </div>
+        <div class="card in" style="animation-delay:0.9s; border-color: var(--accent-line)">
+          <span class="chip">PREP REMEMBERS</span>
+          <div class="s1-fixes">
+            <div class="s1-fix"><span class="mono">✓</span> Your roadmap, persisted per user</div>
+            <div class="s1-fix"><span class="mono">✓</span> Notes that live with each topic</div>
+            <div class="s1-fix"><span class="mono">✓</span> A real review schedule that knows what's due</div>
+            <div class="s1-fix"><span class="mono">✓</span> Pace vs. plan — told to you straight</div>
+          </div>
+        </div>
+      </div>
+      <p class="scene-caption">Prepping with a chatbot means re-pasting a context file every session — nothing is remembered, scheduled, or tracked. Prep replaces that workflow with one persistent system.</p>
+    </section>
+
+    <!-- Scene 2: onboarding → AI roadmap -->
+    <section class="scene" data-label="ROADMAP" data-dur="9500">
+      <h2 class="in">Five answers in, a real roadmap out</h2>
+      <div class="s2-answers">
+        <span class="chip plain in" style="animation-delay:0.2s">ROLE · SDE-2 FRONTEND</span>
+        <span class="chip plain in" style="animation-delay:0.35s">BAR · BIG-TECH LOOP</span>
+        <span class="chip plain in" style="animation-delay:0.5s">TIMELINE · 8 WEEKS</span>
+        <span class="chip plain in" style="animation-delay:0.65s">HOURS · 12 / WK</span>
+        <span class="chip plain in" style="animation-delay:0.8s">WEAK · DSA + SYSTEM DESIGN</span>
+      </div>
+      <div class="pipe">
+        <div class="pipe-node in" style="animation-delay:1.1s"><div class="t">AI Gateway</div><div class="d">reasoning tier · no vendor SDK</div></div>
+        <span class="pipe-arrow in" style="animation-delay:1.3s">→</span>
+        <div class="pipe-node in" style="animation-delay:1.5s"><div class="t">Schema check</div><div class="d">validate · retry · fallback</div></div>
+        <span class="pipe-arrow in" style="animation-delay:1.7s">→</span>
+        <span class="chip green in" style="animation-delay:1.9s">VALID ROADMAP JSON ✓</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:7px">
+        <div class="weekrow in" style="animation-delay:2.3s"><span class="wk">W1</span> Arrays, strings &amp; complexity <span class="topics">4 topics · front-loads weak areas</span></div>
+        <div class="weekrow in" style="animation-delay:2.5s"><span class="wk">W2</span> Hashmaps &amp; two-pointer patterns <span class="topics">5 topics</span></div>
+        <div class="weekrow in" style="animation-delay:2.7s"><span class="wk">W3</span> System design: caching &amp; CDNs <span class="topics">4 topics</span></div>
+      </div>
+      <div class="s2-note in" style="animation-delay:3.1s">auth-gated server route · hard daily cap per user · malformed output → retry → seeded template. <b>AI can never block the app.</b></div>
+      <p class="scene-caption">Five onboarding answers go through a provider-agnostic AI gateway. Every generation is schema-validated, with retry on malformed output and a seeded fallback — so the AI can never block the app.</p>
+    </section>
+
+    <!-- Scene 3: mastery is earned -->
+    <section class="scene" data-label="MASTERY" data-dur="7500">
+      <h2 class="in" style="text-align:center">Mastery is earned, not clicked through</h2>
+      <p class="lede in" style="animation-delay:0.1s; text-align:center; margin:0 auto">Every topic carries a kill criterion — checking it is a claim you commit to defending.</p>
+      <div class="card topic-card in" style="animation-delay:0.4s">
+        <span class="mastered-badge">MASTERED</span>
+        <strong style="font-size:15px; letter-spacing:-0.01em">Closures &amp; scope</strong>
+        <p class="mm">Mental model · ranked resources · from-scratch exercises · your notes, autosaved.</p>
+        <div class="kill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+          <div>
+            <div class="kc-eyebrow">Kill criterion</div>
+            <div class="kc-text">Explain how a closure causes a memory leak — on the spot, no notes.</div>
+          </div>
+          <div class="kc-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4 10-11"/></svg></div>
+        </div>
+      </div>
+      <p class="scene-caption">A topic counts as mastered only when its kill criterion is checked: a specific claim the user commits to defending on the spot. No self-awarded progress.</p>
+    </section>
+
+    <!-- Scene 4: recall loop -->
+    <section class="scene" data-label="RECALL" data-dur="9500">
+      <h2 class="in" style="text-align:center">Recall on a real schedule</h2>
+      <div class="card recall-card in" style="animation-delay:0.3s">
+        <span class="chip plain">CLOSURES &amp; SCOPE · DUE TODAY</span>
+        <div class="recall-q">What does <span class="mono">this</span> bind to inside an arrow function?</div>
+        <div class="grade-row">
+          <button class="btn got" type="button" tabindex="-1">Got it cold</button>
+          <button class="btn miss" type="button" tabindex="-1">Missed it</button>
+        </div>
+        <div class="sched" aria-label="Review intervals">
+          <span class="sched-node">+1d</span><span class="sched-link"></span>
+          <span class="sched-node hop1">+4d</span><span class="sched-link"></span>
+          <span class="sched-node">+14d</span><span class="sched-link"></span>
+          <span class="sched-node reset">+30d</span>
+        </div>
+        <div class="recall-verdicts">
+          <div class="v-got">GOT IT COLD → card advances to the next interval</div>
+          <div class="v-miss">MISSED IT → resets to +1d. "Close enough" is a miss.</div>
+        </div>
+      </div>
+      <p class="scene-caption">Recall runs on a fixed 1 / 4 / 14 / 30-day ladder, not textbook SM-2 — the screen promises those intervals, so the scheduler honours them. "Close enough" counts as a miss and resets the card to +1 day.</p>
+    </section>
+
+    <!-- Scene 5: honest progress -->
+    <section class="scene" data-label="PROGRESS" data-dur="8500">
+      <h2 class="in">A dashboard that tells the truth</h2>
+      <div class="banner in" style="animation-delay:0.15s">
+        <span class="b-eyebrow">BEHIND PACE</span>
+        <span class="b-text">At this rate you finish ~18 days past your target date.</span>
+      </div>
+      <div class="tiles in" style="animation-delay:0.3s">
+        <div class="tile"><div class="t-label">Hours</div><div class="t-value red">41<span style="font-size:13px; color:var(--text-faint)"> / 56</span></div><div class="t-sub">logged vs planned</div></div>
+        <div class="tile"><div class="t-label">Recall accuracy</div><div class="t-value">78%</div><div class="t-sub">last 7 sessions</div></div>
+        <div class="tile"><div class="t-label">Due today</div><div class="t-value accent">6</div><div class="t-sub">recall cards</div></div>
+      </div>
+      <div class="charts in" style="animation-delay:0.45s">
+        <div class="card">
+          <div class="chart-label">Hours · logged vs planned</div>
+          <svg class="bars" viewBox="0 0 260 90" width="100%" height="90" role="img" aria-label="Bar chart of hours logged versus planned per week">
+            <rect class="logged"  x="14"  y="38" width="13" height="52"/><rect class="planned" x="30"  y="30" width="13" height="60"/>
+            <rect class="logged"  x="58"  y="30" width="13" height="60"/><rect class="planned" x="74"  y="30" width="13" height="60"/>
+            <rect class="logged"  x="102" y="52" width="13" height="38"/><rect class="planned" x="118" y="30" width="13" height="60"/>
+            <rect class="logged"  x="146" y="44" width="13" height="46"/><rect class="planned" x="162" y="30" width="13" height="60"/>
+            <rect class="logged"  x="190" y="60" width="13" height="30"/><rect class="planned" x="206" y="30" width="13" height="60"/>
+          </svg>
+        </div>
+        <div class="card acc-line">
+          <div class="chart-label">Recall accuracy</div>
+          <svg viewBox="0 0 260 90" width="100%" height="90" role="img" aria-label="Line chart of recall accuracy trending near 78 percent">
+            <line class="axis" x1="24" y1="6" x2="24" y2="80"/><line class="axis" x1="24" y1="80" x2="252" y2="80"/>
+            <line class="grid" x1="24" y1="16" x2="252" y2="16"/><line class="grid" x1="24" y1="44" x2="252" y2="44"/>
+            <text x="4" y="19">100</text><text x="10" y="47">80</text><text x="10" y="76">60</text>
+            <polyline points="34,52 78,40 122,46 166,30 210,36 246,26"/>
+            <circle cx="246" cy="26" r="3"/>
+          </svg>
+        </div>
+      </div>
+      <div class="s5-foot in" style="animation-delay:0.7s">13d streak · not that it matters &nbsp;·&nbsp; charts are hand-rolled SVG — no chart library</div>
+      <p class="scene-caption">The dashboard reports hours logged vs. planned, the recall-accuracy trend, and an explicit behind-pace warning. Progress is derived on read, never stored, so it cannot go stale while you are away.</p>
+    </section>
+
+    <!-- Scene 6: under the hood -->
+    <section class="scene" data-label="UNDER THE HOOD" data-dur="9000">
+      <h2 class="in">Under the hood</h2>
+      <div class="hood">
+        <div class="card in" style="animation-delay:0.2s">
+          <div class="h-title"><span class="dot"></span>Next.js App Router + TypeScript</div>
+          <p>Real routes per screen, server components, one design system in <b>OKLCH tokens</b> with full light + dark themes.</p>
+        </div>
+        <div class="card in" style="animation-delay:0.45s">
+          <div class="h-title"><span class="dot" style="background:var(--green)"></span>Supabase Postgres · raw SQL</div>
+          <p><b>Row-level security on every table</b>, hand-written migrations, and an index designed for the hot query: "which reviews are due today?"</p>
+        </div>
+        <div class="card in" style="animation-delay:0.7s">
+          <div class="h-title"><span class="dot" style="background:var(--amber)"></span>Provider-agnostic AI gateway</div>
+          <p>Product code calls <b>tiers, never model names</b>. Server-side daily caps, schema validation, retry, and a seeded fallback — AI never hard-blocks a flow.</p>
+        </div>
+        <div class="card in" style="animation-delay:0.95s">
+          <div class="h-title"><span class="dot" style="background:var(--red)"></span>Grounded &amp; tested</div>
+          <p>Resource links are <b>RAG-grounded</b> in a curated corpus (202 docs, 26 areas) — not hallucinated. <b>283 unit + 81 E2E tests</b>, green.</p>
+        </div>
+      </div>
+      <div class="s2-note in" style="animation-delay:1.3s">Deliberately cut for v1: code sandboxing — scoping out an unsafe feature is a stronger call than shipping a weak one.</div>
+      <p class="scene-caption">Next.js and Supabase with row-level security on every table, raw SQL migrations, server-enforced AI caps, RAG-grounded resources, and 364 automated tests.</p>
+    </section>
+  </div>
+
+  <p class="caption" id="caption"></p>
+
+  <div class="rail" id="rail" role="tablist" aria-label="Tour steps"></div>
+
+  <div class="controls">
+    <button class="ctl primary" id="playBtn" type="button" aria-pressed="false">Pause</button>
+    <button class="ctl" id="replayBtn" type="button">Replay</button>
+    <p class="counter mono" id="counter" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="/tour/tour.js"></script>
+</html>
