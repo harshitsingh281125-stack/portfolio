@@ -70,7 +70,7 @@ function AtAGlance({ glance }: { glance: Glance }) {
         </Button>
         {links.tour ? (
           <Button href={links.tour}>
-            <span aria-hidden="true">&#9654;</span> Tour
+            <span aria-hidden="true">&#9654;</span> Illustrated walkthrough
           </Button>
         ) : null}
       </div>

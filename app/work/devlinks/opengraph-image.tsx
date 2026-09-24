@@ -8,8 +8,6 @@ export default function Image() {
   return ogImage({
     kicker: "Case study",
     title: "DevLinks",
-    description:
-      "A bookmark manager whose hard part is the server: it fetches URLs a stranger typed, which makes it an SSRF engine pointed at your own network.",
-    claim: { value: "84", label: "tagging rules, no model call", source: "taggingRules.ts" },
+    description: "A developer bookmark manager with searchable collections, duplicate detection, and public sharing.",
   });
 }

@@ -52,7 +52,7 @@ export const tours: Tour[] = [
     project: "prep",
     title: "Prep in motion",
     blurb:
-      "Six scenes, about fifty seconds: the problem, the roadmap, how a topic is marked mastered, the recall ladder, the honest dashboard, and what is underneath.",
+      "An illustrated walkthrough in six scenes: the problem, the roadmap, how a topic is marked mastered, the recall ladder, progress tracking, and what is underneath.",
     frameTitle: "Prep in motion — a six-scene guided tour of the product",
     height: 850,
     mobileHeight: 975,
@@ -64,7 +64,7 @@ export const tours: Tour[] = [
     project: "prep",
     title: "Prep under the hood",
     blurb:
-      "The same product as a request trace: sign-in, roadmap generation, grounded content, and revision — client on the left, server call stack on the right.",
+      "An illustrated request trace: sign-in, roadmap generation, grounded content, and revision — client on the left, server call stack on the right.",
     frameTitle: "Prep under the hood — a four-step request trace",
     height: 1070,
     mobileHeight: 1375,

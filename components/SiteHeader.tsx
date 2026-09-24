@@ -10,9 +10,8 @@ export function SiteHeader() {
           <span className="brand-monogram" aria-hidden="true">H</span><span>Harshit Singh</span>
         </Link>
         <nav aria-label="Primary" className="primary-nav">
+          <Link href="/#company">Experience</Link>
           <Link href="/#work">Projects</Link>
-          <Link href="/#company">Current work</Link>
-          <Link href="/#resume">Résumé</Link>
           {routes.notes ? <Link href="/notes">Notes</Link> : null}
           <Link href="/#contact">Contact</Link>
         </nav>

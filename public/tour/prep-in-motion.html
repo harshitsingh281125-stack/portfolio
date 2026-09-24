@@ -190,8 +190,8 @@
     <div class="logo">P</div>
     <div>
       <div class="eyebrow">Guided tour · ~50 seconds</div>
-      <h1>Prep — an AI-native learning OS for interview prep</h1>
-      <div class="sub">Structured roadmaps · persistent notes · spaced-repetition recall · an honest dashboard</div>
+      <h1>Prep — an interview study planner</h1>
+      <div class="sub">Illustrated walkthrough · sample data · Structured roadmaps · persistent notes · spaced-repetition recall · progress tracking</div>
     </div>
   </header>
 
@@ -294,7 +294,7 @@
 
     <!-- Scene 5: honest progress -->
     <section class="scene" data-label="PROGRESS" data-dur="8500">
-      <h2 class="in">A dashboard that tells the truth</h2>
+      <h2 class="in">Study progress against the plan</h2>
       <div class="banner in" style="animation-delay:0.15s">
         <span class="b-eyebrow">BEHIND PACE</span>
         <span class="b-text">At this rate you finish ~18 days past your target date.</span>
@@ -327,7 +327,7 @@
         </div>
       </div>
       <div class="s5-foot in" style="animation-delay:0.7s">13d streak · not that it matters &nbsp;·&nbsp; charts are hand-rolled SVG — no chart library</div>
-      <p class="scene-caption">The dashboard reports hours logged vs. planned, the recall-accuracy trend, and an explicit behind-pace warning. Progress is derived on read, never stored, so it cannot go stale while you are away.</p>
+      <p class="scene-caption">The dashboard reports hours logged vs. planned, the recall-accuracy trend, and an explicit behind-pace warning. Progress is calculated from study records and elapsed time when the screen is loaded.</p>
     </section>
 
     <!-- Scene 6: under the hood -->
@@ -344,15 +344,15 @@
         </div>
         <div class="card in" style="animation-delay:0.7s">
           <div class="h-title"><span class="dot" style="background:var(--amber)"></span>Provider-agnostic AI gateway</div>
-          <p>Product code calls <b>tiers, never model names</b>. Server-side daily caps, schema validation, retry, and a seeded fallback — AI never hard-blocks a flow.</p>
+          <p>Product code calls <b>tiers, never model names</b>. Server-side daily caps, schema validation, retry, and a seeded fallback for provider failures.</p>
         </div>
         <div class="card in" style="animation-delay:0.95s">
           <div class="h-title"><span class="dot" style="background:var(--red)"></span>Grounded &amp; tested</div>
-          <p>Resource links are <b>RAG-grounded</b> in a curated corpus (202 docs, 26 areas) — not hallucinated. <b>283 unit + 81 E2E tests</b>, green.</p>
+          <p>The grounded path resolves resource links from a curated corpus. Fallback suggestions are marked unverified. Unit and browser tests cover validation and the study flows.</p>
         </div>
       </div>
-      <div class="s2-note in" style="animation-delay:1.3s">Deliberately cut for v1: code sandboxing — scoping out an unsafe feature is a stronger call than shipping a weak one.</div>
-      <p class="scene-caption">Next.js and Supabase with row-level security on every table, raw SQL migrations, server-enforced AI caps, RAG-grounded resources, and 364 automated tests.</p>
+      <div class="s2-note in" style="animation-delay:1.3s">Deliberately cut for v1: code sandboxing — it would need a separate isolation and execution design.</div>
+      <p class="scene-caption">Next.js and Supabase with row-level security on every table, raw SQL migrations, server-enforced AI caps, RAG-grounded resources, and unit and browser tests.</p>
     </section>
   </div>
 

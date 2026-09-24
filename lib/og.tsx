@@ -24,11 +24,11 @@ export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
 
 const C = {
-  surface: "#F7F8F8",
-  border: "#DCE0E1",
-  content: "#1A1F22",
-  muted: "#5B6569",
-  faint: "#667175",
+  surface: "#F3EFE6",
+  border: "#DDD6C6",
+  content: "#17150F",
+  muted: "#3D392F",
+  faint: "#5B5648",
 };
 
 async function font(file: string) {
@@ -129,7 +129,7 @@ export async function ogImage({ kicker, title, description, claim }: OgCard) {
             </>
           ) : (
             <div style={{ display: "flex", color: C.faint }}>
-              Every number links to the file that proves it.
+              {site.location} · React · React Native
             </div>
           )}
         </div>

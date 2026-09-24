@@ -126,7 +126,7 @@
     <div>
       <div class="eyebrow">Guided tour · ~40 seconds</div>
       <h1>DevLinks — saving a link, end to end</h1>
-      <div class="sub">Metadata fetched server-side · tags inferred by rule · duplicates caught by the database</div>
+      <div class="sub">Illustrated walkthrough · sample data · Metadata fetched server-side · tags inferred by rule · duplicates caught by the database</div>
     </div>
   </header>
 
@@ -202,7 +202,7 @@
       </div>
       <div class="note in" style="animation-delay:0.8s">
         No second network round trip, no per-save cost, and nothing to re-run when a model changes.
-        The limit is honest: <b>84 rules is a vocabulary, not an understanding</b> — a framework
+        <b>The rules cover a fixed vocabulary</b> — a framework
         invented next year gets tagged by its hostname or not at all.
       </div>
       <p class="scene-caption">Tagging runs on every save, which is the frequent call, so it gets no inference at all. These four are what the rules actually return for this URL — run, not imagined. Suggestions are editable, which is the only reason a lookup table is an acceptable answer here.</p>
@@ -256,8 +256,7 @@
       </div>
       <div class="note in" style="animation-delay:0.8s">
         The policy is on the table, not the handler — <b>an anonymous SELECT succeeds only where
-        <span class="mono">is_public</span> is true</b>. This is a live path, not a mock: the three
-        seeded collections are readable right now with nothing but the anon key.
+        <span class="mono">is_public</span> is true</b>. The portfolio demo links to a published collection using this public read path.
       </div>
       <p class="scene-caption">Sharing is the reason a bookmark manager is worth building rather than using a text file. Making it work by loosening a route handler would leave the rows reachable another way; the rule lives in Postgres, so every client gets it whether it asks for it or not.</p>
     </section>

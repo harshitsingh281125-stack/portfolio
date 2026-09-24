@@ -145,7 +145,7 @@
     <div>
       <div class="eyebrow">Request trace · ~45 seconds</div>
       <h1>How Prep actually works, request by request</h1>
-      <div class="sub">Left: what the user sees. Right: what the server does about it — real routes, real checks, real SQL.</div>
+      <div class="sub">Illustrated walkthrough · sample data · Left: what the user sees. Right: what the server does about it — real routes, real checks, real SQL.</div>
     </div>
   </header>
 
@@ -204,7 +204,7 @@
           </div>
         </div>
       </div>
-      <p class="scene-caption">Signing in writes an httpOnly session cookie the browser cannot read. Middleware refreshes it on every request and gates the routes, and row-level security in Postgres enforces ownership underneath — so the auth check is in the database, not just in the handler.</p>
+      <p class="scene-caption">Signing in establishes a session. Middleware refreshes it on every request and gates the routes, and row-level security in Postgres enforces ownership underneath — so the auth check is in the database, not just in the handler.</p>
     </section>
 
     <!-- ================= 2. GENERATE ROADMAP ================= -->
@@ -325,7 +325,7 @@
           </div>
           <div class="t-row good in" style="animation-delay:4.2s">
             <div class="t-main"><span class="verb g">GROUNDED</span> the model ranks <em>our</em> documents</div>
-            <div class="t-note">It returns a ref id per pick, never a URL. The validator resolves each ref back to a real row — so a citation becomes a link on our side of the boundary. Links can't be hallucinated because the model never types one.</div>
+            <div class="t-note">It returns a ref id per pick, never a URL. The validator resolves each ref back to a real row — so a citation becomes a link on our side of the boundary. This limits resource URLs to stored records; relevance still needs evaluation.</div>
           </div>
           <div class="t-row in" style="animation-delay:5.4s">
             <div class="t-main">three labelled degradation steps <span class="rule-tag">RULE 9</span></div>
@@ -342,7 +342,7 @@
           </div>
         </div>
       </div>
-      <p class="scene-caption">Study material is retrieval-augmented. The topic is embedded, cosine-matched against a curated corpus of 202 vetted documents, and the model is asked to rank our documents by reference id — it never types a URL, so a link cannot be hallucinated. Three labelled degradation steps sit behind it: grounded, ungrounded, seeded.</p>
+      <p class="scene-caption">Study material is retrieval-augmented. The topic is embedded, cosine-matched against a curated corpus of 202 vetted documents, and the model is asked to rank our documents by reference id — the server resolves each selected reference to a stored URL. Three labelled degradation steps sit behind it: grounded, ungrounded, seeded.</p>
     </section>
 
     <!-- ================= 4. REVISION ================= -->

@@ -5,9 +5,9 @@
 
 export const site = {
   name: "Harshit Singh",
-  role: "AI product engineer who ships frontend",
+  role: "Frontend engineer · React & React Native",
   /** The short form, for the home page's first line. */
-  title: "AI product engineer",
+  title: "Frontend engineer",
   /** From the résumé summary: frontend since June 2023. */
   experience: "3+ years shipping React and React Native",
   location: "Bengaluru, India",

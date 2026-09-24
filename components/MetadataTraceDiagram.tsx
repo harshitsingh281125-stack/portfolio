@@ -117,8 +117,7 @@ export function MetadataTraceDiagram() {
             It then resolves the hostname in DNS and inspects every A and AAAA
             record returned, not just the first. If any of those addresses is
             loopback, link-local, or inside a private range, the request ends with
-            a 403 and a fetchStatus of blocked, and no outbound request is ever
-            made. Only then does it fetch, with redirect handling set to manual so
+            a 403 and a fetchStatus of blocked before fetching that destination. Only then does it fetch, with redirect handling set to manual so
             the runtime never follows a hop on its own. Every 3xx response sends
             the location header back into the same validator before the next
             request is made, so a public URL that redirects to an internal address

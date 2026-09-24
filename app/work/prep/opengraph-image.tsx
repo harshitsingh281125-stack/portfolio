@@ -8,8 +8,6 @@ export default function Image() {
   return ogImage({
     kicker: "Case study",
     title: "Prep",
-    description:
-      "An AI-native learning OS where a hallucinated citation is not rejected \u2014 it is unrepresentable.",
-    claim: { value: "364", label: "tests", source: "tests/unit + tests/e2e" },
+    description: "An interview study planner with resource retrieval, provider fallback, and scheduled recall.",
   });
 }

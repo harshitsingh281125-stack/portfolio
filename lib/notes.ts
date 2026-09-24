@@ -35,8 +35,8 @@ export type Note = {
 export const notes: Note[] = [
   {
     slug: "similarity-floor",
-    title: "The similarity floor is 0.64, and I measured it",
-    dek: "0.55 sounds strict for a cosine similarity. Against Gemini embeddings it would have grounded a Postgres topic on React documentation and badged every link verified.",
+    title: "Calibrating Prep’s retrieval threshold",
+    dek: "How off-topic queries exposed weak matches, and why expanding the corpus required another calibration.",
     date: "2026-09-21",
     kicker: "Prep · RAG grounding",
     related: { href: "/work/prep#d-citation", label: "Citation by index, on the Prep case study" },
@@ -44,17 +44,17 @@ export const notes: Note[] = [
   {
     slug: "e2e-suite-spent-real-calls",
     title: "My E2E suite spent 26 real API calls and reported green",
-    dek: "The mock provider was configured correctly and never applied. Nothing failed, because a real model answers a test at least as well as a fake one.",
+    dek: "Playwright reused my development server, bypassing the mock-provider configuration. I added an explicit provider check.",
     date: "2026-09-21",
     kicker: "Prep · Testing",
     related: { href: "/work/prep#differently", label: "What I’d do differently, on the Prep case study" },
   },
   {
     slug: "allowed-to-say-behind",
-    title: "Why the dashboard is allowed to say you’re behind",
-    dek: "A progress screen that can deliver bad news has to be right about it: derived on read, measured in whole weeks, and never graded by a model.",
+    title: "Calculating study progress at the boundaries",
+    dek: "Elapsed weeks, inactive roadmaps, and a floating-point error at the on-track boundary.",
     date: "2026-09-21",
-    kicker: "Prep · Product honesty",
+    kicker: "Prep · Progress calculations",
     related: { href: "/work/prep#d-derived", label: "Derived on read, on the Prep case study" },
   },
 ];

@@ -61,7 +61,7 @@ const display = Fraunces({
 export const metadata: Metadata = {
   ...pageMeta({
     description:
-      "I build the unglamorous parts of AI products: the gateway, the cap, the fallback, and the citation that can't be faked.",
+      "Frontend engineer with 3+ years building React and React Native applications across healthcare and marketplace products. Work, independent projects, and engineering notes by Harshit Singh.",
     path: "/",
   }),
   title: {

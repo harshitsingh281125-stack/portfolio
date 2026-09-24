@@ -1,6 +1,6 @@
-// Card thumbnails for the home page (PLAN.md §3.1), cut from the tours' own
-// scenes so the picture on a card is the product as the tour shows it, not a
-// mock drawn for the card. Rerun whenever a tour scene changes:
+// Legacy stills from the illustrated walkthroughs. The homepage now uses
+// prep-app.png and devlinks-app.png, captured from the live applications.
+// This script only refreshes the older tour stills; see public/work/README.md.
 //
 //   npm run build && npx next start -p 3010 &
 //   npm i --no-save @playwright/test && npx playwright install chromium

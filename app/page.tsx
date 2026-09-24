@@ -1,5 +1,5 @@
 import { ProjectCard } from "@/components/ProjectCard";
-import { Experience } from "@/components/Experience";
+import { Experience, Resume } from "@/components/Experience";
 import { projects } from "@/lib/projects";
 import { site } from "@/lib/site";
 
@@ -8,12 +8,12 @@ export default function Home() {
     <>
       <section id="top" className="portfolio-hero page-width" aria-labelledby="intro-heading">
         <div className="hero-copy">
-          <p className="eyebrow">{site.title} &middot; React &middot; 3+ years</p>
-          <h1 id="intro-heading">I build the unglamorous parts of <em>AI products.</em></h1>
+          <p className="eyebrow">React &middot; React Native &middot; 3+ years</p>
+          <h1 id="intro-heading">Frontend engineer building <em>web &amp; mobile products.</em></h1>
           <p className="hero-description">
-            The gateway, the cap, the fallback, and the citation that can&rsquo;t
-            be faked. Two of my products are below, both running, both open.
-            Every number links to the file it came from.
+            I build healthcare and marketplace applications at Kindtech.
+            My independent projects explore AI-assisted learning and tools
+            for organizing developer resources.
           </p>
         </div>
         <div className="hero-aside">
@@ -21,18 +21,19 @@ export default function Home() {
           <p><span className="status-dot muted" />{site.location}</p>
         </div>
       </section>
+      <Experience />
       <section id="work" className="projects-section section-border" aria-labelledby="work-heading">
         <div className="page-width">
           <div className="section-heading">
-            <h2 id="work-heading">Selected projects</h2>
-            <span className="eyebrow">01 &ndash; {String(projects.length).padStart(2, "0")}</span>
+            <h2 id="work-heading">Independent projects</h2>
+            <span className="eyebrow">Built end to end</span>
           </div>
           <div className="project-list">
             {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} />)}
           </div>
         </div>
       </section>
-      <Experience />
+      <Resume />
     </>
   );
 }

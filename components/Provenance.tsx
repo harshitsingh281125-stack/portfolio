@@ -117,13 +117,13 @@ export function Decision({
   return (
     <aside
       id={id}
-      aria-label={name ? `Decision: ${name}` : "The decision worth defending"}
+      aria-label={name ? `Decision: ${name}` : "Engineering decision"}
       className="my-8 scroll-mt-8 rounded-lg border border-edge bg-panel p-5 sm:p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-edge pb-3">
-        <p className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
-          The decision worth defending
-        </p>
+        <h3 className="text-ui font-semibold text-content">
+          {name ?? "Engineering decision"}
+        </h3>
         {rule ? (
           <span className="font-mono text-meta font-medium text-accent">{rule}</span>
         ) : null}

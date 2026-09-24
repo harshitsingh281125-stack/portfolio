@@ -44,6 +44,10 @@ export default async function TourPage({
       <h1 className="max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
         {tour.title}
       </h1>
+      <p className="mt-4 max-w-prose text-ui text-content-muted">
+        An illustrated walkthrough with sample data. These scenes explain the
+        product flow; they are not a recording of a live session.
+      </p>
 
       <TourEmbed tour={tour} full />
 

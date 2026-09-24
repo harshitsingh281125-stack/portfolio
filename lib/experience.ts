@@ -1,31 +1,27 @@
-/**
- * PLAN.md §3.1. Sourced from Harshit_Resume_2026.pdf, five bullets of six —
- * the ones that show ownership across a boundary rather than feature counts.
- *
- * The employer is named. It was left out at first, but the résumé linked from
- * the nav names it, so the omission bought no privacy and cost the recruiter
- * the one thing they match on.
- *
- * Every bullet describes private work, so none of it can be linked. It used to
- * carry an UNVERIFIED badge saying so; that came off with the rest of the chips
- * (components/Provenance.tsx). The two projects below carry file paths, which
- * is where the distinction now lives.
- */
-
+/** Professional scope and outcomes from public/Harshit_Resume_2026.pdf. */
 export const experience = {
   role: "Frontend Engineer",
   company: "Kindtech Pvt Ltd",
-  context: "healthcare & marketplace products",
   location: "Bengaluru",
   period: "June 2023 — present",
-  bullets: [
-    "Architected a config-driven React Native platform that launches four marketplace verticals from shared configuration, theming, and navigation instead of four separate screen trees — and owned the React Native 0.74, Android API-level, and Gradle upgrades underneath it.",
-    "Owned the real-time layer of a production telehealth messaging platform: resilient WebSocket connectivity, pagination, unread state, threaded channel and DM navigation, Twilio video visits, and role-aware clinical forms.",
-    "Fixed a stored-XSS vulnerability in a large inherited application, then removed 841 dead files — roughly 60,000 lines — migrated hardcoded UI values to theme tokens, replaced hardcoded secrets with signed-URL uploads, and added a force-update mechanism.",
-    "Extended ownership past the frontend: designed a PostgreSQL schema and migration for patient clinical data, built a FastAPI global-search API with its frontend integration, and implemented the functional tools an LLM-powered clinical agent calls.",
-    "Reviewed and merged 88 pull requests from 10 engineers and handled 29 staging-to-main release integrations.",
+  work: [
+    {
+      category: "Healthcare",
+      name: "Telehealth & clinical workflows",
+      summary: "Owned major parts of a production messaging platform for clinical care.",
+      details: "Built WebSocket connectivity, paginated conversations, unread state, mentions, and threaded navigation. Integrated Twilio video visits and role-aware clinical forms.",
+      extension: "Also designed a patient-data schema in PostgreSQL, built a FastAPI search endpoint and its UI, and implemented tools for an LLM-powered clinical agent.",
+    },
+    {
+      category: "Mobile & multi-tenant products",
+      name: "One platform, four verticals",
+      summary: "Architected a React Native platform that launches marketplace verticals from shared configuration, themes, and navigation.",
+      details: "Built white-label and multi-tenant infrastructure: brand assets, theme tokens, workspace switching, and enterprise-specific filtering.",
+      extension: "Owned React Native 0.74, Android API-level, and Gradle upgrades, alongside review and release work across the team.",
+    },
   ],
-  stack: ["TypeScript", "React", "React Native", "Redux Toolkit", "WebSockets", "Twilio", "FastAPI", "PostgreSQL"],
+  maintenance: "Fixed stored XSS in an inherited application, replaced hardcoded secrets with signed-URL uploads, and removed 841 unused files while migrating UI values to theme tokens.",
+  collaboration: "Reviewed and merged 88 pull requests from 10 engineers and handled 29 staging-to-main release integrations.",
 } as const;
 
 export const education = {
