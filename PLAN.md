@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. Phase 7 (ship) is next, and starts with O1: creating the Vercel project, which only you can do.
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). What remains of it is manual: M4, M5's PDF correction, M8, and a real-browser pass.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -487,7 +487,7 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | **Done** 2026-09-21 · `df5585b`. See §4.1. Gate: axe 0 on 10 routes (incl. the 404) and inside all 4 tour documents; reduced-motion stillness 0 everywhere after one fix; Lighthouse 97 / 95–98 / 96 / 98 / 97 / 99 perf on home, Prep, DevLinks, notes, a note, a tour, 100 on the other three categories throughout. |
 | **6c** | Chips removed | VERIFIED / UNVERIFIED chips dropped site-wide (incl. OG cards), availability line dropped, standfirst reworded | 6b | **Done** 2026-09-23 · `f331865`. See §4.3. Gate: build + lint clean, axe 0 on home, Prep, DevLinks and notes. |
 | **6b** | Recruiter pass | Identity line + contact buttons, chips cut, card stills + stack lines, named employer with one badge, education, case-study "at a glance" + top CTAs, folded decision reasoning, 44px touch targets, note-index kickers, serif cut to 32KB | 6 | **Done** 2026-09-21 · `f331865` (committed with 6c). See §4.2. Gate: axe 0 on home, Prep, DevLinks, notes and `prep-in-motion` (and on all 11 routes + 4 tours before the final font change); reduced-motion stillness 0; Lighthouse perf home 97–100, Prep 98–99, 100 on the other three categories. Every GitHub citation 200 (8 returned 429 in the batch, 200 retried with spacing); LeetCode 403 / LinkedIn 999 as before. |
-| **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
+| **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), deploy, production gate, final cross-browser + mobile pass | 6 · manual §5 | **Deployed** 2026-09-24 · `b2d5f8e`. See §4.4. Gate, run against production: axe 0 on all 11 routes and inside all 4 tour documents, across light, dark, 320px, 200% zoom and reduced-motion; no horizontal scroll; reduced-motion stillness 0; all 40 external links 200 (10 GitHub 429s cleared on a spaced retry; LeetCode 403 and LinkedIn 999 block bots as always); Lighthouse 100 on accessibility, best practices and SEO everywhere, performance 97 home / 99 notes / 97 DevLinks / 90–95 Prep. **Open:** the cross-browser and mobile pass needs a real Safari and Firefox, which no tool here has. |
 
 The gate is run by [`scripts/qa.mjs`](./scripts/qa.mjs) — axe across light, dark, 320px, 200% zoom
 and reduced-motion, a horizontal-scroll check, and a fetch of every external link on the page.
@@ -574,11 +574,33 @@ availability line with them.
 - The signal colours stay in `globals.css` for the two product diagrams, which show Prep's own
   verified / unverified link states.
 
+### 4.4 Phase 7, as deployed
+
+- **O1 closed without a code change.** `VERCEL_PROJECT_PRODUCTION_URL` resolved to the real host on
+  the first build, exactly as §4.1 predicted: every canonical, `og:url`, `og:image`, the sitemap and
+  robots.txt carry `portfolio-nine-delta-zngdfg4251.vercel.app`. No environment variable was set.
+- **The gate was re-run against production, not localhost** — `QA_BASE` pointed at the deploy. Same
+  result as local: axe 0 everywhere, reduced-motion still, no horizontal scroll. Checked by hand:
+  the OG card renders (46KB PNG, no chip on it since 6c), the résumé PDF serves, `/nope` 404s, both
+  card stills load from the CDN, and the embedded tour plays in dark mode with its Pause control.
+- **One real regression, found only on production.** `/work/prep` scored 83–93 with total blocking
+  time 250–660ms where every other route sat at 97–99. `loading="lazy"` does not hold an iframe
+  back on a slow connection: Chrome's distance-from-viewport threshold grows with the network, so a
+  stage ~2,500px down was fetched during the initial load and its CSS, webfont and rAF driver ran
+  while the page was still settling. `components/LazyTourFrame.tsx` mounts the frame from an
+  IntersectionObserver with a 400px margin instead. Verified at 390px: nothing under `/tour/` is
+  requested until the stage is approached. TBT fell to 190–360ms, Prep to 90–95.
+- **Prep still sits under the ≥95 gate on some runs**, and it is honest to say so. What is left is
+  style/layout and React hydration on a 330-element page, not a deferred asset. Four production
+  runs: 90, 95, 94, and 97 for DevLinks. §4.1's rule applies — report the spread, not the best run.
+- **Not covered by anything here:** Safari, iOS and Firefox. Every measurement in this document
+  came from headless Chromium, and §1.2 records what that renderer once made this review believe.
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |
 |---|---|---|
-| **O1** | **The site itself is not deployed anywhere.** *No longer blocks Phase 6 — see §4.1: absolute URLs now come from Vercel's build env, so they will be right on the first deploy. The deploy itself is still the first step of Phase 7.* Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
+| ~~**O1**~~ | ~~**The site itself is not deployed anywhere.**~~ **Resolved 2026-09-24.** Vercel project created by the owner; production is `https://portfolio-nine-delta-zngdfg4251.vercel.app`. The env-var approach held: canonical, `og:url`, `og:image`, the sitemap and robots all carry the real host with nothing configured. Original note follows. **The site itself is not deployed anywhere.** *No longer blocks Phase 6 — see §4.1: absolute URLs now come from Vercel's build env, so they will be right on the first deploy. The deploy itself is still the first step of Phase 7.* Source is at `github.com/harshitsingh281125-stack/portfolio` (public); there is no Vercel project yet. | Phase 0 listed a deployed skeleton as output and it was never done. Phase 6 cannot write correct OG or canonical URLs without the real host: `app/layout.tsx` currently sets `metadataBase` to `https://harshit.vercel.app`, which is a **guess**, and every absolute URL in the site's metadata inherits it. |
 | ~~**O2**~~ | ~~DevLinks has no printed demo login~~ | **Resolved 2026-09-21, without a login.** The seeded collections are published and the public read path is anonymous — verified against the live REST API with the anon key: `react-debugging` returns `is_public: true` with 8 bookmarks, and the same holds for `css-layout` and `api-auth`. The card and the case study now link straight to `/public/collections/react-debugging`. This is strictly better than a printed password: nothing to leak, and no shared row a stranger can mutate — which is the objection standing against Prep's `qa-a@prep.com` in M4. |
 
 ---
