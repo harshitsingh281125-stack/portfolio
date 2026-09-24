@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { site, siteUrl } from "@/lib/site";
 import { pageMeta } from "@/lib/meta";
@@ -7,13 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
-/**
- * Only the serif is preloaded. It sets the body prose, which is the LCP element
- * on every case study, and five preloaded font files were arriving as one
- * bandwidth-bound clump: the serif landed late and took LCP with it (83% render
- * delay, measured). The interface and evidence faces load a beat later, which
- * costs a brief fallback on nav and labels and buys the prose its paint.
- */
+// Preload the display and prose faces; interface fonts can load after them.
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -56,6 +50,14 @@ const serif = localFont({
   adjustFontFallback: "Times New Roman",
 });
 
+const display = Fraunces({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   ...pageMeta({
     description:
@@ -72,7 +74,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable} ${display.variable}`}>
       <body className="min-h-screen bg-surface text-content antialiased">
         <a href="#main" className="skip-link">
           Skip to content

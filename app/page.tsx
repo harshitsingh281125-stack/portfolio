@@ -1,67 +1,38 @@
-import { Button } from "@/components/Button";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Experience } from "@/components/Experience";
 import { projects } from "@/lib/projects";
-import { resume, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
-/**
- * Home — PLAN.md §3.1.
- *
- * The first line says who, what and how long; the headline says how he
- * thinks; the buttons say how to reach him. A recruiter who reads nothing
- * else has all three. The proof sits on the project cards directly below —
- * the hero used to repeat the cards' numbers as chips, which pushed the
- * projects off a phone's first screen to say something twice.
- *
- * Reading order is DOM order and there is no motion anywhere on this page:
- * the one orchestrated moment on the site is the tour stage (§1.5).
- */
 export default function Home() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-20">
-      <p className="font-mono text-meta text-content-muted">
-        <span className="font-medium text-content">{site.name}</span> &middot; {site.title}{" "}
-        &middot; {site.experience} &middot; {site.location}
-      </p>
-
-      <h1 className="mt-4 max-w-3xl font-serif text-display-sm font-semibold text-content sm:text-display">
-        I build the unglamorous parts of AI products: the gateway, the cap, the
-        fallback, and the citation that can&rsquo;t be faked.
-      </h1>
-
-      <p className="mt-6 max-w-prose prose-serif text-content-muted">
-        Two of them are below, both running, both open. Every number on this
-        site links to the file it came from.
-      </p>
-
-      <div className="mt-8 flex flex-wrap items-center gap-2">
-        <Button href={`mailto:${site.email}`} variant="primary">
-          Email me
-        </Button>
-        {resume.enabled ? <Button href={resume.href}>Résumé (PDF)</Button> : null}
-        <Button href={site.github} external>
-          GitHub
-        </Button>
-        <Button href={site.linkedin} external>
-          LinkedIn
-        </Button>
-      </div>
-
-      <section aria-labelledby="work" className="mt-14 sm:mt-20">
-        <h2
-          id="work"
-          className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint"
-        >
-          Work
-        </h2>
-        <div className="mt-5 grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
-          {projects.map((p) => (
-            <ProjectCard key={p.slug} project={p} />
-          ))}
+    <>
+      <section id="top" className="portfolio-hero page-width" aria-labelledby="intro-heading">
+        <div className="hero-copy">
+          <p className="eyebrow">{site.title} &middot; React &middot; 3+ years</p>
+          <h1 id="intro-heading">I build the unglamorous parts of <em>AI products.</em></h1>
+          <p className="hero-description">
+            The gateway, the cap, the fallback, and the citation that can&rsquo;t
+            be faked. Two of my products are below, both running, both open.
+            Every number links to the file it came from.
+          </p>
+        </div>
+        <div className="hero-aside">
+          <p><span className="status-dot" />Frontend engineer at Kindtech</p>
+          <p><span className="status-dot muted" />{site.location}</p>
         </div>
       </section>
-
+      <section id="work" className="projects-section section-border" aria-labelledby="work-heading">
+        <div className="page-width">
+          <div className="section-heading">
+            <h2 id="work-heading">Selected projects</h2>
+            <span className="eyebrow">01 &ndash; {String(projects.length).padStart(2, "0")}</span>
+          </div>
+          <div className="project-list">
+            {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} />)}
+          </div>
+        </div>
+      </section>
       <Experience />
-    </div>
+    </>
   );
 }

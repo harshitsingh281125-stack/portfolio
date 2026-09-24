@@ -2,73 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ==========================================================================
-   Tokens — PLAN.md §1.1
-   Every value below was computed with a WCAG contrast script, not estimated.
-   Ratios are recorded beside each token so a future change has to argue with
-   a number. Body text targets 4.5:1; large/bold text 3:1.
-   ========================================================================== */
-
 :root {
-  /* Surfaces */
-  --surface:        #F7F8F8;
-  --panel:          #FFFFFF;
-  --border:         #DCE0E1;
-  --border-strong:  #C4CACC;
-
-  /* Content — ratios vs --surface */
-  --content:        #1A1F22;  /* 15.63:1 */
-  --content-muted:  #5B6569;  /*  5.62:1 */
-  --content-faint:  #667175;  /*  4.72:1 */
-
-  /* Signals. Colour appears ONLY on elements carrying evidence. */
-  --verified:       #0F6B3D;  /*  6.19:1 */
-  --verified-soft:  rgba(15, 107, 61, 0.10);
-  --unverified:     #8A5A00;  /*  5.57:1 */
-  --unverified-soft:rgba(138, 90, 0, 0.10);
-  --behind:         #A8201A;  /*  6.84:1 */
-  --behind-soft:    rgba(168, 32, 26, 0.09);
-
-  /* Accent — deliberately rare. Not used for links. */
-  --accent:         #1B4FD8;  /*  6.25:1 */
-  --accent-soft:    rgba(27, 79, 216, 0.10);
-
-  --focus:          #1B4FD8;
-}
-
-/* No theme toggle by design (PLAN.md §1.6, dark-mode.md): the system decides. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --surface:        #101416;
-    --panel:          #181D20;
-    --border:         #262C30;
-    --border-strong:  #394247;
-
-    --content:        #E8ECEE;  /* 15.58:1 */
-    --content-muted:  #9BA5AA;  /*  7.37:1 */
-    --content-faint:  #8A9499;  /*  5.98:1 */
-
-    --verified:       #4CC98A;  /*  8.85:1 */
-    --verified-soft:  rgba(76, 201, 138, 0.13);
-    --unverified:     #E5A93C;  /*  8.88:1 */
-    --unverified-soft:rgba(229, 169, 60, 0.13);
-    --behind:         #F0736A;  /*  6.50:1 */
-    --behind-soft:    rgba(240, 115, 106, 0.13);
-
-    --accent:         #8AB0F5;  /*  8.48:1 */
-    --accent-soft:    rgba(138, 176, 245, 0.14);
-
-    --focus:          #8AB0F5;
-  }
+  color-scheme: light;
+  --surface: #F3EFE6;
+  --panel: #FBF9F4;
+  --border: #DDD6C6;
+  --border-strong: #CFC7B5;
+  --content: #17150F;
+  --content-muted: #3D392F;
+  --content-faint: #5B5648;
+  --verified: #2F7045;
+  --verified-soft: rgba(47, 112, 69, 0.1);
+  --unverified: #805300;
+  --unverified-soft: rgba(128, 83, 0, 0.1);
+  --behind: #A8201A;
+  --behind-soft: rgba(168, 32, 26, 0.09);
+  --accent: #A63A0C;
+  --accent-soft: rgba(166, 58, 12, 0.1);
+  --focus: #A63A0C;
+  --inverse: #17150F;
+  --inverse-panel: #26231C;
+  --inverse-content: #EDE8DC;
+  --inverse-muted: #CFC7B5;
+  --inverse-faint: #B8AF9B;
+  --inverse-border: #4A4538;
 }
 
 @layer base {
   * { box-sizing: border-box; }
-
-  html {
-    -webkit-text-size-adjust: 100%;
-  }
-
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
     background: var(--surface);
     color: var(--content);
@@ -76,32 +38,12 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-
-  /* Prose is the serif; the interface is the sans. One job each. */
-  .prose-serif {
-    font-family: var(--font-serif), Georgia, serif;
-    font-size: 1.0625rem;   /* 17px */
-    line-height: 1.65;
-  }
-
-  /* No orphaned last word on a headline ("faked." alone on line four). */
   h1, h2, h3 { text-wrap: balance; }
-
-  ::selection {
-    background: var(--accent-soft);
-    color: var(--content);
-  }
-
-  /* Visible keyboard focus everywhere, never removed. */
-  :focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-    border-radius: 3px;
-  }
+  .prose-serif { font-family: var(--font-serif), Georgia, serif; font-size: 1.0625rem; line-height: 1.65; }
+  ::selection { background: var(--accent-soft); color: var(--content); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
   :focus:not(:focus-visible) { outline: none; }
-
-  /* Motion is one orchestrated moment (the tour stage) and nothing else.
-     Anything that does animate must stop here. */
+  section[id], footer[id] { scroll-margin-top: 32px; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.001ms !important;
@@ -113,20 +55,190 @@
 }
 
 @layer components {
-  /* Skip link: present in the DOM, revealed on focus. */
   .skip-link {
-    position: absolute;
-    left: -9999px;
-    top: 0;
-    z-index: 100;
-    padding: 0.75rem 1rem;
-    background: var(--panel);
-    color: var(--content);
+    position: absolute; left: -9999px; top: 0; z-index: 100;
+    padding: 12px 16px; background: var(--panel); color: var(--content);
     border: 1px solid var(--border-strong);
-    border-radius: 0 0 8px 0;
-    font-size: 0.9375rem;
   }
-  .skip-link:focus {
-    left: 0;
-  }
+  .skip-link:focus { left: 0; }
+  .page-width { width: calc(100% - 192px); max-width: 1248px; margin-inline: auto; }
+  .section-border { border-top: 1px solid var(--border); }
+  .eyebrow { font-family: var(--font-mono), monospace; font-size: 14px; line-height: 1.6; color: var(--content-faint); }
+  .site-header { border-top: 0; border-bottom: 1px solid var(--border); }
+  .header-inner { display: flex; align-items: center; gap: 32px; min-height: 109px; padding-block: 28px; }
+  .site-brand { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-display), Georgia, serif; font-size: 22px; font-weight: 600; flex-shrink: 0; }
+  .brand-monogram { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--content); color: var(--surface); font-size: 20px; }
+  .primary-nav { display: flex; align-items: center; justify-content: flex-end; gap: 32px; margin-left: auto; font-size: 15px; font-weight: 500; }
+  .primary-nav a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
+  .primary-nav a:hover, .footer-links a:hover { color: var(--accent); }
+  .pill-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 20px; border-radius: 999px; background: var(--content); color: var(--surface); font-size: 15px; font-weight: 500; text-align: center; }
+  .pill-button svg { flex-shrink: 0; }
+  .pill-button:hover { background: var(--content-muted); }
+  .header-download { flex-shrink: 0; }
+  .portfolio-hero { display: grid; grid-template-columns: minmax(0, 9fr) minmax(0, 3fr); gap: 32px; align-items: end; padding-block: 112px 104px; }
+  .hero-copy > .eyebrow { text-transform: uppercase; margin-bottom: 30px; }
+  .portfolio-hero h1 { font-family: var(--font-display), Georgia, serif; font-size: 84px; line-height: 1.04; font-weight: 400; text-wrap: initial; }
+  .portfolio-hero h1 em { color: var(--accent); }
+  .hero-description { margin-top: 32px; max-width: 720px; font-size: 20px; line-height: 1.6; color: var(--content-muted); }
+  .hero-aside { display: flex; flex-direction: column; gap: 16px; padding-bottom: 8px; font-size: 15px; line-height: 1.5; color: var(--content-muted); }
+  .hero-aside p { display: flex; align-items: baseline; gap: 10px; }
+  .status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; background: var(--verified); }
+  .status-dot.muted { background: var(--inverse-faint); }
+  .projects-section { padding-block: 88px 112px; }
+  .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 56px; }
+  .section-heading h2, .company-intro h2, .resume-intro h2 { font-family: var(--font-display), Georgia, serif; font-size: 56px; line-height: 1.1; font-weight: 400; }
+  .section-heading > .eyebrow { flex-shrink: 0; }
+  .project-list { display: grid; gap: 48px; }
+  .project-card { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 48px; padding: 48px; border: 1px solid var(--border); border-radius: 24px; background: var(--panel); }
+  .project-copy { min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  .project-number { color: var(--accent); }
+  .project-copy h3 { font-family: var(--font-display), Georgia, serif; font-size: 44px; line-height: 1.1; font-weight: 600; }
+  .project-copy h3 a:hover { color: var(--accent); }
+  .project-summary { font-size: 18px; line-height: 1.6; color: var(--content-muted); }
+  .project-decisions { list-style: disc; padding-left: 20px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 1.55; color: var(--content-muted); }
+  .stack-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stack-tags li { padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: 999px; font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.5; color: var(--content-muted); }
+  .project-links { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+  .project-links a, .project-access { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); min-height: 44px; }
+  .project-links a { font-size: 15px; font-weight: 600; }
+  .project-links a:hover, .project-access:hover, .contact-email:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .project-access, .demo-access { font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.7; color: var(--content-faint); margin-top: -12px; }
+  .demo-access summary { cursor: pointer; min-height: 44px; align-content: center; width: fit-content; }
+  .demo-access p { padding-top: 4px; overflow-wrap: anywhere; }
+  .project-visual { min-width: 0; padding: 28px; border-radius: 16px; background: var(--inverse); color: var(--inverse-content); align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+  .preview-topline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-weight: 500; }
+  .preview-topline .eyebrow { color: var(--inverse-faint); font-size: 11px; font-weight: 400; }
+  .project-image { display: block; overflow: hidden; border-radius: 8px; background: var(--panel); }
+  .project-image img { width: 100%; height: auto; aspect-ratio: 1073 / 519; object-fit: contain; }
+  .project-image:hover { outline: 2px solid var(--inverse-faint); outline-offset: 4px; }
+  .tour-link { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14px; }
+  .tour-link svg:last-child { margin-left: auto; }
+  .tour-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .project-evidence { display: flex; gap: 18px; align-items: center; border-top: 1px solid var(--inverse-border); padding-top: 24px; margin-top: 8px; }
+  .evidence-number { font-family: var(--font-display), Georgia, serif; font-size: 48px; line-height: 1; }
+  .project-evidence > div { min-width: 0; }
+  .project-evidence p { font-size: 13px; line-height: 1.6; color: var(--inverse-muted); }
+  .project-evidence a { display: inline; font-family: var(--font-mono), monospace; font-size: 11px; color: var(--inverse-faint); overflow-wrap: anywhere; text-decoration: underline; text-underline-offset: 3px; }
+  .project-evidence a svg { display: inline; vertical-align: middle; }
+  .visual-devlinks { background: #E6DFCF; color: var(--content); }
+  .visual-devlinks .eyebrow, .visual-devlinks .project-evidence p, .visual-devlinks .project-evidence a { color: var(--content-faint); }
+  .visual-devlinks .project-evidence { border-color: var(--border-strong); }
+  .project-reversed .project-copy { grid-column: 2; grid-row: 1; }
+  .project-reversed .project-visual { grid-column: 1; grid-row: 1; }
+  .company-section { background: var(--inverse); color: var(--inverse-content); padding-block: 112px 120px; }
+  .company-intro { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; margin-bottom: 64px; }
+  .company-intro .eyebrow { color: var(--inverse-faint); text-transform: uppercase; margin-bottom: 20px; }
+  .company-intro > p { font-size: 18px; line-height: 1.6; color: var(--inverse-muted); }
+  .company-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .company-card { min-width: 0; padding: 40px; border: 1px solid #3A362C; border-radius: 20px; background: var(--inverse-panel); display: flex; flex-direction: column; gap: 24px; }
+  .company-card > .eyebrow { color: #E9895B; }
+  .company-card h3 { font-family: var(--font-display), Georgia, serif; font-size: 36px; line-height: 1.15; font-weight: 600; text-wrap: initial; }
+  .company-description { font-size: 17px; line-height: 1.6; color: var(--inverse-muted); }
+  .company-bullets { display: flex; flex-direction: column; gap: 20px; font-size: 16px; line-height: 1.65; }
+  .company-card .stack-tags { margin-top: auto; padding-top: 8px; }
+  .company-card .stack-tags li { border-color: var(--inverse-border); color: var(--inverse-muted); }
+  .resume-section { display: grid; grid-template-columns: 4fr 8fr; gap: 64px; padding-block: 112px; }
+  .resume-intro { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+  .resume-intro > p { font-size: 17px; line-height: 1.6; color: var(--content-muted); }
+  .accent-button { background: var(--accent); color: white; }
+  .accent-button:hover { background: #7C2B08; }
+  .resume-details { display: flex; flex-direction: column; gap: 48px; min-width: 0; }
+  .resume-label { font-family: var(--font-mono), monospace; font-weight: 400; font-size: 13px; line-height: 1.6; text-transform: uppercase; color: var(--content-faint); padding-bottom: 16px; border-bottom: 1px solid var(--content); margin-bottom: 20px; }
+  .resume-job { display: grid; grid-template-columns: 1fr 3fr; gap: 24px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .resume-job h4 { font-size: 18px; line-height: 1.5; font-weight: 600; }
+  .resume-job > div > p { margin-top: 10px; }
+  .resume-details p:not(.eyebrow) { font-size: 16px; line-height: 1.7; color: var(--content-muted); }
+  .resume-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+  .site-footer { padding-block: 88px 32px; }
+  .footer-main { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
+  .contact-copy { min-width: 0; }
+  .contact-copy h2 { font-family: var(--font-display), Georgia, serif; font-size: 64px; font-weight: 400; line-height: 1.1; margin-bottom: 20px; }
+  .contact-email { color: var(--accent); font-size: 22px; font-weight: 500; overflow-wrap: anywhere; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+  .footer-links a { display: inline-flex; gap: 5px; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; }
+  .footer-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--content-faint); font-family: var(--font-mono), monospace; font-size: 12px; }
+}
+
+@media (min-width: 1600px) {
+  .portfolio-hero { padding-block: 120px 112px; }
+}
+@media (max-width: 1199px) {
+  .page-width { width: calc(100% - 96px); }
+  .primary-nav { gap: 20px; }
+  .header-inner { gap: 24px; }
+  .portfolio-hero { grid-template-columns: minmax(0, 1fr); padding-block: 88px; }
+  .portfolio-hero h1 { max-width: 850px; font-size: 72px; }
+  .hero-aside { flex-direction: row; flex-wrap: wrap; gap: 12px 28px; padding: 0; }
+  .project-card { padding: 32px; gap: 32px; }
+  .project-visual { padding: 24px; }
+  .company-card { padding: 28px; }
+  .resume-section { gap: 40px; }
+  .footer-main { align-items: flex-start; flex-direction: column; gap: 24px; }
+}
+@media (max-width: 899px) {
+  .page-width { width: calc(100% - 64px); }
+  .header-inner { flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-block: 20px; }
+  .primary-nav { order: 3; width: 100%; margin: 0; justify-content: space-between; gap: 12px; }
+  .portfolio-hero { padding-block: 72px; }
+  .portfolio-hero h1 { font-size: 64px; }
+  .projects-section { padding-block: 64px 80px; }
+  .section-heading { margin-bottom: 40px; }
+  .section-heading h2, .company-intro h2, .resume-intro h2 { font-size: 48px; }
+  .project-card { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .project-reversed .project-copy, .project-reversed .project-visual { grid-column: auto; grid-row: auto; }
+  .project-visual { padding: 28px; }
+  .company-section { padding-block: 80px; }
+  .company-intro { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-bottom: 40px; }
+  .company-products { grid-template-columns: minmax(0, 1fr); }
+  .company-card { padding: 32px; }
+  .resume-section { padding-block: 80px; grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .site-footer { padding-top: 64px; }
+}
+@media (max-width: 599px) {
+  .page-width { width: calc(100% - 40px); }
+  .header-inner { padding-block: 16px 8px; gap: 12px; }
+  .site-brand { font-size: 20px; gap: 8px; }
+  .brand-monogram { width: 34px; height: 34px; font-size: 18px; }
+  .header-download { padding: 10px 14px; min-height: 44px; font-size: 12px; gap: 7px; }
+  .primary-nav { flex-wrap: wrap; gap: 0 14px; justify-content: flex-start; font-size: 13px; }
+  .portfolio-hero { padding-block: 48px; gap: 24px; }
+  .hero-copy > .eyebrow { font-size: 11px; margin-bottom: 22px; }
+  .portfolio-hero h1 { font-size: 44px; line-height: 1.08; }
+  .hero-description { font-size: 17px; margin-top: 24px; }
+  .hero-aside { gap: 10px; flex-direction: column; font-size: 13px; }
+  .projects-section { padding-block: 48px 64px; }
+  .section-heading { gap: 12px; margin-bottom: 28px; }
+  .section-heading h2, .company-intro h2, .resume-intro h2 { font-size: 36px; }
+  .section-heading > .eyebrow { font-size: 11px; }
+  .project-list { gap: 24px; }
+  .project-card { padding: 24px 20px; border-radius: 16px; gap: 28px; }
+  .project-copy { gap: 20px; }
+  .project-copy h3 { font-size: 36px; }
+  .project-number { font-size: 12px; }
+  .project-summary { font-size: 17px; }
+  .project-decisions { font-size: 15px; }
+  .project-links { gap: 0 16px; }
+  .project-links a { font-size: 14px; }
+  .stack-tags { gap: 6px; }
+  .stack-tags li { font-size: 11px; padding: 5px 10px; }
+  .project-visual { padding: 20px 16px; border-radius: 10px; gap: 16px; }
+  .preview-topline .eyebrow { font-size: 10px; }
+  .tour-link { font-size: 12px; gap: 6px; }
+  .project-evidence { gap: 12px; padding-top: 20px; }
+  .evidence-number { font-size: 38px; }
+  .project-evidence p { font-size: 12px; }
+  .company-section { padding-block: 64px; }
+  .company-intro .eyebrow { font-size: 11px; }
+  .company-intro > p { font-size: 17px; }
+  .company-card { padding: 24px; gap: 20px; border-radius: 16px; }
+  .company-card h3 { font-size: 30px; }
+  .company-bullets { font-size: 15px; }
+  .resume-section { padding-block: 64px; }
+  .resume-job { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .resume-skills { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .resume-details { gap: 32px; }
+  .contact-copy h2 { font-size: 48px; }
+  .contact-email { font-size: 18px; }
+  .footer-links { gap: 8px 20px; }
+  .footer-meta { margin-top: 40px; }
 }
