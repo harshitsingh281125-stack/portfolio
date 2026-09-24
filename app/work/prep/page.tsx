@@ -7,6 +7,7 @@ import Link from "next/link";
 import { toursFor } from "@/lib/tours";
 import { blob, demoLogins, demos, repos } from "@/lib/site";
 import { pageMeta } from "@/lib/meta";
+import { projectBySlug } from "@/lib/projects";
 
 export const metadata: Metadata = pageMeta({
   title: "Prep",
@@ -33,6 +34,29 @@ export default function PrepCaseStudy() {
     <CaseStudy
       title="Prep"
       standfirst="An AI-native learning OS that generates a study roadmap, schedules recall, and will not show you a link it cannot trace back to a document it already had."
+      glance={{
+        built: (
+          <>
+            End to end: ten Postgres tables behind row-level security, seven
+            auth-gated API routes, ten screens, a provider-agnostic AI gateway
+            with failover, and a hand-written spaced-repetition scheduler.
+          </>
+        ),
+        hardest: (
+          <>
+            Making a hallucinated study link impossible to show. The model ranks
+            our own numbered documents, the server resolves each index to a real
+            row, and the response schema has no field a URL could go in.
+          </>
+        ),
+        stack: projectBySlug("prep").stack,
+        links: { demo: demos.prep.url, repo: repos.prep, tour: `/tour/${inMotion.slug}` },
+        access: (
+          <>
+            demo login &middot; {demoLogins.prep.email} &middot; {demoLogins.prep.password}
+          </>
+        ),
+      }}
       rail={rail}
     >
       <Section id="problem" heading="The problem">

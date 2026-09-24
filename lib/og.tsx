@@ -7,8 +7,8 @@ import { site } from "@/lib/site";
  * One renderer for every route's Open Graph image (PLAN.md §4, Phase 6).
  *
  * The card is the site in miniature: a mono kicker, the serif title, the
- * sans description, and — only where the page itself backs one — a VERIFIED
- * claim in the same green as the badge. A card never states a number the page
+ * sans description, and — only where the page itself backs one — a claim with
+ * the file path that proves it. A card never states a number the page
  * it links to does not prove; pages with no headline number get none.
  *
  * Light theme only. An OG image is shown by someone else's app on someone
@@ -29,8 +29,6 @@ const C = {
   content: "#1A1F22",
   muted: "#5B6569",
   faint: "#667175",
-  verified: "#0F6B3D",
-  verifiedSoft: "rgba(15, 107, 61, 0.10)",
 };
 
 async function font(file: string) {
@@ -121,29 +119,8 @@ export async function ogImage({ kicker, title, description, claim }: OgCard) {
         >
           {claim ? (
             <>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  background: C.verifiedSoft,
-                  color: C.verified,
-                }}
-              >
-                <div
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
-                    background: C.verified,
-                  }}
-                />
-                VERIFIED
-              </div>
               {/* Margins, not gap: Satori does not apply gap across a fragment. */}
-              <div style={{ display: "flex", marginLeft: 20, color: C.content }}>
+              <div style={{ display: "flex", color: C.content }}>
                 {`${claim.value} ${claim.label}`}
               </div>
               <div style={{ display: "flex", marginLeft: 16, color: C.faint }}>

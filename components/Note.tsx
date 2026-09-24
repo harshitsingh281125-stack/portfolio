@@ -28,7 +28,7 @@ export function NoteLayout({ slug, children }: { slug: string; children: ReactNo
           </Link>{" "}
           &middot; <time dateTime={note.date}>{formatDate(note.date)}</time>
         </p>
-        <h1 className="mt-3 max-w-prose font-serif text-display font-semibold text-content">
+        <h1 className="mt-3 max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
           {note.title}
         </h1>
         <p className="mt-5 max-w-prose prose-serif text-content-muted">{note.dek}</p>

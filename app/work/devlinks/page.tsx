@@ -6,6 +6,7 @@ import { TourEmbed } from "@/components/TourEmbed";
 import { toursFor } from "@/lib/tours";
 import { blob, demos, repos } from "@/lib/site";
 import { pageMeta } from "@/lib/meta";
+import { projectBySlug } from "@/lib/projects";
 
 export const metadata: Metadata = pageMeta({
   title: "DevLinks",
@@ -31,6 +32,34 @@ export default function DevLinksCaseStudy() {
     <CaseStudy
       title="DevLinks"
       standfirst="A bookmark manager is a CRUD tutorial until you notice what the save button does: it hands a URL a stranger typed to a server on your own network, and asks it to go fetch."
+      glance={{
+        built: (
+          <>
+            End to end: GitHub OAuth, collections, metadata previews, faceted
+            search and public sharing, with URL normalization, deduplication and
+            full-text search enforced in Postgres rather than in the client.
+          </>
+        ),
+        hardest: (
+          <>
+            Fetching URLs a stranger typed without becoming an SSRF engine:
+            hostnames are resolved and private ranges rejected on every redirect
+            hop, not only the first.
+          </>
+        ),
+        stack: projectBySlug("devlinks").stack,
+        links: { demo: demos.devlinks.url, repo: repos.devlinks, tour: `/tour/${inMotion.slug}` },
+        access: (
+          <a
+            href={`${demos.devlinks.url}${demos.devlinks.publicEntry}`}
+            className="text-content-faint underline underline-offset-2 decoration-edge-strong hover:decoration-content"
+            target="_blank"
+            rel="noreferrer"
+          >
+            a published collection &middot; no login
+          </a>
+        ),
+      }}
       rail={rail}
     >
       <Section id="problem" heading="The problem">

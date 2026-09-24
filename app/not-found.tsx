@@ -22,7 +22,7 @@ export default function NotFound() {
       <p className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
         404
       </p>
-      <h1 className="mt-3 max-w-prose font-serif text-display font-semibold text-content">
+      <h1 className="mt-3 max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
         There is nothing at this address.
       </h1>
       <p className="mt-5 max-w-prose prose-serif text-content-muted">

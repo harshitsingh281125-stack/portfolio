@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Tour } from "@/lib/tours";
+import { Button } from "@/components/Button";
 
 /**
  * The tour stage (PLAN.md §1.5) — the one orchestrated moment on the site.
@@ -97,12 +98,7 @@ export function TourEmbed({
           you scroll at your own pace.
         </p>
         <p className="mt-4">
-          <Link
-            href={`/tour/${tour.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-edge-strong px-3 py-1.5 text-ui font-medium text-content no-underline hover:bg-surface"
-          >
-            Open the tour
-          </Link>
+          <Button href={`/tour/${tour.slug}`}>Open the tour</Button>
         </p>
       </div>
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDate, notes } from "@/lib/notes";
+import { notes } from "@/lib/notes";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata: Metadata = pageMeta({
@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMeta({
 export default function NotesIndex() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
-      <h1 className="font-serif text-display font-semibold text-content">Notes</h1>
+      <h1 className="font-serif text-display-sm sm:text-display font-semibold text-content">Notes</h1>
       <p className="mt-5 max-w-prose prose-serif text-content-muted">
         Three things I measured while building Prep, at more length than a case
         study has room for. Each one links to the code and the log entry it came
@@ -24,7 +24,7 @@ export default function NotesIndex() {
         {notes.map((n) => (
           <li key={n.slug} className="py-6">
             <p className="font-mono text-meta text-content-faint">
-              <time dateTime={n.date}>{formatDate(n.date)}</time>
+              {n.kicker}
             </p>
             <h2 className="mt-2 font-serif text-h3 font-semibold text-content">
               <Link

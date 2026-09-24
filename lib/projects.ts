@@ -32,6 +32,13 @@ export type Project = {
    */
   entry?: { href: string; label: string };
   stat: { value: string; label: string; href: string; source: string };
+  /** What it is built with. Recruiters search for these words; say them once, plainly. */
+  stack: string[];
+  /**
+   * A still cut from the project's own tour (scripts/thumbs.mjs), light and
+   * dark. Alt describes what the picture shows, not what it proves.
+   */
+  thumb: { light: string; dark: string; width: number; height: number; alt: string };
 };
 
 export const projects: Project[] = [
@@ -53,6 +60,14 @@ export const projects: Project[] = [
       label: "automated tests — 283 unit, 81 end-to-end",
       href: `${repos.prep}/tree/main/tests`,
       source: "tests/unit + tests/e2e",
+    },
+    stack: ["Next.js", "TypeScript", "Supabase", "Postgres + RLS", "pgvector", "Playwright"],
+    thumb: {
+      light: "/work/prep-light.jpg",
+      dark: "/work/prep-dark.jpg",
+      width: 1073,
+      height: 519,
+      alt: "Prep's progress dashboard: a behind-pace warning, 41 of 56 hours logged, 78% recall accuracy, and charts of hours and accuracy over time.",
     },
   },
   {
@@ -77,5 +92,19 @@ export const projects: Project[] = [
       href: blob("devlinks", "src/server/taggingRules.ts", "L191-L297"),
       source: "src/server/taggingRules.ts",
     },
+    stack: ["React", "TypeScript", "Redux Toolkit", "Supabase", "Postgres + RLS"],
+    thumb: {
+      light: "/work/devlinks-light.jpg",
+      dark: "/work/devlinks-dark.jpg",
+      width: 1073,
+      height: 514,
+      alt: "A public DevLinks collection, React Debugging, listing three saved bookmarks with their source domains.",
+    },
   },
 ];
+
+export function projectBySlug(slug: string): Project {
+  const p = projects.find((x) => x.slug === slug);
+  if (!p) throw new Error(`No project registered for slug "${slug}" in lib/projects.ts`);
+  return p;
+}

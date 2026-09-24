@@ -14,8 +14,15 @@ export type Note = {
   title: string;
   /** One sentence. The index shows it, and it is the page description. */
   dek: string;
-  /** ISO date the note was written. */
+  /** ISO date the note was written. Shown on the note itself, not the index. */
   date: string;
+  /**
+   * What the index shows above each title, in place of the date. All three
+   * notes were written on one day, and three identical dates stacked in a list
+   * read as a bulk upload. The dates stay true on each note; the index says
+   * what each one is about instead.
+   */
+  kicker: string;
   /**
    * The decision on the case study that this note is the long version of.
    * Notes do not carry a Decision block of their own: §1.4 spends that
@@ -31,6 +38,7 @@ export const notes: Note[] = [
     title: "The similarity floor is 0.64, and I measured it",
     dek: "0.55 sounds strict for a cosine similarity. Against Gemini embeddings it would have grounded a Postgres topic on React documentation and badged every link verified.",
     date: "2026-09-21",
+    kicker: "Prep · RAG grounding",
     related: { href: "/work/prep#d-citation", label: "Citation by index, on the Prep case study" },
   },
   {
@@ -38,6 +46,7 @@ export const notes: Note[] = [
     title: "My E2E suite spent 26 real API calls and reported green",
     dek: "The mock provider was configured correctly and never applied. Nothing failed, because a real model answers a test at least as well as a fake one.",
     date: "2026-09-21",
+    kicker: "Prep · Testing",
     related: { href: "/work/prep#differently", label: "What I’d do differently, on the Prep case study" },
   },
   {
@@ -45,6 +54,7 @@ export const notes: Note[] = [
     title: "Why the dashboard is allowed to say you’re behind",
     dek: "A progress screen that can deliver bad news has to be right about it: derived on read, measured in whole weeks, and never graded by a model.",
     date: "2026-09-21",
+    kicker: "Prep · Product honesty",
     related: { href: "/work/prep#d-derived", label: "Derived on read, on the Prep case study" },
   },
 ];

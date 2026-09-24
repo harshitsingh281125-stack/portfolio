@@ -84,6 +84,9 @@
     line-height: 1.65;
   }
 
+  /* No orphaned last word on a headline ("faked." alone on line four). */
+  h1, h2, h3 { text-wrap: balance; }
+
   ::selection {
     background: var(--accent-soft);
     color: var(--content);

@@ -1,83 +1,52 @@
 import type { ReactNode } from "react";
 
 /**
- * The site's central idea, as a component (PLAN.md §0).
+ * A claim on this site cites the file it came from (PLAN.md §0). The citation
+ * is the link itself — a mono file path under the number it proves.
  *
- * Prep refuses to let a model invent a URL: it cites a document by index and
- * the server resolves that index to a real row. This site applies the same
- * rule to its own claims. A claim is either linked to the file that proves it,
- * or it is explicitly marked as not publicly checkable.
- *
- * Colour is never the only carrier: each badge has a filled dot AND the word.
- * (color.md > Best practices: "Avoid relying solely on color to differentiate
- * between objects, indicate interactivity, or communicate essential
- * information.")
+ * The VERIFIED / UNVERIFIED chips this component used to print were removed on
+ * the owner's call: the amber one read, at a skim, as a warning about his own
+ * résumé, and once that one was gone a green chip on everything else was
+ * decoration rather than a distinction. What proves a number is the path, and
+ * the path is still here. Work that cannot be linked now simply says nothing.
  */
 
 type Status = "verified" | "unverified";
 
-const STYLES: Record<Status, { label: string; className: string }> = {
-  verified: {
-    label: "VERIFIED",
-    className: "text-verified bg-verified-soft",
-  },
-  unverified: {
-    label: "UNVERIFIED",
-    className: "text-unverified bg-unverified-soft",
-  },
-};
-
 export function ProvenanceBadge({
-  status,
   href,
   source,
-  title,
 }: {
-  status: Status;
-  /** Omitted for unverified claims — there is nothing honest to link to. */
+  status?: Status;
+  /** Omitted where there is nothing honest to link to; then nothing renders. */
   href?: string;
   /** e.g. "tests/unit + tests/e2e" */
   source?: string;
-  /** Why an unverified claim cannot be checked. */
+  /** Kept for callers that explain an unlinkable claim; unused since the chips went. */
   title?: string;
 }) {
-  const s = STYLES[status];
+  if (!source) return null;
 
-  const badge = (
-    <span
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded px-1.5 py-0.5 font-mono text-meta font-medium ${s.className}`}
-    >
-      <span aria-hidden="true" className="text-[0.6em] leading-none">
-        ●
-      </span>
-      {s.label}
+  const text = (
+    <span className="font-mono text-meta text-content-faint [overflow-wrap:anywhere]">
+      {source}
     </span>
   );
 
-  if (status === "unverified" || !href) {
+  if (!href) {
     return (
-      <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1" title={title}>
-        {badge}
-        {source ? (
-          <span className="font-mono text-meta text-content-faint [overflow-wrap:anywhere]">{source}</span>
-        ) : null}
-      </span>
+      <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">{text}</span>
     );
   }
 
   return (
     <a
       href={href}
-      className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 no-underline"
+      className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-meta text-content-faint underline underline-offset-2 decoration-edge-strong hover:decoration-content"
       target="_blank"
       rel="noreferrer"
     >
-      {badge}
-      {source ? (
-        <span className="font-mono text-meta text-content-faint underline underline-offset-2 decoration-edge-strong [overflow-wrap:anywhere]">
-          {source}
-        </span>
-      ) : null}
+      {source}
     </a>
   );
 }
@@ -93,7 +62,7 @@ export function Claim({
 }: {
   value: string;
   label: string;
-  status: Status;
+  status?: Status;
   href?: string;
   source?: string;
   title?: string;
@@ -177,7 +146,27 @@ export function Decision({
         <dd className="prose-serif text-content">{because}</dd>
       </dl>
 
-      {children ? <div className="mt-4 prose-serif text-content-muted">{children}</div> : null}
+      {/* Chose / Over / Because is the decision; this is the argument for it.
+          Folded, so a skimmer reads four decisions in the time one used to
+          take, and an engineer is one click from all of it. Find-in-page
+          still reaches folded text: Chrome opens a <details> on a match. */}
+      {children ? (
+        <details className="group mt-4">
+          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 text-ui font-medium text-content sm:min-h-0 [&::-webkit-details-marker]:hidden">
+            <span
+              aria-hidden="true"
+              className="font-mono text-meta text-content-faint transition-transform group-open:rotate-90"
+            >
+              &rsaquo;
+            </span>
+            <span className="underline decoration-edge-strong underline-offset-2 hover:decoration-content">
+              <span className="group-open:hidden">The full reasoning</span>
+              <span className="hidden group-open:inline">Hide the reasoning</span>
+            </span>
+          </summary>
+          <div className="mt-2 prose-serif text-content-muted">{children}</div>
+        </details>
+      ) : null}
 
       {href || source ? (
         <div className="mt-5 border-t border-edge pt-3">

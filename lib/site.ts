@@ -6,6 +6,10 @@
 export const site = {
   name: "Harshit Singh",
   role: "AI product engineer who ships frontend",
+  /** The short form, for the home page's first line. */
+  title: "AI product engineer",
+  /** From the résumé summary: frontend since June 2023. */
+  experience: "3+ years shipping React and React Native",
   location: "Bengaluru, India",
   email: "harshit.singh281125@gmail.com",
   phone: "+91 78392 48591",

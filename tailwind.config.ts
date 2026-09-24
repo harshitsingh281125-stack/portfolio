@@ -39,6 +39,9 @@ const config: Config = {
         h3: ["1.25rem", { lineHeight: "1.35" }],
         h2: ["1.6875rem", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
         display: ["2.5rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        // Below 640px. At 2.5rem the home headline ran eight lines and filled a
+        // 390px phone's whole first screen before a single project appeared.
+        "display-sm": ["1.875rem", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
       },
       maxWidth: {
         prose: "68ch",

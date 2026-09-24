@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21). Phase 7 (ship) is next, and starts with O1: creating the Vercel project, which only you can do.
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day. Phase 7 (ship) is next, and starts with O1: creating the Vercel project, which only you can do.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -20,14 +20,18 @@ senior engineers at late-stage startups and FAANG-tier companies. It exists to d
 
 Prep's defining idea is that a hallucinated URL is *unrepresentable* — the model cites a document
 by index and the server resolves it against a real row. This site applies the same rule to its own
-claims. Every number on it is either linked to the file that proves it, or marked as unverifiable.
+claims. Every number on it carries the file it came from.
 
 That is not a metaphor. It is the literal design system:
 
 | On the site | Means |
 |---|---|
-| `364 tests` with a green **VERIFIED** dot | Links to `tests/unit` + `tests/e2e`; the count is `grep`-able |
-| `~60K lines removed` with an amber **UNVERIFIED** dot | True, from private employer work, not publicly checkable — and the site says so |
+| `364 tests` over `tests/unit + tests/e2e`, linked | The count is `grep`-able in the repo the link opens |
+| `~60K lines removed`, with no path under it | Private employer work. It cites nothing because it can cite nothing |
+
+**Revised 2026-09-23 (§4.3): the VERIFIED / UNVERIFIED chips are gone.** The rule survives them —
+a number either shows the path it came from or shows nothing — but it is now carried by the
+citation instead of by a coloured stamp beside it.
 
 Nobody else's portfolio does this, because nobody else's *products* are about provenance. It is
 the one idea here that could not be transplanted to a different engineer's site.
@@ -81,8 +85,11 @@ and bold text **3:1** (`accessibility.md › Color contrast`).
 Every pair passes. The first draft's faint-meta grey (`#6D787C`) came in at **4.26:1** and was
 darkened to `#667175` before it reached this document.
 
-Badges never rely on color alone — each carries a filled dot **and** the word VERIFIED / UNVERIFIED
-(`color.md › Best practices`: *"Avoid relying solely on color to differentiate…"*).
+The signal colours are no longer printed as chips (§4.3). They survive inside the two product
+diagrams, where `verified` / `unverified` are states **in Prep**, not judgements on this site — and
+there each state is labelled in words as well as coloured (`color.md › Best practices`: *"Avoid
+relying solely on color to differentiate…"*). With the chips gone, the page is ink on paper plus
+those two diagrams.
 
 ### 1.2 Type
 
@@ -118,6 +125,23 @@ render delay**. Preloading only the serif and taking its variable cut moved that
 halved total blocking time. The cost is real and accepted: nav, buttons and badges show a fallback
 for a beat longer, and the home page paid 3 points (98 → 95) because its mono evidence chips now
 swap later. Both pages clear the ≥95 gate.
+
+**Revised in 6b: the serif is self-hosted and cut to size.** `app/fonts/SourceSerif4-opsz20.woff2`
+is Source Serif 4's opsz build instanced with fonttools at `opsz=20` (the font's default) and
+`wght=400:600`, the only weights the site sets: **32KB**, against 51KB for the file next/font/google
+served. Still the only preloaded face. Measured against a same-day rebuild of the pre-6b commit,
+`/work/prep` went from 88–91 to 98–99. OFL 1.1 with no Reserved Font Name; the licence ships beside
+it, and the recipe is in `app/layout.tsx`.
+
+*A wrong turn worth recording.* The review first reported loose serif spacing ("A PI", "W hy") and
+blamed the font file. It was **headless Chromium's default full hinting**, which snaps each glyph
+advance to whole pixels — `r` drawn 9px wide against a true 7.19px. With
+`--font-render-hinting=none` every cut, including the original, renders tight. Screenshot-based QA
+on this machine should pass that flag, or it will keep finding this.
+
+`display` drops to **30px** (`display-sm`) below 640px: at 40px the home headline ran eight lines
+on a 390px phone and filled the first screen before any project appeared. Headings use
+`text-wrap: balance`.
 
 ### 1.3 Layout
 
@@ -179,7 +203,7 @@ defending"), rendered as the one piece of custom typography on the site:
 │ BECAUSE   pgvector cannot index a vector        │
 │           wider than 2000 dimensions.           │
 │                                                 │
-│ ● VERIFIED  supabase/migrations/0007_resources.sql │
+│ supabase/migrations/0007_resources.sql          │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -210,9 +234,10 @@ to any senior engineer. On its own it is a competent default, not a point of vie
 
 What makes it this person's and not a template:
 
-1. **The color rule** — saturated color exclusively on evidence-bearing elements — is derived from
-   Prep's VERIFIED / UNVERIFIED provenance system. A site about a different product has no reason
-   to invent it.
+1. **The citation rule** — every number shows the file it came from, and a number that cannot show
+   one says so by staying bare — is derived from Prep's own provenance system. A site about a
+   different product has no reason to invent it. (Until §4.3 this was a colour rule too: saturated
+   colour only on evidence-bearing elements. The colour went; the rule did not.)
 2. **The Decision block** copies the rhetorical structure he already writes in (`chose / over /
    because`), so the site sounds like the repos it is describing.
 3. **Rule tags** (`RULE 9`) come from his own numbered `Rules.md`, and link to it.
@@ -254,14 +279,26 @@ No `/about` page. The bio lives in the hero and the experience section; a separa
 
 ### 3.1 Home
 
+*Revised in 6b (§4.2) for the reader who gives the page ten seconds.*
+
+- **Identity line** above the hero, in mono: name · AI product engineer · 3+ years shipping React
+  and React Native · Bengaluru. Who, what and how long, before anything clever.
 - **Hero:** the thesis sentence, first person, no "passionate developer", no emoji, no "Hi 👋".
-- **Two evidence chips** under it, both linking to source.
-- **Project cards:** name, one-line what-it-is, three decision headlines, `[live demo] [code] [▶ tour]`.
-- **Experience:** employer unnamed per your call — "Frontend Engineer · healthcare & marketplace
-  products · Bengaluru · June 2023 — present" — carrying the four highest-signal bullets, each
-  marked UNVERIFIED because private work cannot be checked. That badge is not an apology; it is
-  the site being consistent with its own rule, and a reviewer will notice.
-- **Contact:** email, LinkedIn, GitHub, LeetCode, resume. No availability statement.
+- **Contact buttons** directly under it: `[Email me]` (the one filled button) `[Résumé (PDF)]
+  [GitHub] [LinkedIn]`, then "Open to full-time roles." behind `site.openToRoles` — a claim like
+  any other, turned off the day it stops being true.
+- ~~Two evidence chips~~ — **cut in 6b.** They repeated the cards' own numbers (364 appeared twice
+  above the fold) and pushed the projects off a phone's first screen. The proof now lives once, on
+  each card.
+- **Project cards:** a still from the project's own tour (light and dark, cut by
+  `scripts/thumbs.mjs`, linking to the tour), name, one-line what-it-is, a mono stack line, three
+  decision headlines, the verified number, `[case study] [live demo] [code] [▶ tour]`.
+- **Experience:** **Kindtech Pvt Ltd, named** — the résumé linked from the nav already names it
+  (M5), so leaving it off bought no privacy and cost the recruiter the thing they match on. Five
+  bullets (the 88 PRs / 29 releases one added) and a stack line. 6b cut four amber UNVERIFIED
+  badges down to one; §4.3 removed that one as well, along with its sentence.
+- **Education:** B.Tech CSE, Presidency University, 2019 — 2023.
+- **Contact:** footer, unchanged.
 
 ### 3.2 `/work/prep` — the lead case study
 
@@ -448,6 +485,8 @@ violations, and a manual pass at 320px / 200% zoom / reduced-motion / keyboard-o
 | **4** | Tours | Retoken 2 existing, build `devlinks-in-motion` + `devlinks-trace`, embed all four | 2 | **Done** 2026-09-21. `fb4d057`. Gate: axe 0 on 7 routes **and inside all 4 tour documents**, Lighthouse 95–99 / 100 / 100 / 100. |
 | **5** | Notes | Index + 3 posts | 2 | **Done** 2026-09-21 · `f1baa69`. Gate: axe 0 on 11 routes and inside all 4 tour documents, Lighthouse 97–98 / 100 / 100 / 100 on the four notes routes. Link check: every GitHub citation 200 (7 returned 429 in the batch and 200 when retried with spacing); LeetCode 403 and LinkedIn 999/429 block automated requests, as they did before this phase. |
 | **6** | Polish | OG images per route, metadata, sitemap, 404, prefers-reduced-motion audit, Lighthouse, axe | all | **Done** 2026-09-21 · `df5585b`. See §4.1. Gate: axe 0 on 10 routes (incl. the 404) and inside all 4 tour documents; reduced-motion stillness 0 everywhere after one fix; Lighthouse 97 / 95–98 / 96 / 98 / 97 / 99 perf on home, Prep, DevLinks, notes, a note, a tour, 100 on the other three categories throughout. |
+| **6c** | Chips removed | VERIFIED / UNVERIFIED chips dropped site-wide (incl. OG cards), availability line dropped, standfirst reworded | 6b | **Done** 2026-09-23, uncommitted. See §4.3. Gate: build + lint clean, axe 0 on home, Prep, DevLinks and notes. |
+| **6b** | Recruiter pass | Identity line + contact buttons, chips cut, card stills + stack lines, named employer with one badge, education, case-study "at a glance" + top CTAs, folded decision reasoning, 44px touch targets, note-index kickers, serif cut to 32KB | 6 | **Done** 2026-09-21, uncommitted. See §4.2. Gate: axe 0 on home, Prep, DevLinks, notes and `prep-in-motion` (and on all 11 routes + 4 tours before the final font change); reduced-motion stillness 0; Lighthouse perf home 97–100, Prep 98–99, 100 on the other three categories. Every GitHub citation 200 (8 returned 429 in the batch, 200 retried with spacing); LeetCode 403 / LinkedIn 999 as before. |
 | **7** | Ship | ~~Custom domain, DNS~~ (§6.6: shipping on `*.vercel.app`), final cross-browser + mobile pass | 6 · manual §5 | Not started. |
 
 The gate is run by [`scripts/qa.mjs`](./scripts/qa.mjs) — axe across light, dark, 320px, 200% zoom
@@ -468,7 +507,7 @@ Lighthouse is a separate command, documented in that file's header.
   through one shape is what stops half the site sharing the home page's `og:title`. Canonical,
   OG (`article` + `published_time` for notes and case studies), Twitter `summary_large_image`.
 - **OG images**, 11 of them, one `opengraph-image.tsx` per route over a shared renderer in
-  `lib/og.tsx`: the site in miniature, light theme only. A card shows a VERIFIED claim **only where
+  `lib/og.tsx`: the site in miniature, light theme only. A card shows a claim **only where
   the page it links to proves that number** (364 tests on home and Prep, 84 rules on DevLinks);
   notes and tours get none. Fonts are vendored as woff in `assets/og/` (fontsource, OFL) because
   Satori cannot read the woff2 `next/font` downloads, and a CDN fetch would make the build depend
@@ -487,6 +526,53 @@ Lighthouse is a separate command, documented in that file's header.
   four blinks, then steady; none under reduced motion.
 - **Lighthouse variance is real.** `/work/prep` scored 94 once and 95, 96, 98 on reruns (LCP
   2.3–2.7s, CLS 0). Report the spread, not the best run.
+
+### 4.2 Phase 6b, the recruiter pass, as built
+
+An apple-design review of the shipped site against the reader §0 names: a recruiter or hiring
+manager who skims before an engineer reads. Nothing in the thesis changed; what changed is how fast
+it reaches someone who will not scroll.
+
+- **Home** — see §3.1. Shared `Button` component (`components/Button.tsx`): ink outline, or filled
+  ink for the one primary action per view; `min-h-11` (44px) below 640px, where the old buttons
+  measured 35px against HIG's 44pt default (`accessibility.md`).
+- **Case studies open with the short version.** Under the standfirst: `[Live demo] [Code] [▶ Tour]`
+  and the demo login or public path, then an **At a glance** panel — Built / Hardest part / Stack.
+  §7's risk row promised "a scannable summary up top"; the first build put the demo link in a Links
+  section at the very bottom of 1,200 words.
+- **Decision blocks fold their long argument.** Chose / Over / Because stays open — that *is* the
+  decision — and the elaboration sits in a `<details>` ("The full reasoning"). Chrome's
+  find-in-page still opens a folded block on a match, and the rail's anchors still land.
+- **Notes index** shows a topic kicker ("Prep · RAG grounding") instead of the date. All three were
+  written on 2026-09-21, and three identical dates stacked read as a bulk upload. Each note page
+  still carries its true date; nothing was back-dated.
+- **Serif** — self-hosted and cut to 32KB, see §1.2. The spacing "bug" that started it was a
+  headless-rendering artifact, also recorded there.
+- **Card stills are lazy and low priority.** Eager, the two JPEGs took bandwidth from the preloaded
+  serif and cost home ~3 points; they are below the fold on a phone and never the LCP.
+- **Lighthouse on this machine drifted.** Rebuilding the pre-6b commit gave Prep 88–91 (recorded
+  96 at Phase 6), so 6b was measured against that same-day baseline, not the old numbers. Against
+  it, the layout changes were neutral and the smaller serif is what lifted Prep to 98–99.
+
+### 4.3 The chips removed, 2026-09-23
+
+Owner's call, after seeing 6b: **drop the VERIFIED / UNVERIFIED chips everywhere**, and the
+availability line with them.
+
+- `ProvenanceBadge` now renders the source path alone — a mono link, no dot, no word, no colour.
+  Where there is no path, it renders nothing at all.
+- The experience block lost its badge and the sentence beside it. The job now stands on the work
+  described; what separates it from the projects is that the projects carry paths and it does not.
+- The OG cards lost their chip; the claim and its path remain.
+- Home's standfirst no longer promises what the page stopped doing: "Every number on this site
+  links to the file it came from", with the "or says out loud that it can't be checked" clause cut.
+- **What this costs, recorded plainly.** The chips were the visible half of §0's thesis: they said
+  *this one is checkable, that one is not*, in a form a skimming reader could not miss. Without
+  them a reader has to notice that some numbers carry a path and others do not. The claim-level
+  honesty is intact — nothing unlinkable is dressed as linked — but it is quieter, and the amber
+  case now reads as absence rather than as a statement.
+- The signal colours stay in `globals.css` for the two product diagrams, which show Prep's own
+  verified / unverified link states.
 
 ### Open items the phases depend on
 
@@ -519,7 +605,7 @@ Ordered by when they block me.
 | # | Answer |
 |---|---|
 | 1 | LinkedIn `linkedin.com/in/harshit-singh-8900691a8` · GitHub `github.com/harshitsingh281125-stack` · LeetCode `leetcode.com/u/gbXitzr3rZ` |
-| 2 | **Both repos are public.** Provenance badges can link to real files. |
+| 2 | **Both repos are public.** Every citation can link to a real file. |
 | 3 | ~~DevLinks is deployed but the link is broken~~ → **fixed 2026-09-20**: the deployed `vercel.json` used legacy `routes`, which disables Vercel's filesystem step, so `/assets/*.js` was served `index.html`. Live at `dev-links-rouge.vercel.app`; the demo flag is on. |
 | 4 | Prep is live at `prep-seven-theta.vercel.app`, Supabase awake. |
 | 5 | Show **email and phone**: `harshit.singh281125@gmail.com`, `+91 78392 48591` (rendered as a `tel:` link). Public exposure of the number was raised and accepted. |
@@ -547,7 +633,7 @@ Not phases. Things found while building a phase that are real but out of its sco
 | Risk | Mitigation |
 |---|---|
 | **A third Next + Tailwind + Supabase-adjacent repo reads as samey** | The design layer is where this is won — the provenance system, the Decision block and the four tours are things a template cannot produce. |
-| **Case studies are long; recruiters skim** | Your chosen "full depth behind a read more": scannable summary up top, decision log expandable underneath. A recruiter gets 30 seconds of signal, an engineer gets everything. |
+| **Case studies are long; recruiters skim** | Your chosen "full depth behind a read more": scannable summary up top, decision log expandable underneath. A recruiter gets 30 seconds of signal, an engineer gets everything. **Built in 6b** (§4.2) — it had not been in the first build. |
 | **A demo is down when someone clicks it** | M2 + M4, and optionally M7's video. |
-| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written, and **re-measured from the runners at Phase 1**: Prep is **364** (`vitest run` -> 283, `playwright test --list` -> 81 — the suite grew past the 79 recorded here); 202 = 48 + 35 + 35 + 84, confirmed by `grep -c 'https\?://' supabase/migrations/*.sql`; 84 `TAG_RULES`; 10 tables. DevLinks' unit suite is **596**, not the 487 in `PORTFOLIO_REVIEW.md`. Anything unverifiable gets the amber badge. |
+| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written, and **re-measured from the runners at Phase 1**: Prep is **364** (`vitest run` -> 283, `playwright test --list` -> 81 — the suite grew past the 79 recorded here); 202 = 48 + 35 + 35 + 84, confirmed by `grep -c 'https\?://' supabase/migrations/*.sql`; 84 `TAG_RULES`; 10 tables. DevLinks' unit suite is **596**, not the 487 in `PORTFOLIO_REVIEW.md`. Anything unverifiable carries no citation, and since §4.3 no badge either — so it must not be stated as if it were checkable. |
 | **Scope creep into a sixth and seventh section** | The phase table is the contract. New ideas go to a backlog section, not into a phase. |

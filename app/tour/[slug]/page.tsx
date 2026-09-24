@@ -41,7 +41,7 @@ export default async function TourPage({
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <h1 className="max-w-prose font-serif text-display font-semibold text-content">
+      <h1 className="max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
         {tour.title}
       </h1>
 
