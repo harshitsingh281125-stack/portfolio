@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). What remains of it is manual: M4, M5's PDF correction, M8, and a real-browser pass.
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). Two content commits shipped on top of it the same day — `68c5b6c` (the tour link back on the cards) and `426d0c4` (the expanded work cards and the rebuilt résumé section), deployed on push, smoke-checked on production, and **not** put through the gate: no axe or Lighthouse run behind either. What remains of Phase 7 is manual: M4, M5's PDF correction, M8, and a real-browser pass.
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
