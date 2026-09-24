@@ -248,9 +248,15 @@
 .project-stack { font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.8; color: var(--content-faint); }
 .project-visual figcaption { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; font-size: 12px; line-height: 1.6; }
 .project-visual figcaption span { display: inline-flex; align-items: center; gap: 3px; }
-.work-details { font-size: 15px; line-height: 1.65; color: var(--inverse-muted); }
+.work-details { margin-top: auto; font-size: 15px; line-height: 1.65; color: var(--inverse-muted); }
 .work-details summary { cursor: pointer; min-height: 44px; align-content: center; color: var(--inverse-content); }
 .work-details p { margin-top: 12px; }
+.company-stack { font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.8; color: var(--inverse-faint); }
+.work-product { margin-top: 12px; color: var(--inverse-content); }
+.work-details strong { color: var(--inverse-content); font-weight: 500; }
+.work-group { margin-top: 22px; }
+.work-group h4 { font-family: var(--font-mono), monospace; font-size: 12px; line-height: 1.5; letter-spacing: 0.04em; text-transform: uppercase; color: #E9895B; }
+.work-group ul { margin-top: 10px; padding-left: 18px; list-style: disc; display: flex; flex-direction: column; gap: 10px; }
 .company-maintenance { margin-top: 28px; max-width: 100ch; font-size: 15px; line-height: 1.7; color: var(--inverse-muted); }
 .company-maintenance strong { color: var(--inverse-content); font-weight: 500; }
 @media (max-width: 599px) {

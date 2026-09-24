@@ -297,7 +297,14 @@ No `/about` page. The bio lives in the hero and the experience section; a separa
   (M5), so leaving it off bought no privacy and cost the recruiter the thing they match on. Five
   bullets (the 88 PRs / 29 releases one added) and a stack line. 6b cut four amber UNVERIFIED
   badges down to one; §4.3 removed that one as well, along with its sentence.
-- **Education:** B.Tech CSE, Presidency University, 2019 — 2023.
+- **Education:** B.Tech CSE, Presidency University, 2019 — 2023, with the CGPA the PDF carries.
+- **Résumé section:** the job entry (role, employer, location, dates, one line on the two
+  products), the reviews-and-releases line, five skill rows and education, above the PDF download.
+  The redesign in `4e75e0a` had dropped the job entry and left the section promising an experience
+  block it no longer rendered, with `.resume-job` styling nothing and `experience.role` /
+  `experience.location` unread by any component. Skills moved out of the JSX into
+  `lib/experience.ts` at the same time: two hand-typed rows had drifted to twelve items and named
+  neither Python nor any of the AI work, which is half of what the section above them describes.
 - **Contact:** footer, unchanged.
 
 ### 3.2 `/work/prep` — the lead case study
