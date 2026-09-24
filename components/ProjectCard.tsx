@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { caseStudy } from "@/lib/site";
+import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
+import { caseStudy, tours } from "@/lib/site";
 import type { Project } from "@/lib/projects";
 
 export function ProjectCard({ project, index = 0 }: { project: Project; index?: number }) {
   const { name, slug, summary, contribution, decisions, repo, demo, login, entry, stack, thumb } = project;
+  const tourHref = `/tour/${slug}-in-motion`;
   return (
     <article className="project-card" aria-labelledby={`project-${slug}`}>
       <div className="project-copy">
@@ -16,6 +17,7 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
         <p className="project-stack" aria-label={`${name} technology stack`}>{stack.join(" · ")}</p>
         <div className="project-links">
           {demo.enabled ? <a href={entry?.href ?? demo.url} target="_blank" rel="noreferrer">{entry?.label ?? "Live demo"} <ArrowUpRight size={17} aria-hidden="true" /></a> : null}
+          {tours.enabled ? <Link href={tourHref}><Play size={16} aria-hidden="true" /> Watch the product tour</Link> : null}
           {caseStudy[slug] ? <Link href={`/work/${slug}`}>Case study <ArrowRight size={17} aria-hidden="true" /></Link> : null}
           <a href={repo} target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={17} aria-hidden="true" /></a>
         </div>
