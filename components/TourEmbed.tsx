@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Tour } from "@/lib/tours";
 import { Button } from "@/components/Button";
+import { LazyTourFrame } from "@/components/LazyTourFrame";
 
 /**
  * The tour stage (PLAN.md §1.5) — the one orchestrated moment on the site.
@@ -42,13 +43,15 @@ export function TourEmbed({
     "--tour-rmh": `${tour.reducedMobileHeight}px`,
   } as CSSProperties;
 
-  const frame = (
-    <iframe
-      src={`/tour/${tour.slug}.html`}
-      title={tour.frameTitle}
-      loading={full ? "eager" : "lazy"}
-      className="h-full w-full border-0"
-    />
+  const src = `/tour/${tour.slug}.html`;
+
+  /* On its own route the stage is the page, so it is fetched immediately.
+     Embedded in a case study it waits until it is nearly on screen — see
+     LazyTourFrame for what that costs when it does not. */
+  const frame = full ? (
+    <iframe src={src} title={tour.frameTitle} loading="eager" className="h-full w-full border-0" />
+  ) : (
+    <LazyTourFrame src={src} title={tour.frameTitle} />
   );
 
   /* On its own page the tour is the content, so it is always rendered — the
