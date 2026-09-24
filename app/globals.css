@@ -129,7 +129,7 @@
   .company-intro { display: grid; grid-template-columns: 7fr 5fr; gap: 48px; align-items: end; margin-bottom: 32px; }
   .company-intro .eyebrow { color: var(--inverse-faint); text-transform: uppercase; margin-bottom: 20px; }
   .company-intro > p { font-size: 18px; line-height: 1.6; color: var(--inverse-muted); }
-  .company-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .company-products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
   .company-card { min-width: 0; padding: 28px; border: 1px solid #3A362C; border-radius: 20px; background: var(--inverse-panel); display: flex; flex-direction: column; gap: 24px; }
   .company-card > .eyebrow { color: #E9895B; }
   .company-card h3 { font-family: var(--font-display), Georgia, serif; font-size: 36px; line-height: 1.15; font-weight: 600; text-wrap: initial; }

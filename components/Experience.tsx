@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Download } from "lucide-react";
+import { EqualCardHeights } from "@/components/EqualCardHeights";
 import { education, experience, skills } from "@/lib/experience";
 import { resume } from "@/lib/site";
 
@@ -55,6 +56,7 @@ export function Experience() {
             </article>
           ))}
         </div>
+        <EqualCardHeights selector=".company-card" />
         <p className="company-maintenance"><strong>Maintaining existing systems.</strong> {experience.maintenance}</p>
       </div>
     </section>
