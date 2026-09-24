@@ -438,7 +438,14 @@ its caption and **248 unit + 81 E2E** on screen; both now read 364 / 283 + 81.
   `prep-under-the-hood`'s `.t-note` was bumped to 12px; only the tiny uppercase pane labels stay
   below, being signposts rather than prose.
 
-### 3.5 Notes — 3 posts, mined from `memory.md` and `Rules.md`
+### 3.5 Notes — initial three posts, expanded to nine
+
+**Expanded 2026-09-24.** The section now includes six more notes: duplicate saves and tag
+suggestions in DevLinks; the caption-validation failure and backend template mismatch in Prep;
+and optimistic deletion and public collection permissions in DevLinks. Each links to its source
+code or development-log entry. The index, article metadata, social images, sitemap, and QA route
+list include the additions. Keep the section name **Notes**: these are short accounts of specific
+implementation decisions and bugs. The original scope below records the first three posts.
 
 1. **"The similarity floor is 0.64, and I measured it"** — why 0.55 felt right and was wrong, what
    0.568 on an off-domain topic would have shipped, and why Gemini embeddings aren't zero-centred.

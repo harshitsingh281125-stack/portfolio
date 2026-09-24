@@ -1,13 +1,4 @@
-/**
- * The three notes (PLAN.md §3.5).
- *
- * Each note is its own route under app/notes/, written as JSX rather than MDX:
- * three posts do not justify a content pipeline, and JSX lets a note use the
- * same Code and ProvenanceBadge primitives as the case studies, so a citation
- * in a note is checked by the same rules as a citation anywhere else.
- *
- * This file holds only what the index and the note chrome need.
- */
+/** Note summaries for the index, page metadata, and related reading. */
 
 export type Note = {
   slug: string;
@@ -16,23 +7,61 @@ export type Note = {
   dek: string;
   /** ISO date the note was written. Shown on the note itself, not the index. */
   date: string;
-  /**
-   * What the index shows above each title, in place of the date. All three
-   * notes were written on one day, and three identical dates stacked in a list
-   * read as a bulk upload. The dates stay true on each note; the index says
-   * what each one is about instead.
-   */
+  /** Topic shown above the title on the index. */
   kicker: string;
-  /**
-   * The decision on the case study that this note is the long version of.
-   * Notes do not carry a Decision block of their own: §1.4 spends that
-   * element on the case studies and nowhere else, and two of these three
-   * decisions already have one there. The note links back instead.
-   */
+  /** The case-study decision expanded on by this note. */
   related: { href: string; label: string };
 };
 
 export const notes: Note[] = [
+  {
+    slug: "fallback-hid-the-failure",
+    title: "The fallback worked. The feature didn’t.",
+    dek: "A caption-length check rejected real model responses while my short test fixtures passed.",
+    date: "2026-09-24",
+    kicker: "Prep · Response validation",
+    related: { href: "/work/prep#differently", label: "Testing and current limitations, on the Prep case study" },
+  },
+  {
+    slug: "wrong-template-fallback",
+    title: "A backend study plan fell back to frontend material",
+    dek: "The fallback catalog has a scope. The roadmap needs to say when the requested role falls outside it.",
+    date: "2026-09-24",
+    kicker: "Prep · Fallback content",
+    related: { href: "/work/prep#architecture", label: "Retrieval and fallback, on the Prep case study" },
+  },
+  {
+    slug: "optimistic-bookmark-delete",
+    title: "Delete now, put it back if the request fails",
+    dek: "How DevLinks removes a bookmark immediately and restores it when the delete request fails.",
+    date: "2026-09-24",
+    kicker: "DevLinks · UI updates",
+    related: { href: "/work/devlinks#problem", label: "The collection workflow, on the DevLinks case study" },
+  },
+  {
+    slug: "public-collection-permissions",
+    title: "Sharing a collection without sharing the account",
+    dek: "Public collections allow anonymous reads. Their database policies still restrict changes to the owner.",
+    date: "2026-09-24",
+    kicker: "DevLinks · Public collections",
+    related: { href: "/work/devlinks#problem", label: "Public collections, on the DevLinks case study" },
+  },
+  {
+    slug: "saving-the-same-link",
+    title: "Saving the same link twice in DevLinks",
+    dek: "The database catches the duplicate. The save dialog still needs to do something useful with it.",
+    date: "2026-09-24",
+    kicker: "DevLinks · Duplicate saves",
+    related: { href: "/work/devlinks#d-normalize", label: "Duplicate saves, on the DevLinks case study" },
+  },
+  {
+    slug: "tags-from-the-url",
+    title: "Getting useful tags from a URL and a title",
+    dek: "DevLinks suggests tags with a small rule table. It works for familiar topics and misses what it doesn’t know.",
+    date: "2026-09-24",
+    kicker: "DevLinks · Tag suggestions",
+    related: { href: "/work/devlinks#d-rules", label: "Tag suggestions, on the DevLinks case study" },
+  },
   {
     slug: "similarity-floor",
     title: "Calibrating Prep’s retrieval threshold",

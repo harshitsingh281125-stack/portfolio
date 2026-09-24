@@ -36,7 +36,7 @@ export function NoteLayout({ slug, children }: { slug: string; children: ReactNo
         <div className="mt-10 max-w-prose">{children}</div>
 
         <p className="mt-12 max-w-prose border-t border-edge pt-6 text-ui text-content-muted">
-          The short version, with the decision it belongs to:{" "}
+          More context in the project case study:{" "}
           <Link href={note.related.href} className={LINK}>
             {note.related.label}
           </Link>

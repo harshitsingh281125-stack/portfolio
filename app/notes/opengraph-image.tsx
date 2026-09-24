@@ -9,6 +9,6 @@ export default function Image() {
     kicker: "Notes",
     title: "Notes",
     description:
-      "Debugging and implementation notes from building Prep.",
+      "Debugging and implementation notes from building Prep and DevLinks.",
   });
 }

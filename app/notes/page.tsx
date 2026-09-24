@@ -6,7 +6,7 @@ import { pageMeta } from "@/lib/meta";
 export const metadata: Metadata = pageMeta({
   title: "Notes",
   description:
-    "Debugging and implementation notes from building Prep.",
+    "Debugging and implementation notes from building Prep and DevLinks.",
   path: "/notes",
 });
 
@@ -15,7 +15,7 @@ export default function NotesIndex() {
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
       <h1 className="font-serif text-display-sm sm:text-display font-semibold text-content">Notes</h1>
       <p className="mt-5 max-w-prose prose-serif text-content-muted">
-        Debugging and implementation notes from building Prep, with source links
+        Debugging and implementation notes from building Prep and DevLinks, with source links
         and recorded observations.
       </p>
 
