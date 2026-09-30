@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
 <link rel="stylesheet" href="/tour/tour.css">
 <!-- Ported to the portfolio shell in Phase 4. Only this tour's own CSS is below;
      the split stage (client pane | server trace) is wider and taller than the
@@ -32,7 +32,12 @@
   .server { padding: 18px 20px; overflow: hidden; display: flex; flex-direction: column; }
 
 
-  /* ---- Client mini-screen ---- */
+  /* ---- Client mini-screen ----
+     Drawn in Prep's 2026-09-28 redesign: Newsreader titles, sentence-case
+     labels, ink primary buttons, hairline rows, grade buttons that carry their
+     verdict colour in a dot. The trace (right pane) stays in the portfolio shell. */
+  :root { --prep-serif: "Newsreader", Georgia, serif; }
+  .logo { font: 500 21px var(--prep-serif); }
   .screen {
     background: var(--bg-elevated); border: 1px solid var(--border);
     border-radius: 10px; overflow: hidden; flex: none;
@@ -44,19 +49,29 @@
   }
   .urlbar .lock { color: var(--green); font-size: 9px; }
   .screen-body { padding: 12px 13px; }
-  .screen h3 { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 3px; }
+  .screen h3 { font: 500 17px/1.25 var(--prep-serif); letter-spacing: -0.01em; margin: 0 0 3px; }
   .screen p { font-size: 11.5px; color: var(--text-muted); margin: 0 0 10px; }
+  .screen .crumb { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
   .field {
-    border: 1px solid var(--border); border-radius: 7px; padding: 6px 9px;
-    font: 400 11px "IBM Plex Mono", monospace; color: var(--text-faint);
+    border: 1px solid var(--border-strong); border-radius: 7px; padding: 6px 9px;
+    font: 400 11.5px "IBM Plex Sans", sans-serif; color: var(--text-faint);
     margin-bottom: 6px; background: var(--panel);
   }
+  .answers { border-top: 1px solid var(--border); margin-bottom: 10px; }
+  .answer {
+    display: flex; justify-content: space-between; gap: 8px; padding: 5px 0;
+    border-bottom: 1px solid var(--border); font-size: 11.5px;
+  }
+  .answer span:first-child { color: var(--text-faint); }
   .fakebtn {
     border-radius: 7px; padding: 6px 11px; text-align: center;
     font: 600 11.5px "IBM Plex Sans", sans-serif;
-    background: var(--accent); color: var(--on-accent); margin-top: 2px;
+    background: var(--text); color: var(--bg); margin-top: 2px;
   }
-  .fakebtn.ghost { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border-strong); }
+  .fakebtn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); font-weight: 500; }
+  .fakebtn .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+  .grades { display: flex; gap: 6px; }
+  .grades .fakebtn { flex: 1; margin-top: 0; }
   .client-note {
     margin-top: 12px; font: 400 10.5px/1.55 "IBM Plex Mono", monospace;
     color: var(--text-faint);
@@ -158,9 +173,9 @@
         <div class="screen in" style="animation-delay:0.1s">
           <div class="urlbar"><span class="lock">●</span> localhost:3000/login</div>
           <div class="screen-body">
-            <h3>Sign in to Prep</h3>
-            <p>No fluff. Five questions, then a roadmap.</p>
-            <div class="field">you@example.com</div>
+            <h3>Welcome back</h3>
+            <p>Sign in to pick up where you left off.</p>
+            <div class="field">you@company.com</div>
             <div class="field">••••••••••</div>
             <div class="fakebtn">Sign in</div>
             <div class="fakebtn ghost" style="margin-top:6px">Continue with Google</div>
@@ -214,14 +229,16 @@
         <div class="screen in" style="animation-delay:0.1s">
           <div class="urlbar"><span class="lock">●</span> /onboarding</div>
           <div class="screen-body">
-            <h3>5 questions</h3>
+            <h3>New roadmap</h3>
             <p>Answers are the only input the model gets.</p>
-            <div class="field">role · SDE-2 Frontend</div>
-            <div class="field">bar · Big-tech loop</div>
-            <div class="field">timeline · 8 weeks</div>
-            <div class="field">hours · 12 / week</div>
-            <div class="field">weak · DSA, System design</div>
-            <div class="fakebtn">Generate roadmap</div>
+            <div class="answers">
+              <div class="answer"><span>Role</span><span>SDE-2 · Frontend</span></div>
+              <div class="answer"><span>Bar</span><span>Big-tech loop</span></div>
+              <div class="answer"><span>Timeline</span><span>8 weeks</span></div>
+              <div class="answer"><span>Hours / week</span><span>12h</span></div>
+              <div class="answer"><span>Weak areas</span><span>DSA, system design</span></div>
+            </div>
+            <div class="fakebtn">Generate roadmap →</div>
           </div>
         </div>
         <div class="client-note in" style="animation-delay:1.0s">
@@ -286,9 +303,10 @@
         <div class="screen in" style="animation-delay:0.1s">
           <div class="urlbar"><span class="lock">●</span> /roadmap/[id]/topic/[topicId]</div>
           <div class="screen-body">
+            <div class="crumb">← Roadmap</div>
             <h3>Closures &amp; scope</h3>
             <p>Week 2 · Hashmaps &amp; patterns</p>
-            <div class="fakebtn">Generate study material</div>
+            <div class="fakebtn">Generate with AI</div>
             <div class="client-note" style="margin-top:10px; animation:none">
               An explicit button —<br>never automatic.
             </div>
@@ -352,10 +370,12 @@
         <div class="screen in" style="animation-delay:0.1s">
           <div class="urlbar"><span class="lock">●</span> /recall</div>
           <div class="screen-body">
-            <h3>What does <span class="mono">this</span> bind to in an arrow function?</h3>
-            <p>Closures &amp; scope · due today</p>
-            <div class="fakebtn" style="background:var(--green-soft); color:var(--green); border:1px solid var(--green)">Got it cold</div>
-            <div class="fakebtn ghost" style="margin-top:6px; color:var(--red); border-color:var(--red); background:var(--red-soft)">Missed it</div>
+            <p style="margin-bottom:4px">Closures &amp; scope · due today</p>
+            <h3>What does <span class="mono" style="font-size:14px">this</span> bind to in an arrow function?</h3>
+            <div class="grades" style="margin-top:10px">
+              <div class="fakebtn ghost"><span class="dot" style="background:var(--green)"></span>Got it cold</div>
+              <div class="fakebtn ghost"><span class="dot" style="background:var(--red)"></span>Missed it</div>
+            </div>
           </div>
         </div>
         <div class="client-note in" style="animation-delay:1.0s">

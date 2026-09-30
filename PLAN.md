@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). Two content commits shipped on top of it the same day — `68c5b6c` (the tour link back on the cards) and `426d0c4` (the expanded work cards and the rebuilt résumé section), deployed on push, smoke-checked on production, and **not** put through the gate: no axe or Lighthouse run behind either. What remains of Phase 7 is manual: M4, M5's PDF correction, M8, and a real-browser pass.
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). Two content commits shipped on top of it the same day — `68c5b6c` (the tour link back on the cards) and `426d0c4` (the expanded work cards and the rebuilt résumé section), deployed on push, smoke-checked on production, and **not** put through the gate: no axe or Lighthouse run behind either. What remains of Phase 7 is manual: M4, M5's PDF correction, M8, and a real-browser pass. **Prep's 2026-09-28 redesign is carried into the site's Prep screenshot and both Prep tours (§4.5)**, after Prep deployed it (PR #9, 2026-09-30) and the screenshot was re-captured from production (M9).
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -610,6 +610,36 @@ availability line with them.
 - **Not covered by anything here:** Safari, iOS and Firefox. Every measurement in this document
   came from headless Chromium, and §1.2 records what that renderer once made this review believe.
 
+### 4.5 Prep's redesign carried over, 2026-09-29
+
+Prep was restyled on 2026-09-28 (its `design.md` §1–5: Newsreader titles and figures, sentence-case
+labels, ink primary buttons, hairlines instead of cards, status as a dot + word). Everything on
+this site that *depicts* Prep's UI was brought in line; nothing that is the site's own UI changed.
+
+- **`public/work/prep-app.png`** re-captured: same screen, same example answers, dark theme, now
+  **1280 × 800**, not 720 — the redesign's larger page header pushed the Generate button below a
+  720px fold, and the card frame has no fixed ratio (DevLinks is already 1280 × 900). `lib/projects.ts`
+  carries the new height. First captured from the redesign running locally, then — once Prep's
+  PR #9 was on production (2026-09-30) — re-captured from `prep-seven-theta.vercel.app` with the
+  published demo login, which is the one that ships (M9). The two captures were pixel-for-pixel the
+  same screen; the production one is used so the README's provenance is true.
+- **The two tours.** Only the mockups of Prep's own screens were redrawn — `prep-in-motion` scenes
+  2–5 (week rows, kill-criterion card, recall item, progress) and `prep-under-the-hood`'s client
+  pane (login, onboarding, topic, recall). The shell, the scene headings, the captions and the
+  server trace stay in the portfolio's system, and the colours still come from `tour.css`'s aliases.
+  Newsreader is loaded by those two documents only, as `--prep-serif`: drawing Prep's serif in
+  Plex would be the one thing a reviewer comparing tour to app would catch. The legacy
+  `prep-{light,dark}.jpg` stills were re-cut by `scripts/thumbs.mjs`; the DevLinks stills it also
+  re-renders were restored, since nothing on them changed.
+- **Two Prep copy bugs fixed in Prep first**, because the new screenshot shows the panel they were
+  in: "1 areas" and "A 5 weeks plan" (and, unseen, "A No date yet plan").
+- **Gate** (local production build; axe inside the tour documents, as §3.4 requires): axe 0 on `/`
+  and `/work/prep` across light, dark, 320px, 200% zoom and reduced-motion, and inside both Prep
+  tours across the same set **after one fix** — the kill-criterion footer used `--text-faint`,
+  which fails contrast once the card settles on `--green-soft`; it is `--text-muted` now. Reduced
+  motion still. `tsc`, lint and `next build` clean. Links: GitHub 429 ×2 cleared on a spaced retry,
+  LeetCode 403 and LinkedIn 999 as always. **Not run:** Lighthouse, and the DevLinks routes (untouched).
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |
@@ -628,10 +658,11 @@ Ordered by when they block me.
 | ~~M1~~ | ~~**Make both repos public**~~ | Phase 1 | **Done.** Both return 200 anonymously, and every provenance link on the site was fetched at its exact line range before shipping. |
 | ~~M2~~ | ~~**Confirm Prep's deploy is live**~~ | Phase 1 | **Done** 2026-09-20: `prep-seven-theta.vercel.app` redirects to `/login` and serves 200. Free-tier Supabase still pauses after ~7 days idle, so this needs re-checking before anyone is sent the link. |
 | ~~M3~~ | ~~**Deploy DevLinks**~~ | Phase 3 | **Done** 2026-09-20. It was deployed but blank: the legacy `routes` config in `vercel.json` disables Vercel's filesystem step, so `/assets/*.js` was served `index.html` and Firefox rejected the module script as `NS_ERROR_CORRUPTED_CONTENT`. Fixed by reverting to `rewrites`. Live at `dev-links-rouge.vercel.app`. |
-| M4 | **Create the two demo accounts** — *half done* | Phase 2 | **Prep: done.** `qa-a@prep.com` is printed on the home card and the case study. Two caveats: it is a QA account on the live Supabase, so anyone who reads the page can mutate its rows; and its data is whatever QA left behind, not the mid-plan state this row asks for (week 3, reviews due, BEHIND PACE showing) — which is the state that makes the dashboard's honesty visible. **DevLinks: not done** (O2). |
+| M4 | **Create the two demo accounts** — *half done* | Phase 2 | **Prep: done.** `qa-a@prep.com` is printed on the home card and the case study. Two caveats: it is a QA account on the live Supabase, so anyone who reads the page can mutate its rows; and its data is whatever QA left behind — the E2E suite signs in as this account and creates and deletes roadmaps on it (a run on 2026-09-28 left it empty) — not the mid-plan state this row asks for (week 3, reviews due, BEHIND PACE showing) — which is the state that makes the dashboard's honesty visible. **DevLinks: not done** (O2). |
 | ~~M5~~ | ~~**Resume PDF onto disk**~~ | Phase 1 | **Done:** `public/Harshit_Resume_2026.pdf`, linked from nav and footer, committed to the public repo. Two things it changes: it says **362 tests** where the site now says 364 (the suite grew — the PDF is the one to correct), and it **names the employer**, which §3.1 deliberately does not. The omission now costs credibility without buying privacy. The phone-free variant was not taken. |
 | ~~M6~~ | ~~**Domain**~~ | Phase 7 | **Decided** (§6.6): shipping on `*.vercel.app`, no custom domain. Superseded by O1 — there is still no Vercel project. |
 | M7 | *(optional)* **Record a 30s fallback video** per app | Phase 6 | Insurance for when a deploy is cold or the AI key is exhausted. |
+| ~~M9~~ | ~~**Deploy Prep's redesign, then re-capture `prep-app.png` from production**~~ **Done** 2026-09-30: Prep PR #9 merged and deployed (verified: production CSS carries Newsreader, Instrument Sans and `--ink`), screenshot re-captured from production. | pushing §4.5 | The card says "example input in the live app". Until Prep's redesign is on `prep-seven-theta.vercel.app`, the screenshot and the tours show a UI the live demo link does not. Order: commit + push Prep → confirm the deploy → re-run the capture against production (README in `public/work/`) → then commit this site. |
 | M8 | *(optional)* **Tidy both repo landing pages** | Phase 7 | GitHub description and topics. The `INTERVIEW_PREP.md` worry is moot — it is **untracked** in DevLinks and was never pushed, along with `PORTFOLIO_REVIEW.md` and `.codex`. A reviewer who clicks through lands on the README, so it is part of the site. |
 
 ---

@@ -31,7 +31,7 @@ export const projects: Project[] = [
     thumb: {
       src: "/work/prep-app.png",
       width: 1280,
-      height: 720,
+      height: 800,
       alt: "Prep's roadmap setup screen with example role, timeline, study hours, and weak-area selections.",
       caption: "Roadmap setup · example input in the live app",
     },
