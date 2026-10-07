@@ -819,6 +819,10 @@ with Carlito (metric-compatible with Calibri), not by Google Docs as before.
 
 Gate: build clean; home screenshotted at 1280px and 375px.
 
+**§4.8–4.10 deployed 2026-10-07** in `b23df84`, smoke-checked on production: `/`, `/notes`, both
+new notes and the résumé PDF serve 200; the home title reads "Software engineer"; the served PDF is
+the SDE version. Not run on production: axe, Lighthouse.
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |
