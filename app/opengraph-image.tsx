@@ -1,13 +1,13 @@
 import { ogContentType, ogImage, ogSize } from "@/lib/og";
 
-export const alt = "Harshit Singh, frontend engineer";
+export const alt = "Harshit Singh, software engineer";
 export const size = ogSize;
 export const contentType = ogContentType;
 
 export default function Image() {
   return ogImage({
     kicker: "Portfolio",
-    title: "Frontend engineer building web & mobile products.",
+    title: "Software engineer building web & mobile products.",
     description: "3+ years building healthcare and marketplace applications with React and React Native.",
   });
 }

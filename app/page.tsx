@@ -12,12 +12,13 @@ export default function Home() {
     <>
       <section id="top" className="hero page-width" aria-labelledby="intro-heading">
         <h1 id="intro-heading">
-          <span className="rise">Frontend engineer building</span>{" "}
+          <span className="rise">Software engineer building</span>{" "}
           <span className="rise" style={d(90)}>web and mobile products.</span>
         </h1>
         <p className="hero-lede rise" style={d(200)}>
-          I build healthcare and marketplace applications at Kindtech. My independent projects
-          explore AI-assisted learning and tools for developer resources.
+          Frontend first, with backend and cloud work where the product needs it. At Kindtech I
+          build healthcare and marketplace apps, from React screens to FastAPI endpoints, Postgres
+          schemas and an AWS production setup.
         </p>
         <div className="hero-actions rise" style={d(300)}>
           <a href="#work" className={buttonClass("primary")}>
@@ -35,7 +36,7 @@ export default function Home() {
         <dl className="page-width">
           <div><dt>Currently</dt><dd>{experience.role}, Kindtech</dd></div>
           <div><dt>Experience</dt><dd>3+ years, since 2023</dd></div>
-          <div><dt>Works in</dt><dd>React, React Native, TypeScript</dd></div>
+          <div><dt>Works in</dt><dd>React, TypeScript, React Native, AWS</dd></div>
           <div><dt>Based in</dt><dd>{site.location}</dd></div>
         </dl>
       </div>

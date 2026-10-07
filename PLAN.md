@@ -758,6 +758,67 @@ Debugging shown as a roadmap**.
   and a full gate after M10's recapture: the swap is one image of the same dimensions, followed by a
   build and an axe pass on `/` only.
 
+### 4.8 Kindtech AWS deployment work, 2026-10-07
+
+The healthcare platform's move from one VM to AWS, added in two depths:
+
+- **Home, work card.** A "Production deployment on AWS" group of four bullets on the healthcare
+  card, ending in a "Read the full write-up" link (new optional `link` on a work group, styled
+  `.work-link`). `AWS` and `Docker` join the card's stack; the section lede now says "backend and
+  infrastructure work". Skills gain the AWS services and Docker. **The résumé PDF does not list
+  these yet**, so the site and the PDF have drifted again until the PDF is updated.
+- **Note** `/notes/one-server-to-aws`, kicker `Kindtech · Production deployment`. Acronyms are
+  spelled out on first use. No provenance badges: the code is under NDA. The note links back to
+  `/#company` with a new optional `relatedHeading` ("From my work history"). The notes index gains
+  a third group, Kindtech, linking to work history. A new `List` primitive in `components/Note.tsx`
+  holds the note's bullet lists.
+- **Timings left out.** The owner's draft had `[X s]` placeholders for task replacement and RDS
+  failover. They are phrased without numbers until real measurements exist.
+
+Gate: typecheck, lint and build clean; screenshots of the card, note and index checked at 1280px.
+**Not run:** axe, Lighthouse, 320px. Not committed or deployed.
+
+### 4.9 AI-assisted workflow note, 2026-10-07
+
+Note `/notes/ai-workflow-with-gates`, built from a Cursor-generated evidence report on the
+marketplace repo (`ai-workflow-material.md`, kept outside this repo; it contains internal names and
+hashes). It covers the 17 Cursor instruction files, the `/new-feature` → `/review` → `/create-pr`
+flow, the corrected camelCase rule and the backend-contracts rule, the outcomes, and Claude Code on
+Prep (`CLAUDE.md`, `/phase`, `memory.md`; 26 of 31 commits co-authored) and DevLinks
+(`claude-context/`), citing the public repos. It states the limits: no tests in the marketplace
+repo, and no evidence that `/ship`, `/qa` or `/debug` ran. The marketplace card gains an
+"AI-assisted development" group linking to it, the résumé's "Reviews and releases" line gains the
+same link (`collaborationLink`), and a new "AI tools" skills group lists Cursor, Claude Code and
+Figma MCP.
+
+**TypeScript confirmed by the owner (2026-10-07)**, so the card keeps it, although the evidence
+report found no `tsconfig.json` in the repo it scanned. **Still open:** the report counts 5
+verticals while the card says six.
+
+Gate: typecheck, lint and build clean; screenshots at 1280px; no horizontal scroll at 375px.
+**Not run:** axe, Lighthouse. Not committed or deployed.
+
+### 4.10 Positioning: software engineer, frontend-leaning, 2026-10-07
+
+The owner asked for the site to read as an SDE who leans frontend, not frontend-only. Changed: the
+hero headline ("Software engineer building web and mobile products."), the hero lede (frontend
+first, then backend and cloud work, naming only evidenced backend work: FastAPI endpoints, Postgres
+schemas, the AWS setup), the facts strip ("React, TypeScript, React Native, AWS"), `site.role` /
+`site.title` (so every page title and the social card now read "Software engineer"), the home meta
+description and the home OG image. **Kept:** the employer title "Software Engineer, Kindtech",
+because that is the real job title.
+
+**Résumé updated the same day** to match. Source is the owner's `~/Downloads/Harshit_Resume_2026.docx`
+(left untouched); the edited copy is `Harshit_Resume_2026_SDE.docx` / `.pdf`, and
+`public/Harshit_Resume_2026.pdf` is replaced with it. Changes: SDE summary; skills gain AWS and
+Docker under "Backend & Cloud" and a new "AI Tools" line, and "Data Structures and Algorithms" is
+dropped; a new AWS bullet; the AI workflow rewritten as its own bullet; white-label and the
+inherited-app cleanup merged into one bullet; the force-update mechanism and "Android API-level"
+cut; Prep's first bullet names Claude Code. Still one page. The PDF was rendered by LibreOffice
+with Carlito (metric-compatible with Calibri), not by Google Docs as before.
+
+Gate: build clean; home screenshotted at 1280px and 375px.
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |

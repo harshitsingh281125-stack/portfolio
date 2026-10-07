@@ -8,7 +8,7 @@ export type WorkItem = {
       product is described, never named. */
   product?: string;
   /** Grouped contributions, for work detailed enough to need headings. */
-  groups?: { title: string; points: string[] }[];
+  groups?: { title: string; points: string[]; link?: { href: string; label: string } }[];
   /** Same treatment as the personal projects: what it is built with. */
   stack?: string[];
   /** The shorter form: two paragraphs, where groups would be overkill. */
@@ -26,8 +26,9 @@ export const experience: {
   work: WorkItem[];
   maintenance: string;
   collaboration: string;
+  collaborationLink: { href: string; label: string };
 } = {
-  role: "Frontend Engineer",
+  role: "Software Engineer",
   company: "Kindtech Pvt Ltd",
   location: "Bengaluru",
   period: "June 2023 - present",
@@ -50,6 +51,8 @@ export const experience: {
         "FastAPI",
         "PostgreSQL",
         "LLM tooling",
+        "AWS",
+        "Docker",
       ],
       groups: [
         {
@@ -84,6 +87,16 @@ export const experience: {
             "**Multi-enterprise tenancy and white-label branding**: per-brand configuration, an asset pipeline, enterprise switcher and active-workspace state. Migrated **142 files** off hardcoded colors onto theme tokens.",
             "**The clinical task system**: creating and editing tasks in chat, patient-linked tasks, consent-assessment and initial-visit workflows, and recurring schedules backed by tests.",
           ],
+        },
+        {
+          title: "Production deployment on AWS",
+          points: [
+            "**Moved the platform off a single server onto AWS**, where one disk failure would have taken down patient records, chat and the website together. Chose ECS Fargate (Elastic Container Service) so crashed services restart on their own, spread across two data centres.",
+            "**Set up the pieces around it**: the web app on S3 and CloudFront (file storage and CDN), Postgres on RDS with a standby copy (Relational Database Service, Multi-AZ), Redis on ElastiCache, and a queue (SQS) for document processing.",
+            "**Turned on encryption in our own code**: the database clients were silently connecting without TLS, so I made them verify the certificate and refuse to start otherwise. Removed default passwords so a missing secret fails loudly.",
+            "**Tested the failure cases on purpose**: killed running services, forced a database failover, and restored a backup to check the data came back.",
+          ],
+          link: { href: "/notes/one-server-to-aws", label: "Read the full write-up" },
         },
         {
           title: "Maintaining what I inherited",
@@ -138,6 +151,15 @@ export const experience: {
             "Added pagination and debounced search across every feed, fixed timezone correctness for cross-region users, and **refactored onboarding onto Redux Toolkit after cross-account data leaked between sessions**.",
           ],
         },
+        {
+          title: "AI-assisted development",
+          points: [
+            "**Wrote the team's Cursor setup**: six rule files that teach the agent our architecture, and seven slash commands that take a feature from a one-line request and a Figma link to a plan, code, review and an open PR, **stopping for a human to approve at each step**.",
+            "Added a rule that makes the agent **read the real backend serializers before it trusts an API field**, after an earlier rule of mine turned out to be wrong.",
+            "A teammate used it to plan and ship **a whole new vertical in about nine days**: a 12-task plan, then 20 commits across 172 files.",
+          ],
+          link: { href: "/notes/ai-workflow-with-gates", label: "How the workflow works" },
+        },
       ],
     },
   ],
@@ -145,6 +167,7 @@ export const experience: {
     "Fixed stored XSS in an inherited application, replaced hardcoded secrets with signed-URL uploads, and removed 841 unused files while migrating UI values to theme tokens.",
   collaboration:
     "Reviewed and merged 88 pull requests from 10 engineers and handled 29 staging-to-main release integrations. I also wrote the rules behind the team's AI-assisted workflow: how a change gets planned, what the codebase expects of it, and how it is checked against the API contract.",
+  collaborationLink: { href: "/notes/ai-workflow-with-gates", label: "Read how the AI workflow works" },
 };
 
 export const education = {
@@ -204,11 +227,20 @@ export const skills: { label: string; items: string[] }[] = [
     ],
   },
   {
+    label: "AI tools",
+    items: [
+      "Cursor (agent mode, rules, slash commands)",
+      "Claude Code (CLAUDE.md, custom commands)",
+      "Figma MCP",
+    ],
+  },
+  {
     label: "Testing & platform",
     items: [
       "Jest",
       "Playwright",
-      "AWS Cognito",
+      "AWS (ECS Fargate, RDS, ElastiCache, S3, CloudFront, SQS, Cognito)",
+      "Docker",
       "Firebase / FCM",
       "Twilio",
       "Git",

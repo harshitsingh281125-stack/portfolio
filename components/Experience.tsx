@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { ArrowDown, Plus } from "lucide-react";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, Plus } from "lucide-react";
 import { buttonClass } from "@/components/Button";
 import { education, experience, skills } from "@/lib/experience";
 import { resume } from "@/lib/site";
@@ -32,7 +33,7 @@ export function Experience() {
         </p>
         <p className="section-lede" data-reveal style={d(120)}>
           I own web and mobile features across healthcare and marketplace products, with backend
-          work where the feature needs it.
+          and infrastructure work where the feature needs it.
         </p>
 
         <div className="work-grid">
@@ -63,6 +64,11 @@ export function Experience() {
                           <li key={point}>{emphasise(point)}</li>
                         ))}
                       </ul>
+                      {group.link ? (
+                        <Link href={group.link.href} className="work-link">
+                          {group.link.label} <ArrowRight size={14} aria-hidden="true" />
+                        </Link>
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -109,6 +115,9 @@ export function Resume() {
           <div data-reveal>
             <h3 className="resume-label">Reviews and releases</h3>
             <p className="resume-text">{experience.collaboration}</p>
+            <Link href={experience.collaborationLink.href} className="work-link">
+              {experience.collaborationLink.label} <ArrowRight size={14} aria-hidden="true" />
+            </Link>
           </div>
           <div data-reveal>
             <h3 className="resume-label">Skills</h3>

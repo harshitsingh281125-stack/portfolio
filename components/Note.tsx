@@ -52,7 +52,7 @@ export function NoteLayout({ slug, children }: { slug: string; children: ReactNo
           className="group mt-16 flex items-center justify-between gap-4 rounded-card bg-panel p-5 shadow-card transition-shadow hover:shadow-lift sm:p-6"
         >
           <span>
-            <span className="block text-meta text-content-faint">From the case study</span>
+            <span className="block text-meta text-content-faint">{note.relatedHeading ?? "From the case study"}</span>
             <span className="mt-1 block text-ui font-medium text-content">{note.related.label}</span>
           </span>
           <ArrowRight size={18} aria-hidden="true" className="shrink-0 text-content-faint transition-transform group-hover:translate-x-0.5" />
@@ -100,5 +100,14 @@ export function Output({ label, children }: { label: string; children: string })
       </pre>
       <figcaption className="mt-2 text-meta text-content-faint">{label}</figcaption>
     </figure>
+  );
+}
+
+/** A short bulleted list inside a note, in the body paragraph's type. */
+export function List({ items }: { items: ReactNode[] }) {
+  return (
+    <ul className="note-list prose-body text-content-muted [&_strong]:font-medium [&_strong]:text-content">
+      {items.map((item, i) => <li key={i}>{item}</li>)}
+    </ul>
   );
 }

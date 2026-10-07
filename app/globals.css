@@ -151,6 +151,15 @@
   .work-group ul { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
   .work-group li { position: relative; padding-left: 18px; }
   .work-group li::before { content: ""; position: absolute; left: 2px; top: 0.72em; width: 6px; height: 1px; background: var(--content-faint); }
+  .work-link {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: 4px;
+    font-weight: 500; color: var(--content); text-decoration: underline;
+    text-decoration-color: var(--edge-strong); text-underline-offset: 4px;
+  }
+  .work-link:hover { text-decoration-color: var(--content); }
+  .note-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .note-list li { position: relative; padding-left: 18px; }
+  .note-list li::before { content: ""; position: absolute; left: 2px; top: 0.85em; width: 6px; height: 1px; background: var(--content-faint); }
   .maintenance {
     display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 24px; margin-top: 48px;
     padding: 24px 28px; border-radius: 12px; background: var(--sunken);

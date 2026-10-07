@@ -5,11 +5,11 @@
 
 export const site = {
   name: "Harshit Singh",
-  role: "Frontend engineer · React & React Native",
-  /** The short form, for the home page's first line. */
-  title: "Frontend engineer",
-  /** From the résumé summary: frontend since June 2023. */
-  experience: "3+ years shipping React and React Native",
+  role: "Software engineer · frontend-leaning",
+  /** The short form, for page titles and the social card. Frontend-leaning, not frontend-only. */
+  title: "Software engineer",
+  /** Professional since June 2023; the employer title is still "Frontend Engineer". */
+  experience: "3+ years shipping web and mobile products",
   location: "Bengaluru, India",
   email: "harshit.singh281125@gmail.com",
   phone: "+91 78392 48591",

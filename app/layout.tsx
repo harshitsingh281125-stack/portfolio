@@ -34,7 +34,7 @@ const mono = Geist_Mono({
 export const metadata: Metadata = {
   ...pageMeta({
     description:
-      "Frontend engineer with 3+ years building React and React Native applications across healthcare and marketplace products. Work, independent projects, and engineering notes by Harshit Singh.",
+      "Software engineer with 3+ years building web and mobile products, frontend first, with backend and AWS work across healthcare and marketplace apps. Work, independent projects, and engineering notes by Harshit Singh.",
     path: "/",
   }),
   title: {

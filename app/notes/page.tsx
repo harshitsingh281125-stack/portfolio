@@ -9,16 +9,16 @@ import { d } from "@/lib/motion";
 export const metadata: Metadata = pageMeta({
   title: "Notes",
   description:
-    "Debugging and implementation notes from building Prep and DevLinks.",
+    "Debugging and implementation notes from building Prep and DevLinks, and from production work at Kindtech.",
   path: "/notes",
 });
 
-/** Nine notes read better as two short lists, one per project, than as one long one. */
-const groups = ["Prep", "DevLinks"].map((project) => ({
-  project,
-  href: `/work/${project.toLowerCase()}`,
-  items: notes.filter((n) => splitKicker(n.kicker)[0] === project),
-}));
+/** The notes read better as short lists, one per project, than as one long one. */
+const groups = [
+  { project: "Prep", href: "/work/prep", linkLabel: "Case study" },
+  { project: "DevLinks", href: "/work/devlinks", linkLabel: "Case study" },
+  { project: "Kindtech", href: "/#company", linkLabel: "Work history" },
+].map((g) => ({ ...g, items: notes.filter((n) => splitKicker(n.kicker)[0] === g.project) }));
 
 export default function NotesIndex() {
   return (
@@ -27,8 +27,8 @@ export default function NotesIndex() {
         Notes
       </h1>
       <p style={d(100)} className="rise mt-6 max-w-[38em] text-[1.1875rem] leading-[1.6] text-content-muted">
-        Debugging and implementation notes from building Prep and DevLinks, with source links
-        and recorded observations.
+        Debugging and implementation notes from building Prep and DevLinks, and from production
+        work at Kindtech, with source links and recorded observations.
       </p>
 
       <div className="mt-16 grid gap-16 lg:grid-cols-2 lg:gap-10">
@@ -39,7 +39,7 @@ export default function NotesIndex() {
                 {g.project}
               </h2>
               <Link href={g.href} className="inline-flex min-h-11 items-center gap-1 text-[14px] text-content-muted transition-colors hover:text-content sm:min-h-0">
-                Case study <ArrowUpRight size={14} aria-hidden="true" />
+                {g.linkLabel} <ArrowUpRight size={14} aria-hidden="true" />
               </Link>
             </div>
             <ul className="mt-4 flex flex-col gap-3">

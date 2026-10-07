@@ -11,9 +11,29 @@ export type Note = {
   kicker: string;
   /** The case-study decision expanded on by this note. */
   related: { href: string; label: string };
+  /** Small label above the related link. Defaults to "From the case study". */
+  relatedHeading?: string;
 };
 
 export const notes: Note[] = [
+  {
+    slug: "ai-workflow-with-gates",
+    title: "AI-assisted development: the workflow I set up for my team",
+    dek: "The Cursor rules and slash commands I wrote for my team, how I use Claude Code on my own projects, and what both still get wrong.",
+    date: "2026-10-07",
+    kicker: "Kindtech · AI-assisted development",
+    related: { href: "/#company", label: "One codebase, six verticals, under Production work" },
+    relatedHeading: "From my work history",
+  },
+  {
+    slug: "one-server-to-aws",
+    title: "Taking a healthcare platform from one server to production on AWS",
+    dek: "Everything ran on a single machine. I moved it to AWS so a single failure no longer takes the whole product down, and checked that it actually recovers.",
+    date: "2026-10-07",
+    kicker: "Kindtech · Production deployment",
+    related: { href: "/#company", label: "Telehealth & clinical workflows, under Production work" },
+    relatedHeading: "From my work history",
+  },
   {
     slug: "fallback-hid-the-failure",
     title: "The fallback worked. The feature didn’t.",
