@@ -5,113 +5,155 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/tour/tour.css">
 <!--
   Built in Phase 4 on the shared shell (/tour/tour.css + /tour/tour.js).
 
   Every value shown on this stage was produced by the real code rather than
-  invented for the demo. The tags and resource type in scene 3 are what
-  inferSuggestedTags() and inferResourceType() actually return for that URL,
-  and the normalized form in scene 4 is what canonicalizeUrl() actually
-  produces — both checked by running them, not by reading them.
+  invented for the demo. The preview in scene 2 and the tags and type in
+  scene 3 are what fetchMetadataPreview() returned for that URL on
+  2026-10-01 (react.dev now serves a site-wide og:description, which is why
+  the description is generic and the tags are fewer than before), and the
+  normalized form in scene 4 is what canonicalizeUrl() produces. All three
+  were checked by running them, not by reading them.
+
+  The mockups follow DevLinks' 2026-09-30 redesign (its src/styles.css):
+  Geist, neutral tags, sentence-case labels, an amber notice for duplicates,
+  and public roadmaps as numbered steps. The shell, headings and captions stay
+  in the portfolio's own system, as Prep's tours did in PLAN.md §4.5.
 -->
 <style>
   .row { display: flex; gap: 14px; align-items: stretch; min-width: 0; }
   .row > * { min-width: 0; }
   .grow { flex: 1; }
 
-  /* ---- The save field ---- */
+  /* ---- The save bar (DevLinks .savebar) ---- */
   .field {
     display: flex; align-items: center; gap: 10px;
-    background: var(--surface); border: 1px solid var(--border-strong);
-    border-radius: 9px; padding: 9px 12px;
-    font: 400 12.5px "IBM Plex Mono", monospace; color: var(--content);
-    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    background: var(--surface); border: 1px solid var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    border-radius: 10px; padding: 7px 7px 7px 13px;
+    font: 400 12.5px "Geist Mono", monospace; color: var(--content);
   }
+  .field .url { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .field svg { flex: none; color: var(--content-faint); }
   .field .caret {
-    display: inline-block; width: 1.5px; height: 15px; background: var(--accent);
+    display: inline-block; width: 1.5px; height: 15px; background: var(--accent); vertical-align: -3px;
     /* Four blinks, not infinite: anything that blinks past five seconds needs
        its own off switch (WCAG 2.2.2), and the tour's pause does not reach a
        CSS animation. Under reduced motion it does not blink at all. */
-    animation: blink 1s steps(2) 4; flex: none;
+    animation: blink 1s steps(2) 4;
   }
   @keyframes blink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .field .caret { animation: none; } }
-  .field-label {
-    font: 500 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--content-faint); margin-bottom: 6px;
+  .fetch {
+    flex: none; font: 500 12px "Geist", sans-serif; color: var(--content);
+    background: var(--panel); border: 1px solid var(--border-strong); border-radius: 7px; padding: 5px 9px;
   }
+  .field-label { font-size: 12.5px; font-weight: 500; color: var(--content-muted); margin-bottom: 7px; }
 
-  /* ---- The preview card ---- */
+  /* ---- The save dialog's preview card ---- */
   .preview { display: flex; gap: 12px; align-items: flex-start; }
   .thumb {
-    width: 96px; height: 62px; border-radius: 7px; flex: none;
+    width: 96px; height: 50px; border-radius: 6px; flex: none;
     background: var(--surface); border: 1px solid var(--border);
     display: grid; place-items: center;
-    font: 500 9.5px "IBM Plex Mono", monospace; color: var(--content-faint);
+    font: 500 9.5px "Geist Mono", monospace; color: var(--content-faint);
   }
-  .p-title { font-size: 13.5px; font-weight: 600; line-height: 1.35; }
-  .p-desc { font-size: 12px; color: var(--content-muted); line-height: 1.5; margin-top: 3px; }
-  .p-domain {
-    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint); margin-top: 5px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .favicon {
-    width: 11px; height: 11px; border-radius: 2px; background: var(--accent); flex: none;
+  .p-url { font: 400 12px "Geist Mono", monospace; color: var(--content-faint); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .p-title { font-size: 13.5px; font-weight: 600; line-height: 1.35; margin-top: 4px; }
+  .p-desc { font-size: 12px; color: var(--content-muted); line-height: 1.5; margin-top: 2px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .badge {
+    font-size: 11.5px; font-weight: 500; color: var(--content-muted);
+    border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px;
   }
 
   /* ---- Field-by-field arrival ---- */
   .kv { display: grid; grid-template-columns: 96px 1fr; gap: 4px 12px; font-size: 12px; }
-  .kv dt { font: 500 12px "IBM Plex Mono", monospace; color: var(--content-faint); }
+  .kv dt { font: 500 12px "Geist Mono", monospace; color: var(--content-faint); }
   .kv dd { margin: 0; color: var(--content); font-size: 12px; }
 
-  /* ---- Tags ---- */
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  /* ---- Tags (DevLinks .tag: neutral, 6px) ---- */
+  .tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
   .tag {
-    font: 500 12px "IBM Plex Mono", monospace; padding: 3px 8px; border-radius: 5px;
-    background: var(--verified-soft); color: var(--verified); border: 1px solid var(--verified);
+    font-size: 12px; padding: 3px 8px; border-radius: 6px;
+    background: var(--surface); color: var(--content-muted); border: 1px solid var(--border);
   }
-  .tag.type { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
-  .rulehit {
-    font: 400 12px/1.7 "IBM Plex Mono", monospace; color: var(--content-faint);
+  .src-step { display: grid; grid-template-columns: 22px 1fr; gap: 3px 8px; align-items: start; }
+  .src-step + .src-step { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); }
+  .src-step .n {
+    width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+    font: 600 11px "Geist", sans-serif; color: var(--content-muted); border: 1px solid var(--border-strong);
   }
+  .src-step .t { font-size: 12.5px; font-weight: 600; }
+  .src-step .d { grid-column: 2; font-size: 12px; color: var(--content-muted); line-height: 1.5; }
+  .rulehit { font: 400 12px/1.7 "Geist Mono", monospace; color: var(--content-faint); }
   .rulehit b { color: var(--content-muted); font-weight: 500; }
 
   /* ---- Duplicate flow ---- */
   .norm {
-    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-muted);
+    font: 400 12px "Geist Mono", monospace; color: var(--content-muted);
     display: flex; flex-direction: column; gap: 5px;
   }
-  .norm .strike { color: var(--content-faint); }
+  .norm .strike { color: var(--content-faint); overflow-wrap: anywhere; }
   .norm .out { color: var(--content); }
   .err {
-    font: 500 12px "IBM Plex Mono", monospace; color: var(--behind);
+    font: 500 12px "Geist Mono", monospace; color: var(--behind);
     background: var(--behind-soft); border: 1px solid var(--behind);
     border-radius: 7px; padding: 7px 10px;
   }
+  /* DevLinks .notice-warn */
   .existing {
     border: 1px solid var(--unverified); background: var(--unverified-soft);
-    border-radius: 9px; padding: 10px 12px;
+    border-radius: 8px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; color: var(--content-muted);
+  }
+  .existing .h { font-weight: 600; color: var(--content); }
+  .existing .btn {
+    display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 500; color: var(--content);
+    background: var(--panel); border: 1px solid var(--border-strong); border-radius: 7px; padding: 4px 9px;
   }
 
-  /* ---- Public collection ---- */
-  .pub-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  /* ---- Public roadmap (DevLinks .path) ---- */
+  .pub-kicker { font-size: 12px; font-weight: 500; color: var(--content-faint); }
+  .pub-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; margin-top: 3px; }
+  .pub-by { font-size: 12px; color: var(--content-faint); margin-top: 3px; }
+  .pub-by b { color: var(--content); font-weight: 500; }
   .pub-url {
-    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-muted);
+    font: 400 12px "Geist Mono", monospace; color: var(--content-muted);
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 6px; padding: 5px 9px; overflow: hidden;
+    border-radius: 6px; padding: 4px 8px; overflow: hidden;
     white-space: nowrap; text-overflow: ellipsis;
   }
-  .bm-list { display: flex; flex-direction: column; gap: 7px; }
-  .bm {
-    display: flex; align-items: center; gap: 9px;
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
-    background: var(--panel); font-size: 12.5px;
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .step-row { position: relative; display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding-bottom: 8px; }
+  .step-row:not(:last-child)::before {
+    content: ""; position: absolute; left: 11.5px; top: 26px; bottom: 2px; width: 1px; background: var(--border-strong);
   }
-  .bm .d { font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint); margin-left: auto; flex: none; }
+  .step-n {
+    width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+    font: 600 11.5px "Geist", sans-serif; color: var(--content-muted);
+    border: 1px solid var(--border-strong); background: var(--panel);
+  }
+  .step-row.next .step-n { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .step-card { border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; background: var(--panel); }
+  .step-row.next .step-card { border-color: var(--accent-line); }
+  .step-card .t { font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+  .step-card .d { font: 400 11.5px "Geist Mono", monospace; color: var(--content-faint); margin-top: 1px; }
+  .next-up {
+    font-size: 10.5px; font-weight: 500; color: var(--accent);
+    border: 1px solid var(--accent-line); background: var(--accent-soft); border-radius: 5px; padding: 0 5px;
+  }
   .note { font-size: 12px; color: var(--content-muted); }
   .note b { font-weight: 600; color: var(--content); }
+
+  /* The redrawn scenes stack taller on a phone than the shared 520px stage.
+     Measured 2026-10-01: tallest scene 612px in the 350px frame and 738px in
+     the 280px one (a 320px viewport), so two heights rather than one that
+     leaves a 120px gap at the common width. */
+  @media (max-width: 700px) { .stage { height: 620px; } }
+  @media (max-width: 300px) { .stage { height: 744px; } }
 
   @media (max-width: 700px) {
     .row { flex-direction: column; }
@@ -125,8 +167,8 @@
     <div class="logo mono">DL</div>
     <div>
       <div class="eyebrow">Guided tour · ~40 seconds</div>
-      <h1>DevLinks — saving a link, end to end</h1>
-      <div class="sub">Illustrated walkthrough · sample data · Metadata fetched server-side · tags inferred by rule · duplicates caught by the database</div>
+      <h1>DevLinks: saving a link, end to end</h1>
+      <div class="sub">Illustrated walkthrough · sample data · Metadata fetched server-side · tags read from the page, then by rule · duplicates caught by the database · public roadmaps</div>
     </div>
   </header>
 
@@ -135,32 +177,35 @@
     <!-- Scene 1 -->
     <section class="scene" data-label="PASTE" data-dur="7000">
       <h2 class="in">One field. Paste a URL.</h2>
-      <p class="lede in" style="animation-delay:0.1s">Everything else on the card is derived — the point is that you never type a title.</p>
+      <p class="lede in" style="animation-delay:0.1s">Everything else on the card is derived; the point is that you never type a title.</p>
       <div class="card in" style="animation-delay:0.3s">
-        <div class="field-label">Save a link</div>
+        <div class="field-label">Save to React Debugging</div>
         <div class="field">
-          <span>https://react.dev/reference/react/useMemo</span><span class="caret"></span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
+          <span class="url">https://react.dev/reference/react/useMemo<span class="caret"></span></span>
+          <span class="fetch">Fetch preview ↵</span>
         </div>
         <div class="note" style="margin-top:10px">
-          The URL goes to <span class="mono">POST /api/metadata</span> — a server route, because
+          The URL goes to <span class="mono">POST /api/metadata</span>, a server route, because
           the browser cannot fetch a cross-origin page and read its <span class="mono">&lt;title&gt;</span>.
         </div>
       </div>
-      <p class="scene-caption">A bookmark manager that makes you type the title is a form. The only input here is the URL; the server does the rest — which is what puts an SSRF surface in the middle of a CRUD app, and why the other tour exists.</p>
+      <p class="scene-caption">A bookmark manager that makes you type the title is a form. The only input here is the URL; the server does the rest, which is what puts an SSRF surface in the middle of a CRUD app, and why the other tour exists.</p>
     </section>
 
     <!-- Scene 2 -->
     <section class="scene" data-label="PREVIEW" data-dur="8500">
       <h2 class="in">The preview comes back parsed</h2>
-      <p class="lede in" style="animation-delay:0.1s">Open Graph first, then Twitter cards, then the plain <span class="mono">&lt;title&gt;</span> — whichever exists.</p>
+      <p class="lede in" style="animation-delay:0.1s">Open Graph first, then Twitter cards, then the plain <span class="mono">&lt;title&gt;</span>, whichever exists.</p>
       <div class="row">
         <div class="card grow in" style="animation-delay:0.3s">
           <div class="preview">
             <div class="thumb">og:image</div>
-            <div>
+            <div style="min-width:0">
+              <div class="p-url">https://react.dev/reference/react/useMemo</div>
               <div class="p-title">useMemo – React</div>
-              <div class="p-desc">useMemo is a React Hook that lets you cache a calculation between re-renders.</div>
-              <div class="p-domain"><span class="favicon"></span>react.dev</div>
+              <div class="p-desc">The library for web and native user interfaces</div>
+              <div class="badges"><span class="badge">Detected: Docs</span><span class="badge">Preview complete</span></div>
             </div>
           </div>
         </div>
@@ -176,62 +221,59 @@
       </div>
       <div class="note in" style="animation-delay:0.95s">
         <b>fetchStatus</b> is <span class="mono">success</span> only when title, description and image all arrived.
-        Anything less is <span class="mono">partial</span> — the save still works, the card is just thinner.
+        Anything less is <span class="mono">partial</span> and the dialog says what is missing; the save still works.
       </div>
       <p class="scene-caption">The parse is a cascade with a named outcome. A page missing an og:image is not an error and is not silently pretended away: it comes back as partial, and the UI shows a thinner card rather than a broken one.</p>
     </section>
 
     <!-- Scene 3 -->
-    <section class="scene" data-label="TAGS" data-dur="8500">
-      <h2 class="in">Tags are inferred by rule, not by a model</h2>
-      <p class="lede in" style="animation-delay:0.1s">84 regexes over hostname, path, title and description. Same URL, same tags, every time.</p>
+    <section class="scene" data-label="TAGS" data-dur="9000">
+      <h2 class="in">Tags: the page's own first, then rules</h2>
+      <p class="lede in" style="animation-delay:0.1s">No model call. What the author declared leads; 127 rules over host, path, title and description fill the rest.</p>
       <div class="card in" style="animation-delay:0.3s">
-        <div class="field-label">Suggested</div>
-        <div class="tags">
-          <span class="tag type">documentation</span>
-          <span class="tag">react</span>
-          <span class="tag">performance</span>
-          <span class="tag">caching</span>
+        <div class="src-step">
+          <span class="n">1</span><span class="t">Tags the page declares</span>
+          <span class="d"><span class="mono">article:tag</span>, JSON-LD <span class="mono">keywords</span>, dev.to's "Tagged with", GitHub topics. react.dev declares none.</span>
         </div>
-        <div class="rulehit" style="margin-top:11px">
-          <div><b>documentation</b> &nbsp;·&nbsp; hostname is react.dev, a known docs host</div>
-          <div><b>react</b> &nbsp;·&nbsp; /\breact\b/i matched the path and the title</div>
-          <div><b>performance</b> &nbsp;·&nbsp; /\bperformance\b/i matched the description</div>
-          <div><b>caching</b> &nbsp;·&nbsp; /\bcach(?:ing|e)\b/i matched "cache a calculation"</div>
+        <div class="src-step">
+          <span class="n">2</span><span class="t">Rules fill the gap</span>
+          <span class="d">
+            <span class="tags" style="margin:3px 0 6px"><span class="tag">react</span><span class="tag">hooks</span><span style="font-size:12px;color:var(--content-faint)">react.dev · Docs</span></span>
+            <span class="rulehit" style="display:block"><b>react</b> &nbsp;/\breact\b/i matched the path and the title<br><b>hooks</b> &nbsp;/\buse(?:State|Effect|Memo|…)\b/ matched "useMemo"</span>
+          </span>
         </div>
       </div>
       <div class="note in" style="animation-delay:0.8s">
-        No second network round trip, no per-save cost, and nothing to re-run when a model changes.
-        <b>The rules cover a fixed vocabulary</b> — a framework
-        invented next year gets tagged by its hostname or not at all.
+        On a dev.to article the first step does the work: its own <b>webdev, javascript, programming, beginners</b>
+        lead, and the rules add <b>http, cookies</b>.
       </div>
-      <p class="scene-caption">Tagging runs on every save, which is the frequent call, so it gets no inference at all. These four are what the rules actually return for this URL — run, not imagined. Suggestions are editable, which is the only reason a lookup table is an acceptable answer here.</p>
+      <p class="scene-caption">Most platforms already publish their tags in machine-readable places, so reading them beats guessing. Rules cover pages that declare nothing. Same URL, same tags, every time, and every suggestion is editable before saving.</p>
     </section>
 
     <!-- Scene 4 -->
     <section class="scene" data-label="DUPLICATE" data-dur="10000">
       <h2 class="in">The same link again, dressed differently</h2>
-      <p class="lede in" style="animation-delay:0.1s">Different case, a <span class="mono">www</span>, a tracking query, a fragment — one bookmark.</p>
+      <p class="lede in" style="animation-delay:0.1s">Different case, a <span class="mono">www</span>, a tracking query, a fragment: one bookmark.</p>
       <div class="row">
         <div class="card grow in" style="animation-delay:0.3s">
           <div class="field-label">Pasted</div>
           <div class="norm">
             <span class="strike">https://WWW.React.dev/reference/react/useMemo?utm_source=twitter#top</span>
-            <span>↓ &nbsp;normalize_bookmark_url() — in Postgres, on a trigger</span>
+            <span>↓ &nbsp;normalize_bookmark_url(), in Postgres, on a trigger</span>
             <span class="out">react.dev/reference/react/usememo</span>
           </div>
         </div>
         <div class="card grow in" style="animation-delay:0.65s">
           <div class="err">23505 &nbsp;unique_violation<br>bookmarks_user_id_normalized_url_key</div>
           <div class="existing" style="margin-top:9px">
-            <div class="mono" style="font-size:10.5px;letter-spacing:0.05em;color:var(--unverified)">ALREADY SAVED</div>
-            <div style="font-size:12.5px;font-weight:600;margin-top:3px">useMemo – React</div>
-            <div class="mono" style="font-size:11px;color:var(--content-muted);margin-top:2px">saved 6 days ago · React Debugging</div>
+            <div class="h">You already saved this link</div>
+            “useMemo – React” is in React Debugging.
+            <div><span class="btn">Edit the saved one</span></div>
           </div>
         </div>
       </div>
       <div class="note in" style="animation-delay:1s">
-        The constraint is the check. The app does not query first and then insert — it inserts, and
+        The constraint is the check. The app does not query first and then insert; it inserts, and
         reads <span class="mono">23505</span> as <b>“show them the one they already have.”</b>
         Lowercasing the path is deliberate and lossy: two URLs differing only in case are treated as one.
       </div>
@@ -239,26 +281,29 @@
     </section>
 
     <!-- Scene 5 -->
-    <section class="scene" data-label="PUBLISH" data-dur="8000">
-      <h2 class="in">A collection can be read without an account</h2>
-      <p class="lede in" style="animation-delay:0.1s">Flip one flag and row-level security opens exactly that collection to anonymous reads.</p>
-      <div class="card in" style="animation-delay:0.3s">
-        <div class="pub-head">
-          <div style="font-size:13.5px;font-weight:600">React Debugging</div>
-          <span class="chip green">public</span>
+    <section class="scene" data-label="PUBLISH" data-dur="9000">
+      <h2 class="in">Read without an account, followed in order</h2>
+      <p class="lede in" style="animation-delay:0.1s">One flag opens the collection to anonymous reads; another turns it into numbered steps.</p>
+      <div class="row">
+        <div class="card grow in" style="animation-delay:0.3s">
+          <div class="pub-kicker">Roadmap</div>
+          <div class="pub-title">React Debugging</div>
+          <div class="pub-by">Curated by <b>DevLinks Demo</b> · 8 steps</div>
+          <div class="pub-url" style="margin-top:8px">/public/collections/react-debugging</div>
         </div>
-        <div class="pub-url" style="margin-top:8px">/public/collections/react-debugging</div>
-        <div class="bm-list" style="margin-top:10px">
-          <div class="bm"><span class="favicon"></span>useMemo – React<span class="d">react.dev</span></div>
-          <div class="bm"><span class="favicon"></span>Fix the slow render before the re-render<span class="d">kentcdodds.com</span></div>
-          <div class="bm"><span class="favicon"></span>Profiler – React<span class="d">react.dev</span></div>
+        <div class="card grow in" style="animation-delay:0.5s">
+          <ol class="steps">
+            <li class="step-row next"><span class="step-n">1</span><div class="step-card"><div class="t">React Developer Tools <span class="next-up">Next up</span></div><div class="d">react.dev · Tool</div></div></li>
+            <li class="step-row"><span class="step-n">2</span><div class="step-card"><div class="t">How to Use React DevTools</div><div class="d">freecodecamp.org · Article</div></div></li>
+            <li class="step-row"><span class="step-n">3</span><div class="step-card"><div class="t">React Strict Mode</div><div class="d">react.dev · Docs</div></div></li>
+          </ol>
         </div>
       </div>
       <div class="note in" style="animation-delay:0.8s">
-        The policy is on the table, not the handler — <b>an anonymous SELECT succeeds only where
-        <span class="mono">is_public</span> is true</b>. The portfolio demo links to a published collection using this public read path.
+        <b>An anonymous SELECT succeeds only where <span class="mono">is_public</span> is true</b>; the policy is on the table, not the handler.
+        Step order is <span class="mono">bookmarks.position</span>, rewritten in one call by <span class="mono">reorder_bookmarks()</span>, which rejects a stale list.
       </div>
-      <p class="scene-caption">Sharing is the reason a bookmark manager is worth building rather than using a text file. Making it work by loosening a route handler would leave the rows reachable another way; the rule lives in Postgres, so every client gets it whether it asks for it or not.</p>
+      <p class="scene-caption">Sharing is the reason a bookmark manager is worth building rather than using a text file. The read rule lives in Postgres, so every client gets it. A roadmap adds order: the author drags steps into place, and readers tick them off with progress kept in their own browser.</p>
     </section>
 
   </div>

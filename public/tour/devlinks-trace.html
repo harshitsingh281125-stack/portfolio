@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
-<title>DevLinks — the request trace</title>
+<title>DevLinks: the request trace</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/tour/tour.css">
 <!--
   Built in Phase 4 on the shared shell. A two-pane stage: what was sent on the
@@ -14,6 +14,9 @@
   This is the tour the DevLinks case study is built around. Every step on the
   right-hand spine corresponds to real code in src/server/metadata.ts, and the
   line ranges in the footers were checked against the committed file.
+  Re-checked 2026-10-01 against DevLinks 0ec3ff8, whose metadata.ts lost its
+  regex meta parser (29 lines) to src/server/html.ts; the tags in step 4 were
+  re-run through the current two-stage pipeline.
 -->
 <style>
   /* Two panes: the request on the left, the call stack on the right. */
@@ -24,7 +27,7 @@
     display: grid; grid-template-columns: 36% 64%;
   }
   .pane-label {
-    font: 500 10.5px "IBM Plex Mono", monospace; text-transform: uppercase;
+    font: 500 10.5px "Geist Mono", monospace; text-transform: uppercase;
     letter-spacing: 0.08em; color: var(--content-faint); margin-bottom: 10px;
   }
   .client {
@@ -37,13 +40,13 @@
   .req {
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 9px; padding: 11px 12px;
-    font: 400 12px/1.6 "IBM Plex Mono", monospace; color: var(--content);
+    font: 400 12px/1.6 "Geist Mono", monospace; color: var(--content);
     overflow-wrap: anywhere;
   }
   .req .m { color: var(--accent); font-weight: 600; }
   .req .k { color: var(--content-faint); }
   .client-note {
-    margin-top: auto; font: 400 12px/1.65 "IBM Plex Mono", monospace;
+    margin-top: auto; font: 400 12px/1.65 "Geist Mono", monospace;
     color: var(--content-faint);
   }
   .client-note b { color: var(--content-muted); font-weight: 500; }
@@ -60,7 +63,7 @@
   .rung.stop::before { background: var(--behind);   border-color: var(--behind); }
   .rung.loop::before { background: var(--accent);   border-color: var(--accent); }
   .rung .call {
-    font: 500 12.5px "IBM Plex Mono", monospace; color: var(--content);
+    font: 500 12.5px "Geist Mono", monospace; color: var(--content);
     overflow-wrap: anywhere;
   }
   .rung .call .fn { color: var(--accent); }
@@ -71,7 +74,7 @@
 
   .addrs { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
   .addr {
-    font: 400 12px "IBM Plex Mono", monospace; padding: 2px 7px; border-radius: 5px;
+    font: 400 12px "Geist Mono", monospace; padding: 2px 7px; border-radius: 5px;
     border: 1px solid var(--border); background: var(--panel); color: var(--content-muted);
   }
   .addr.bad { border-color: var(--behind); background: var(--behind-soft); color: var(--behind); }
@@ -79,14 +82,14 @@
 
   .outcome {
     margin-top: auto; border-radius: 8px; padding: 9px 11px;
-    font: 500 12px "IBM Plex Mono", monospace;
+    font: 500 12px "Geist Mono", monospace;
   }
   .outcome.bad { background: var(--behind-soft); border: 1px solid var(--behind); color: var(--behind); }
   .outcome.ok  { background: var(--verified-soft); border: 1px solid var(--verified); color: var(--verified); }
   .outcome .sub { display: block; font-weight: 400; margin-top: 3px; opacity: 0.9; }
 
   .src {
-    font: 400 12px "IBM Plex Mono", monospace; color: var(--content-faint);
+    font: 400 12px "Geist Mono", monospace; color: var(--content-faint);
     margin-top: 9px;
   }
 
@@ -134,14 +137,14 @@
           </div>
           <div class="rung hit in" style="animation-delay:0.5s">
             <div class="call">new <span class="fn">URL</span>(rawUrl)</div>
-            <div class="why">Parsed, not regexed. Then the scheme is checked against an allowlist — <b>http: and https: only</b>, so file:, gopher: and data: never reach a fetch.</div>
+            <div class="why">Parsed, not regexed. Then the scheme is checked against an allowlist: <b>http: and https: only</b>, so file:, gopher: and data: never reach a fetch.</div>
           </div>
           <div class="rung hit in" style="animation-delay:0.85s">
             <div class="call">hostname denylist</div>
-            <div class="why"><span class="mono">localhost</span>, <span class="mono">*.local</span>, <span class="mono">*.internal</span>. Cheap, and worth almost nothing on its own — the next rung is the one that matters.</div>
+            <div class="why"><span class="mono">localhost</span>, <span class="mono">*.local</span>, <span class="mono">*.internal</span>. Cheap, and worth almost nothing on its own; the next rung is the one that matters.</div>
           </div>
         </div>
-        <div class="src in" style="animation-delay:1.2s">src/server/metadata.ts · validateUrlString, L140-L183</div>
+        <div class="src in" style="animation-delay:1.2s">src/server/metadata.ts · validateUrlString, L111-L154</div>
       </div>
       <p class="scene-caption">A string check is where most implementations stop, and it stops nothing: the attacker owns the hostname, so it can be spelled any way that passes. The denylist is here because it is cheap, not because it is the defence.</p>
     </section>
@@ -167,7 +170,7 @@
           </div>
           <div class="rung hit in" style="animation-delay:0.45s">
             <div class="call"><span class="fn">dns.lookup</span>(host, { all: true })</div>
-            <div class="why">Resolve first, and judge the <b>answer</b>. <span class="mono">all: true</span> because a host can carry several records and the resolver decides the order — one public address must not launder a private one.</div>
+            <div class="why">Resolve first, and judge the <b>answer</b>. <span class="mono">all: true</span> because a host can carry several records and the resolver decides the order; one public address must not launder a private one.</div>
             <div class="addrs">
               <span class="addr ok in" style="animation-delay:0.9s">93.184.216.34</span>
               <span class="addr bad in" style="animation-delay:1.15s">10.0.0.12</span>
@@ -175,16 +178,16 @@
           </div>
           <div class="rung stop in" style="animation-delay:1.5s">
             <div class="call"><span class="fn">isPrivateIp</span>() → true</div>
-            <div class="why">Loopback, link-local, <span class="mono">10/8</span>, <span class="mono">192.168/16</span>, <span class="mono">172.16–31</span>, and the IPv6 equivalents. One hit is enough.</div>
+            <div class="why">Loopback, link-local, <span class="mono">10/8</span>, <span class="mono">192.168/16</span>, <span class="mono">172.16-31</span>, and the IPv6 equivalents. One hit is enough.</div>
           </div>
         </div>
         <div class="outcome bad in" style="animation-delay:1.9s">
           403 · fetchStatus: 'blocked'
           <span class="sub">No outbound request was ever made.</span>
         </div>
-        <div class="src in" style="animation-delay:2.1s">src/server/metadata.ts · isPrivateIp, L118-L138</div>
+        <div class="src in" style="animation-delay:2.1s">src/server/metadata.ts · isPrivateIp, L89-L109</div>
       </div>
-      <p class="scene-caption">This is the whole reason the endpoint is interesting. The server sits inside a network and can reach the cloud metadata service, anything on loopback, anything on a private range — and it takes its instructions from a text field. Rejecting on the resolved addresses is the only check the attacker does not control.</p>
+      <p class="scene-caption">This is the whole reason the endpoint is interesting. The server sits inside a network and can reach the cloud metadata service, anything on loopback, anything on a private range, and it takes its instructions from a text field. Rejecting on the resolved addresses is the only check the attacker does not control.</p>
     </section>
 
     <!-- Scene 3 -->
@@ -212,7 +215,7 @@
           </div>
           <div class="rung loop in" style="animation-delay:0.8s">
             <div class="call">302 → http://169.254.169.254/</div>
-            <div class="why">The location header is a <b>new URL that nobody has checked</b>. So it goes back through <span class="mono">validateUrlString</span> — the same function, not a cheaper copy of it.</div>
+            <div class="why">The location header is a <b>new URL that nobody has checked</b>. So it goes back through <span class="mono">validateUrlString</span>, the same function, not a cheaper copy of it.</div>
           </div>
           <div class="rung stop in" style="animation-delay:1.25s">
             <div class="call">blocked on the hop</div>
@@ -223,9 +226,9 @@
           403 · fetchStatus: 'blocked'
           <span class="sub">Validation is a loop, not an entrance.</span>
         </div>
-        <div class="src in" style="animation-delay:1.9s">src/server/metadata.ts · fetchWithRedirects, L204-L226</div>
+        <div class="src in" style="animation-delay:1.9s">src/server/metadata.ts · fetchWithRedirects, L175-L197</div>
       </div>
-      <p class="scene-caption">The address you were handed is not the address you end up requesting. Two validators that are meant to agree eventually disagree, and the one on the quieter path is the one missing a case — so the redirect loop calls the same function the front door did.</p>
+      <p class="scene-caption">The address you were handed is not the address you end up requesting. Two validators that are meant to agree eventually disagree, and the one on the quieter path is the one missing a case, so the redirect loop calls the same function the front door did.</p>
     </section>
 
     <!-- Scene 4 -->
@@ -252,22 +255,21 @@
             <div class="why">A cascade with a named outcome: all three of title, description and image present is <span class="mono">success</span>, otherwise <span class="mono">partial</span>.</div>
           </div>
           <div class="rung hit in" style="animation-delay:0.85s">
-            <div class="call"><span class="fn">inferSuggestedTags</span>(host, path, title, desc)</div>
-            <div class="why">84 regexes, run in this same request. <b>No model call</b> — tagging is the frequent path, so it gets no inference at all.</div>
+            <div class="call"><span class="fn">extractPublisherTags</span> → <span class="fn">inferSuggestedTags</span></div>
+            <div class="why">The page's own tags first (<span class="mono">article:tag</span>, JSON-LD, GitHub topics); react.dev declares none, so 127 rules fill in. <b>No model call</b>: tagging is the frequent path.</div>
             <div class="addrs">
               <span class="addr ok in" style="animation-delay:1.2s">react</span>
-              <span class="addr ok in" style="animation-delay:1.35s">performance</span>
-              <span class="addr ok in" style="animation-delay:1.5s">caching</span>
+              <span class="addr ok in" style="animation-delay:1.35s">hooks</span>
             </div>
           </div>
         </div>
         <div class="outcome ok in" style="animation-delay:1.8s">
           200 · fetchStatus: 'success'
-          <span class="sub">documentation · 3 tags · og:image</span>
+          <span class="sub">documentation · 2 tags · og:image</span>
         </div>
-        <div class="src in" style="animation-delay:2s">src/server/taggingRules.ts · L191-L297</div>
+        <div class="src in" style="animation-delay:2s">src/server/pageTags.ts · taggingRules.ts L191-L353</div>
       </div>
-      <p class="scene-caption">These three tags are what the rules actually return for this URL — run against the real function, not written for the slide. Topics outside the rule table may receive no suggested tags.</p>
+      <p class="scene-caption">These two tags are what the pipeline actually returns for this URL, run against the real functions, not written for the slide. A page that declares its own tags gets those first; one that declares none and falls outside the rule table may get no suggestions.</p>
     </section>
 
     <!-- Scene 5 -->
@@ -288,7 +290,7 @@
         <div class="spine">
           <div class="rung hit in" style="animation-delay:0.15s">
             <div class="call">trigger <span class="fn">sync_bookmark_derived_fields</span></div>
-            <div class="why">Runs <span class="mono">before insert or update</span> and overwrites <span class="mono">normalized_url</span> with what the database computes — so the key cannot be smuggled past it.</div>
+            <div class="why">Runs <span class="mono">before insert or update</span> and overwrites <span class="mono">normalized_url</span> with what the database computes, so the key cannot be smuggled past it.</div>
             <div class="addrs"><span class="addr ok in" style="animation-delay:0.6s">react.dev/reference/react/usememo</span></div>
           </div>
           <div class="rung stop in" style="animation-delay:0.95s">
@@ -297,7 +299,7 @@
           </div>
           <div class="rung loop in" style="animation-delay:1.35s">
             <div class="call">re-query → { kind: <b>'duplicate'</b>, existing }</div>
-            <div class="why">Returned as a <b>success shape</b>, not an error, and the list is not invalidated — nothing was created. The user gets the bookmark they already had.</div>
+            <div class="why">Returned as a <b>success shape</b>, not an error, and the list is not invalidated: nothing was created. The user gets the bookmark they already had.</div>
           </div>
         </div>
         <div class="outcome ok in" style="animation-delay:1.8s">
@@ -306,7 +308,7 @@
         </div>
         <div class="src in" style="animation-delay:2s">bookmarksApi.ts · L186-L217 · migration 000002 · L11-L32</div>
       </div>
-      <p class="scene-caption">The key a constraint is enforced on should be computed by the engine that enforces it. Put normalization in the client and every client — the app, a script, a psql session — gets a chance to disagree, and uniqueness quietly becomes a suggestion.</p>
+      <p class="scene-caption">The key a constraint is enforced on should be computed by the engine that enforces it. Put normalization in the client and every client (the app, a script, a psql session) gets a chance to disagree, and uniqueness quietly becomes a suggestion.</p>
     </section>
 
   </div>

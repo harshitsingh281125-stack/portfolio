@@ -1,11 +1,13 @@
 # Product screenshots
 
-The homepage uses actual application screenshots:
+The homepage shows two application screens per project, switched by tabs on each card (`components/ScreenSwitcher.tsx`). All four are actual captures of the live applications:
 
 - `prep-app.png` — https://prep-seven-theta.vercel.app/onboarding after Prep's 2026-09-28 redesign (PR #9), dark theme, 1280 × 800 — taller than the first capture's 720 because the redesigned page header pushed the Generate button below a 720px fold. Captured 30 September 2026 with the published demo account. Example form selections: SDE-2 Frontend, late-stage startup, 5 weeks, 12 hours, React internals. Generation was not submitted, and the generate request was blocked in the browser as a guard; no roadmap or study progress was created.
-- The first `prep-app.png` (24 September 2026, 1280 × 720) showed the pre-redesign UI and is in git history.
-- `devlinks-app.png` — captured 24 September 2026 from https://dev-links-rouge.vercel.app/public/collections/react-debugging, 1280 × 900. Anonymous view of the seeded public collection.
+- `prep-usage.png` — https://prep-seven-theta.vercel.app/usage, dark theme, 1280 × 800, captured 1 October 2026 with the published demo account. Read-only: every write request except sign-in was blocked in the browser, and none was attempted. The figures (daily cap, tokens, fallback rate, cost projection) are the live gateway's, and the "AI off" badge is the live setting at capture time. Chosen because the demo account had no roadmaps, recall cards or progress, so the screens that need data showed empty states.
+- `devlinks-app.png` — https://dev-links-rouge.vercel.app/public/collections/react-debugging, light theme, 1280 × 900, captured 7 October 2026 after DevLinks' redesign and roadmap feature were deployed and the seeded React Debugging collection was switched to a roadmap in study order on production (PLAN.md M10). Anonymous view with every write request blocked; the page rendered all 8 steps in the seeded order.
+- `devlinks-home.png` — https://dev-links-rouge.vercel.app/, light theme, 1280 × 800, captured 1 October 2026. Anonymous view of the landing page; the right-hand panel runs DevLinks' real matching and tagging rules on the example URL in the browser.
+- Earlier captures are in git history: the first `prep-app.png` (24 September 2026, 1280 × 720, pre-redesign) and the first `devlinks-app.png` (24 September 2026, the pre-redesign dark collection grid).
 
-Both screenshots can be enlarged from the project cards. When refreshing them, wait for fonts and data to load and keep the image dimensions and descriptions in `lib/projects.ts` in sync.
+Each screen can be enlarged from its card. When refreshing them, wait for fonts and data to load, capture with reduced motion so entrance animations are settled, and keep the dimensions, alt text and captions in `lib/projects.ts` in sync.
 
-The older `*-light.jpg` and `*-dark.jpg` images are stills from authored HTML walkthroughs, not live application captures. `scripts/thumbs.mjs` only regenerates those legacy files.
+The older `*-light.jpg` and `*-dark.jpg` images are stills from authored HTML walkthroughs, not live application captures. `scripts/thumbs.mjs` only regenerates those legacy files. Since the site went light-only (PLAN.md §4.6) the two variants of each render identically.

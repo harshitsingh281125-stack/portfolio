@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
 <link rel="stylesheet" href="/tour/tour.css">
 <!-- Ported to the portfolio shell in Phase 4. Tokens, stage, scene, rail and controls now come from /tour/tour.css and the driver from /tour/tour.js; what remains below is only this tour's own scene CSS. -->
 <style>
@@ -23,7 +23,7 @@
   .s1-cols { display: flex; gap: 18px; align-items: stretch; }
   .s1-cols > .card { flex: 1; min-width: 0; }
   .chatline {
-    font: 400 12px "IBM Plex Mono", monospace; color: var(--text-faint);
+    font: 400 12px "Geist Mono", monospace; color: var(--text-faint);
     padding: 6px 0; border-bottom: 1px dashed var(--border);
   }
   .chatline:last-child { border-bottom: 0; }
@@ -44,8 +44,8 @@
     border-radius: 10px; padding: 10px 14px; text-align: center;
   }
   .pipe-node .t { font-weight: 600; font-size: 13px; }
-  .pipe-node .d { font: 400 10.5px "IBM Plex Mono", monospace; color: var(--text-faint); margin-top: 2px; }
-  .pipe-arrow { color: var(--text-faint); font: 600 14px "IBM Plex Mono", monospace; }
+  .pipe-node .d { font: 400 10.5px "Geist Mono", monospace; color: var(--text-faint); margin-top: 2px; }
+  .pipe-arrow { color: var(--text-faint); font: 600 14px "Geist Mono", monospace; }
   .weeks { border-top: 1px solid var(--border); }
   .weekrow {
     display: flex; align-items: baseline; gap: 14px; padding: 9px 0;
@@ -54,7 +54,7 @@
   .weekrow .wk { font-size: 12px; color: var(--text-faint); flex: 0 0 48px; }
   .weekrow .wt { font: 500 16px var(--prep-serif); letter-spacing: -0.01em; }
   .weekrow .topics { color: var(--text-faint); font-size: 12px; margin-left: auto; }
-  .s2-note { font: 400 11px "IBM Plex Mono", monospace; color: var(--text-faint); }
+  .s2-note { font: 400 11px "Geist Mono", monospace; color: var(--text-faint); }
   .s2-note b { color: var(--green); font-weight: 600; }
 
   /* ---- Scene 3: mastery ---- */
@@ -97,13 +97,13 @@
     display: grid; grid-template-columns: 30px minmax(0, 1fr);
     border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0;
   }
-  .recall-card .idx { font: 400 11.5px "IBM Plex Mono", monospace; color: var(--text-faint); padding-top: 3px; }
+  .recall-card .idx { font: 400 11.5px "Geist Mono", monospace; color: var(--text-faint); padding-top: 3px; }
   .recall-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-faint); }
   .recall-q { font: 400 19px/1.4 var(--prep-serif); margin: 6px 0 14px; }
   .grade-row { display: flex; gap: 10px; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    border-radius: 8px; padding: 7px 14px; font: 500 13px "IBM Plex Sans", sans-serif;
+    border-radius: 8px; padding: 7px 14px; font: 500 13px "Geist", sans-serif;
     border: 1px solid var(--border-strong); background: transparent; color: var(--text);
   }
   .btn.got .dot { color: var(--green); }
@@ -113,7 +113,7 @@
   @keyframes pulse { 50% { transform: scale(1.07); } }
   .sched { display: flex; align-items: center; gap: 0; margin-top: 18px; }
   .sched-node {
-    font: 600 11px "IBM Plex Mono", monospace; color: var(--text-muted);
+    font: 600 11px "Geist Mono", monospace; color: var(--text-muted);
     border: 1px solid var(--border-strong); border-radius: 6px; padding: 5px 10px;
     background: var(--bg-elevated); position: relative;
   }
@@ -163,8 +163,8 @@
   .acc-line .grid { stroke: var(--border); stroke-dasharray: 3 4; }
   .acc-line .axis { stroke: var(--border-strong); }
   .acc-line circle { fill: var(--amber); }
-  .acc-line text { font: 500 9px "IBM Plex Mono", monospace; fill: var(--text-faint); }
-  .s5-foot { font: 400 11px "IBM Plex Mono", monospace; color: var(--text-faint); }
+  .acc-line text { font: 500 9px "Geist Mono", monospace; fill: var(--text-faint); }
+  .s5-foot { font: 400 11px "Geist Mono", monospace; color: var(--text-faint); }
 
   /* ---- Scene 6: under the hood ---- */
   .hood { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -199,6 +199,11 @@
     .tile { min-width: 40%; border-left: 0; padding-left: 0; }
     .step .l { display: none; }
   }
+  /* Scenes stack taller on a phone than the shared 520px stage and were being
+     clipped. Measured 2026-10-01: tallest scene 701px in the 350px frame and
+     807px in the 280px one (a 320px viewport). */
+  @media (max-width: 700px) { .stage { height: 710px; } }
+  @media (max-width: 300px) { .stage { height: 812px; } }
 </style>
 
 <div class="wrap">
@@ -206,7 +211,7 @@
     <div class="logo">P</div>
     <div>
       <div class="eyebrow">Guided tour · ~50 seconds</div>
-      <h1>Prep — an interview study planner</h1>
+      <h1>Prep: an interview study planner</h1>
       <div class="sub">Illustrated walkthrough · sample data · Structured roadmaps · persistent notes · spaced-repetition recall · progress tracking</div>
     </div>
   </header>
@@ -231,11 +236,11 @@
             <div class="s1-fix"><span class="mono">✓</span> Your roadmap, persisted per user</div>
             <div class="s1-fix"><span class="mono">✓</span> Notes that live with each topic</div>
             <div class="s1-fix"><span class="mono">✓</span> A real review schedule that knows what's due</div>
-            <div class="s1-fix"><span class="mono">✓</span> Pace vs. plan — told to you straight</div>
+            <div class="s1-fix"><span class="mono">✓</span> Pace vs. plan, told to you straight</div>
           </div>
         </div>
       </div>
-      <p class="scene-caption">Prepping with a chatbot means re-pasting a context file every session — nothing is remembered, scheduled, or tracked. Prep replaces that workflow with one persistent system.</p>
+      <p class="scene-caption">Prepping with a chatbot means re-pasting a context file every session; nothing is remembered, scheduled, or tracked. Prep replaces that workflow with one persistent system.</p>
     </section>
 
     <!-- Scene 2: onboarding → AI roadmap -->
@@ -261,13 +266,13 @@
         <div class="weekrow in" style="animation-delay:2.7s"><span class="wk">Week 3</span> <span class="wt">System design: caching &amp; CDNs</span> <span class="topics">4 topics</span></div>
       </div>
       <div class="s2-note in" style="animation-delay:3.1s">auth-gated server route · hard daily cap per user · malformed output → retry → seeded template. <b>AI can never block the app.</b></div>
-      <p class="scene-caption">Five onboarding answers go through a provider-agnostic AI gateway. Every generation is schema-validated, with retry on malformed output and a seeded fallback — so the AI can never block the app.</p>
+      <p class="scene-caption">Five onboarding answers go through a provider-agnostic AI gateway. Every generation is schema-validated, with retry on malformed output and a seeded fallback, so the AI can never block the app.</p>
     </section>
 
     <!-- Scene 3: mastery is earned -->
     <section class="scene" data-label="MASTERY" data-dur="7500">
       <h2 class="in" style="text-align:center">Mastery is earned, not clicked through</h2>
-      <p class="lede in" style="animation-delay:0.1s; text-align:center; margin:0 auto">Every topic carries a kill criterion — checking it is a claim you commit to defending.</p>
+      <p class="lede in" style="animation-delay:0.1s; text-align:center; margin:0 auto">Every topic carries a kill criterion: checking it is a claim you commit to defending.</p>
       <div class="card topic-card in" style="animation-delay:0.4s">
         <span class="mastered-badge"><span class="dot"></span>Mastered</span>
         <div class="t-title">Closures &amp; scope</div>
@@ -276,7 +281,7 @@
           <div class="kc-box"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4 10-11"/></svg></div>
           <div>
             <div class="kc-eyebrow">Kill criterion</div>
-            <div class="kc-text">Explain how a closure causes a memory leak — on the spot, no notes.</div>
+            <div class="kc-text">Explain how a closure causes a memory leak, on the spot, no notes.</div>
           </div>
         </div>
         <div class="kc-foot">Check only when you can do it cold, no notes.</div>
@@ -308,7 +313,7 @@
         </div>
         </div>
       </div>
-      <p class="scene-caption">Recall runs on a fixed 1 / 4 / 14 / 30-day ladder, not textbook SM-2 — the screen promises those intervals, so the scheduler honours them. "Close enough" counts as a miss and resets the card to +1 day.</p>
+      <p class="scene-caption">Recall runs on a fixed 1 / 4 / 14 / 30-day ladder, not textbook SM-2: the screen promises those intervals, so the scheduler honours them. "Close enough" counts as a miss and resets the card to +1 day.</p>
     </section>
 
     <!-- Scene 5: honest progress -->
@@ -345,7 +350,7 @@
           </svg>
         </div>
       </div>
-      <div class="s5-foot in" style="animation-delay:0.7s">13d streak · not that it matters &nbsp;·&nbsp; charts are hand-rolled SVG — no chart library</div>
+      <div class="s5-foot in" style="animation-delay:0.7s">13d streak · not that it matters &nbsp;·&nbsp; charts are hand-rolled SVG, no chart library</div>
       <p class="scene-caption">The dashboard reports hours logged vs. planned, the recall-accuracy trend, and an explicit behind-pace warning. Progress is calculated from study records and elapsed time when the screen is loaded.</p>
     </section>
 
@@ -370,7 +375,7 @@
           <p>The grounded path resolves resource links from a curated corpus. Fallback suggestions are marked unverified. Unit and browser tests cover validation and the study flows.</p>
         </div>
       </div>
-      <div class="s2-note in" style="animation-delay:1.3s">Deliberately cut for v1: code sandboxing — it would need a separate isolation and execution design.</div>
+      <div class="s2-note in" style="animation-delay:1.3s">Deliberately cut for v1: code sandboxing. It would need a separate isolation and execution design.</div>
       <p class="scene-caption">Next.js and Supabase with row-level security on every table, raw SQL migrations, server-enforced AI caps, RAG-grounded resources, and unit and browser tests.</p>
     </section>
   </div>

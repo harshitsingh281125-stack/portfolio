@@ -30,7 +30,7 @@ export const experience: {
   role: "Frontend Engineer",
   company: "Kindtech Pvt Ltd",
   location: "Bengaluru",
-  period: "June 2023 — present",
+  period: "June 2023 - present",
   summary:
     "Two products: a clinical care platform on the web, where I am the primary author of the client, and a React Native app that ships six marketplace verticals from one codebase.",
   work: [
@@ -55,7 +55,7 @@ export const experience: {
         {
           title: "Real-time clinical messaging",
           points: [
-            "**Built the chat client the rest of the product sits on** — authentication, WebSocket transport over msgpack, message pagination, unread-horizon tracking, reactions, pins, mentions, DMs and channels.",
+            "**Built the chat client the rest of the product sits on**: authentication, WebSocket transport over msgpack, message pagination, unread-horizon tracking, reactions, pins, mentions, DMs and channels.",
             "Co-authored the **TypeScript client library** the frontend talks to the backend through. I wrote the **WebSocket transport and event decoding**, plus the channel, task, tag and user API bindings.",
             "Added a **reconnect layer** and fixed the event-decoding failures that were **silently dropping live message and membership updates**.",
             "**Twilio video visits**: in-call messaging, gallery view, rejoining a missed call, and a call widget that floats over the chat.",
@@ -64,24 +64,24 @@ export const experience: {
         {
           title: "Clinical forms & patient onboarding",
           points: [
-            "**Built the dynamic form system end to end**, across client and bot — SurveyJS rendering, multi-step and read-only modes, role-gated visibility, prefill from existing records, and form launchers in the message composer.",
+            "**Built the dynamic form system end to end**, across client and bot: SurveyJS rendering, multi-step and read-only modes, role-gated visibility, prefill from existing records, and form launchers in the message composer.",
             "Implemented **GUIDE-model patient onboarding**: eligibility schema, caregiver capture, document upload with LLM extraction, and a staged review task so **a human confirms extracted fields before anyone is provisioned as a patient**.",
-            "**Migrated patient clinical data off Aidbox/FHIR onto PostgreSQL** — designed the schema, wrote the backfill, then removed the legacy write paths.",
+            "**Migrated patient clinical data off Aidbox/FHIR onto PostgreSQL**: designed the schema, wrote the backfill, then removed the legacy write paths.",
           ],
         },
         {
           title: "AI",
           points: [
-            "Shipped **tool modules for the platform's LLM clinical agent** — pharmacy, allergies, care plan — and extended **around eighteen more** covering insurance, care team, patient stage and clinical summary.",
+            "Shipped **tool modules for the platform's LLM clinical agent** (pharmacy, allergies, care plan) and extended **around eighteen more** covering insurance, care team, patient stage and clinical summary.",
             "Made document extraction **document-aware, so the model's field inferences are grounded in the uploaded source** rather than guessed. Also wrote the algorithm that derives a patient's care stage from their collected clinical data, and the CMS alignment-letter generator.",
-            "Used Cursor's agent mode to ship **recurring task scheduling across both repos in a single day** — bot-side ticker, REST endpoints, test suite and the repeats UI, ~2,800 lines.",
+            "Used Cursor's agent mode to ship **recurring task scheduling across both repos in a single day**: bot-side ticker, REST endpoints, test suite and the repeats UI, ~2,800 lines.",
           ],
         },
         {
           title: "Platform",
           points: [
             "**Global message search, both halves**: the FastAPI endpoint and the client-side query UI, result navigation and message-context fetch.",
-            "**Multi-enterprise tenancy and white-label branding** — per-brand configuration, an asset pipeline, enterprise switcher and active-workspace state. Migrated **142 files** off hardcoded colors onto theme tokens.",
+            "**Multi-enterprise tenancy and white-label branding**: per-brand configuration, an asset pipeline, enterprise switcher and active-workspace state. Migrated **142 files** off hardcoded colors onto theme tokens.",
             "**The clinical task system**: creating and editing tasks in chat, patient-linked tasks, consent-assessment and initial-visit workflows, and recurring schedules backed by tests.",
           ],
         },
@@ -113,7 +113,7 @@ export const experience: {
         {
           title: "One platform, six verticals",
           points: [
-            "Architected a React Native platform that launches marketplace verticals from shared configuration, themes, and navigation — **a new vertical is a config entry and a theme, not a forked screen tree**.",
+            "Architected a React Native platform that launches marketplace verticals from shared configuration, themes, and navigation. **A new vertical is a config entry and a theme, not a forked screen tree**.",
             "Rebuilt tabs, headers, and modals as config-driven components, so **one component tree renders six different products**.",
           ],
         },
@@ -127,7 +127,7 @@ export const experience: {
         {
           title: "Real-time chat",
           points: [
-            "Built **socket-driven chat used by every vertical** — live list updates, pending-message states, read receipts, unread indicators, and listing cards rendered inline in conversations.",
+            "Built **socket-driven chat used by every vertical**: live list updates, pending-message states, read receipts, unread indicators, and listing cards rendered inline in conversations.",
             "Later migrated it onto a new backend API **while keeping the legacy path running, so nothing broke mid-rollout**.",
           ],
         },
@@ -144,13 +144,13 @@ export const experience: {
   maintenance:
     "Fixed stored XSS in an inherited application, replaced hardcoded secrets with signed-URL uploads, and removed 841 unused files while migrating UI values to theme tokens.",
   collaboration:
-    "Reviewed and merged 88 pull requests from 10 engineers and handled 29 staging-to-main release integrations. I also wrote the rules behind the team's AI-assisted workflow — how a change gets planned, what the codebase expects of it, and how it is checked against the API contract.",
+    "Reviewed and merged 88 pull requests from 10 engineers and handled 29 staging-to-main release integrations. I also wrote the rules behind the team's AI-assisted workflow: how a change gets planned, what the codebase expects of it, and how it is checked against the API contract.",
 };
 
 export const education = {
   degree: "B.Tech, Computer Science and Engineering",
   school: "Presidency University, Bengaluru",
-  period: "2019 — 2023",
+  period: "2019 - 2023",
   cgpa: "CGPA 8.2 / 10",
 } as const;
 

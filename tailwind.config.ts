@@ -12,6 +12,7 @@ const config: Config = {
       colors: {
         surface: "var(--surface)",
         panel: "var(--panel)",
+        sunken: "var(--sunken)",
         edge: "var(--border)",
         "edge-strong": "var(--border-strong)",
         content: "var(--content)",
@@ -28,23 +29,32 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        serif: ["var(--font-serif)", "Georgia", "serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
         // PLAN.md §1.2. rem throughout so the browser's font-size setting works.
-        meta: ["0.8125rem", { lineHeight: "1.45", letterSpacing: "0.02em" }],
+        meta: ["0.8125rem", { lineHeight: "1.45" }],
         ui: ["0.9375rem", { lineHeight: "1.5" }],
-        prose: ["1.0625rem", { lineHeight: "1.65" }],
-        h3: ["1.25rem", { lineHeight: "1.35" }],
-        h2: ["1.6875rem", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
-        display: ["2.5rem", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
-        // Below 640px. At 2.5rem the home headline ran eight lines and filled a
-        // 390px phone's whole first screen before a single project appeared.
-        "display-sm": ["1.875rem", { lineHeight: "1.15", letterSpacing: "-0.015em" }],
+        prose: ["1.0625rem", { lineHeight: "1.7" }],
+        h3: ["1.125rem", { lineHeight: "1.4", letterSpacing: "-0.01em" }],
+        h2: ["1.5rem", { lineHeight: "1.25", letterSpacing: "-0.025em" }],
+        display: ["3rem", { lineHeight: "1.05", letterSpacing: "-0.045em" }],
+        // Below 640px, so a long note title does not fill a phone's first screen.
+        "display-sm": ["2.125rem", { lineHeight: "1.1", letterSpacing: "-0.04em" }],
       },
       maxWidth: {
-        prose: "68ch",
+        prose: "66ch",
+      },
+      borderRadius: {
+        // The one shape rule (PLAN.md §1.3): controls are pills, containers
+        // are 12px, and an image inside a container is 8px.
+        card: "12px",
+        image: "8px",
+      },
+      boxShadow: {
+        // Stacked small offsets plus a hairline ring, never one heavy drop.
+        card: "0 0 0 1px var(--border), 0 1px 2px var(--shadow), 0 4px 12px -4px var(--shadow)",
+        lift: "0 0 0 1px var(--border), 0 2px 4px var(--shadow), 0 12px 24px -8px var(--shadow)",
       },
     },
   },

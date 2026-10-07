@@ -41,6 +41,13 @@ for (const path of PAGES) {
     const ctx = await browser.newContext(opts);
     const page = await ctx.newPage();
     await page.goto(BASE + path, { waitUntil: "networkidle" });
+    // Audit the settled page. Since §4.6 the hero rises in on load, and axe
+    // caught mid-fade text as a contrast failure. Scroll reveals below the fold
+    // stay at opacity 0 here, which axe skips; the reduced-motion pass is the
+    // one that sees every element, because nothing is hidden there.
+    await page.evaluate(() => Promise.all(document.getAnimations()
+      .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+      .map((a) => a.finished.catch(() => {}))));
     await page.addScriptTag({ content: AXE });
     const res = await page.evaluate(async () =>
       await window.axe.run(document, { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] }));

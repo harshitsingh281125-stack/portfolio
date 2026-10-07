@@ -92,5 +92,9 @@ export const demoLogins = {
 /** Source links for provenance badges. Blob paths resolve to real files. */
 export function blob(repo: keyof typeof repos, path: string, lines?: string) {
   const branch = repo === "prep" ? "main" : "main";
-  return `${repos[repo]}/blob/${branch}/${path}${lines ? `#${lines}` : ""}`;
+  // Next.js route folders like [id] must be percent-encoded: browsers send the
+  // brackets literally and GitHub answers a literal [id] with a 404 (found by
+  // the link check on 2026-09-30). Only the brackets: "?plain=1" is a query.
+  const encoded = path.replaceAll("[", "%5B").replaceAll("]", "%5D");
+  return `${repos[repo]}/blob/${branch}/${encoded}${lines ? `#${lines}` : ""}`;
 }

@@ -37,7 +37,7 @@ export type Tour = {
    * the tour's own route — a case-study page drops the embed entirely and
    * links here instead, rather than putting a 6000px document inside a frame.
    *
-   * Measured at the narrowest supported width (320px viewport, 286px frame),
+   * Measured at the narrowest supported width (320px viewport, now a 280px frame),
    * because the stacked layout gets taller as it gets narrower and the first
    * pass, measured at 380px, was short by up to 454px. Too tall costs a strip
    * of empty panel; too short silently hides the end of the tour.
@@ -53,9 +53,12 @@ export const tours: Tour[] = [
     title: "Prep in motion",
     blurb:
       "An illustrated walkthrough in six scenes: the problem, the roadmap, how a topic is marked mastered, the recall ladder, progress tracking, and what is underneath.",
-    frameTitle: "Prep in motion — a six-scene guided tour of the product",
+    frameTitle: "Prep in motion: a six-scene guided tour of the product",
     height: 850,
-    mobileHeight: 975,
+    // 975 until 2026-10-01, when four scenes were found clipped by the shared
+    // 520px phone stage; the tour now sets its own (710 / 812px) and measures
+    // 1104 in the 350px frame and 1284 in the 280px one.
+    mobileHeight: 1290,
     reducedHeight: 2560,
     reducedMobileHeight: 4980,
   },
@@ -64,37 +67,46 @@ export const tours: Tour[] = [
     project: "prep",
     title: "Prep under the hood",
     blurb:
-      "An illustrated request trace: sign-in, roadmap generation, grounded content, and revision — client on the left, server call stack on the right.",
-    frameTitle: "Prep under the hood — a four-step request trace",
+      "An illustrated request trace: sign-in, roadmap generation, grounded content, and revision. Client on the left, server call stack on the right.",
+    frameTitle: "Prep under the hood: a four-step request trace",
     height: 1070,
-    mobileHeight: 1375,
+    // 1375 / 6600 until 2026-10-01: measured in the 280px frame they are
+    // 1471 and 6695.
+    mobileHeight: 1480,
     reducedHeight: 3320,
-    reducedMobileHeight: 6600,
+    reducedMobileHeight: 6700,
   },
   {
     slug: "devlinks-in-motion",
     project: "devlinks",
     title: "DevLinks in motion",
     blurb:
-      "Paste a URL and watch what is derived from it: the parsed preview, the rule-inferred tags, the duplicate the database catches, and the collection anyone can read.",
-    frameTitle: "DevLinks in motion — a five-scene guided tour of the product",
+      "Paste a URL and watch what is derived from it: the parsed preview, the tags read from the page and filled in by rule, the duplicate the database catches, and a public collection anyone can follow as a roadmap.",
+    frameTitle: "DevLinks in motion: a five-scene guided tour of the product",
     height: 850,
-    mobileHeight: 940,
+    // Re-measured 2026-10-01 after DevLinks' redesign was drawn into scenes
+    // 1-5: 1072 in the 350px frame, 1274 in the 280px one (320px viewport),
+    // and both widths share this constant, so the narrow one sets it.
+    mobileHeight: 1280,
     reducedHeight: 2200,
-    reducedMobileHeight: 3940,
+    reducedMobileHeight: 4120,
   },
   {
     slug: "devlinks-trace",
     project: "devlinks",
-    title: "DevLinks — the request trace",
+    title: "DevLinks: the request trace",
     blurb:
       "What happens to a URL a stranger typed: the scheme allowlist, DNS resolved and judged, a private range refused, a redirect hop re-validated, and the unique constraint answering the duplicate.",
     frameTitle:
-      "DevLinks request trace — five steps from POST to the database conflict",
+      "DevLinks request trace: five steps from POST to the database conflict",
     height: 1010,
-    mobileHeight: 1100,
+    // 1100 until 2026-09-30: the redesign's 20px gutters narrowed the phone
+    // frame to 350px and the tallest scene measured 1112 there. 1130 until
+    // 2026-10-01: a 320px viewport gives a 280px frame, where it is 1165, and
+    // the pause button was clipped. Reduced: 4397 at 280px, not 4330.
+    mobileHeight: 1170,
     reducedHeight: 2390,
-    reducedMobileHeight: 4330,
+    reducedMobileHeight: 4400,
   },
 ];
 

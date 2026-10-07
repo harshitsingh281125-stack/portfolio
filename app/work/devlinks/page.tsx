@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { CaseStudy, Code, P, Section } from "@/components/CaseStudy";
+import { CaseStudy, Code, Disclosure, P, Section, WalkthroughLinks } from "@/components/CaseStudy";
 import { MetadataTraceDiagram } from "@/components/MetadataTraceDiagram";
 import { Decision, ProvenanceBadge } from "@/components/Provenance";
 import { blob, demos, repos } from "@/lib/site";
@@ -17,10 +16,10 @@ const rail = [
   { id: "d-search", name: "Search & navigation" },
   { id: "d-normalize", name: "Duplicate saves" },
   { id: "d-rules", name: "Tag suggestions" },
+  { id: "d-order", name: "Roadmap order" },
   { id: "d-ssrf", name: "Metadata fetching" },
   { id: "differently", name: "Current limitations" },
 ];
-const LINK = "text-content underline underline-offset-2 decoration-edge-strong hover:decoration-content";
 
 export default function DevLinksCaseStudy() {
   return (
@@ -28,16 +27,17 @@ export default function DevLinksCaseStudy() {
       title="DevLinks"
       standfirst="A developer bookmark manager for saving docs, articles, repositories, and videos into searchable collections that can be shared publicly."
       glance={{
-        built: <>Personal project. I built the React interface, GitHub sign-in, metadata endpoint, Postgres schema and policies, public collections, and bookmark export.</>,
+        built: <>Personal project. I built the React interface, GitHub sign-in, metadata endpoint, Postgres schema and policies, public collections and roadmaps, and bookmark export.</>,
         hardest: <>Coordinating the save flow across metadata fetching, duplicate detection, and cached collection data while keeping errors useful to the user.</>,
         stack: projectBySlug("devlinks").stack,
         links: { demo: `${demos.devlinks.url}${demos.devlinks.publicEntry}`, repo: repos.devlinks, tour: "/tour/devlinks-in-motion" },
-        access: <>The demo opens a published collection without a login. Saving and editing require an account.</>,
+        access: <>The demo opens a published roadmap without a login. Saving, editing and reordering require an account.</>,
       }}
       rail={rail}
     >
       <Section id="problem" heading="From a saved URL to a useful collection">
-        <P>Paste a link, review its metadata and suggested tags, then save it to a collection. Search combines text, collection, tag, and resource-type filters. Collections are private by default; publishing one exposes a read-only page with the author profile.</P>
+        <P>Paste a link, review its metadata and suggested tags, then save it to a collection. Search combines text, collection, tag, and resource-type filters. Collections are private by default; publishing one exposes a read-only page with the author profile, and every published collection appears in a public feed.</P>
+        <P>A collection can also be a roadmap: the author orders its links into numbered steps, and readers work through them, ticking steps off as they go.</P>
         <P>I used RTK Query for the data layer and Supabase for authentication and storage. Database policies control private and public reads. Bookmarks can also be exported as JSON or Markdown.</P>
       </Section>
 
@@ -68,13 +68,27 @@ export default function DevLinksCaseStudy() {
       <Decision
         id="d-rules"
         name="Suggest tags without an extra service call"
-        chose="hostname and text-matching rules"
+        chose="the tags the page declares, then text-matching rules"
         over="an AI request on every save"
-        because={<>The rules run alongside metadata parsing and give repeatable suggestions. Users can edit the result before saving.</>}
-        href={blob("devlinks", "src/server/taggingRules.ts")}
-        source="Resource and tag classification"
+        because={<>Most platforms already publish tags in machine-readable places: <Code>article:tag</Code>, JSON-LD keywords, GitHub topics. Reading them first uses the author&rsquo;s own words; rules fill in for pages that declare nothing. Users can edit the result before saving.</>}
+        href={blob("devlinks", "src/server/pageTags.ts")}
+        source="Page-declared tags, normalization, and merging"
       >
-        <P>This keeps tagging independent of model availability and inference cost. The tradeoff is limited vocabulary: a topic the rules do not recognize may receive no useful tag. Unit tests cover the rule table as well as search, export, and data-layer behavior.</P>
+        <P>Both stages run alongside metadata parsing and give repeatable suggestions, independent of model availability and inference cost. Tags are normalized to one vocabulary, so <Code>React.js</Code> and <Code>reactjs</Code> become <Code>react</Code>. A dev.to article that used to get no tags now gets six. The tradeoff: sites that block bots return nothing to read, and a page that declares no tags and falls outside the rule table may still get none.</P>
+        <p className="mt-4"><ProvenanceBadge href={blob("devlinks", "src/server/taggingRules.ts")} source="Keyword rules and resource-type inference" /></p>
+      </Decision>
+
+      <Decision
+        id="d-order"
+        name="Keep roadmap order consistent"
+        chose="integer positions rewritten in one database call"
+        over="updating rows one at a time from the client"
+        because={<>A reorder sends the whole new order to a Postgres function that rewrites it in a single statement, so nobody sees a half-applied order. It rejects any list that isn&rsquo;t exactly the caller&rsquo;s links in that collection, so a stale tab can&rsquo;t leave gaps or duplicates.</>}
+        href={blob("devlinks", "supabase/migrations/20260930_000001_roadmap_order.sql")}
+        source="Positions, append trigger, and reorder function"
+      >
+        <P>The function runs with the caller&rsquo;s privileges, so row-level security still decides what may change; a trigger appends new and moved-in links at the end. In the editor, steps reorder by drag, by arrow keys on a focused grip, or by buttons, with each move announced to screen readers. The save is optimistic and rolls back on failure. Reader progress stays in the reader&rsquo;s browser and is never sent to the server.</P>
+        <p className="mt-4"><ProvenanceBadge href={blob("devlinks", "src/components/dashboard/RoadmapEditor.tsx")} source="Reorder by drag, keyboard, or buttons" /></p>
       </Decision>
 
       <Decision
@@ -90,17 +104,20 @@ export default function DevLinksCaseStudy() {
       </Decision>
 
       <Section id="architecture" heading="The save flow">
-        <details className="mt-4 rounded-lg border border-edge p-4">
-          <summary className="cursor-pointer text-ui text-content">View metadata validation flow</summary>
+        <Disclosure label="View the metadata validation flow">
           <MetadataTraceDiagram />
-        </details>
-        <P><Link href="/tour/devlinks-in-motion" className={LINK}>Illustrated product walkthrough</Link> &middot; <Link href="/tour/devlinks-trace" className={LINK}>Illustrated request walkthrough</Link></P>
+        </Disclosure>
+        <WalkthroughLinks links={[
+          { href: "/tour/devlinks-in-motion", label: "Product walkthrough" },
+          { href: "/tour/devlinks-trace", label: "Request walkthrough" },
+        ]} />
       </Section>
 
       <Section id="differently" heading="Before broader use">
         <P>My first changes would be requiring a session and rate limiting on the metadata endpoint, then pinning outbound connections to the validated IP to close the DNS-rebinding gap. These are outstanding implementation tasks.</P>
         <p className="mt-4"><ProvenanceBadge href={blob("devlinks", "api/metadata.ts")} source="Current endpoint handler" /></p>
-        <P>The bookmark list also fetches and renders all matching rows. I would add pagination before supporting large collections, then measure whether rendering needs virtualization. I have not established a production-scale performance benchmark.</P>
+        <P>The bookmark list also fetches and renders all matching rows, and the public feed loads every published collection in one query. I would add pagination before supporting large collections, then measure whether rendering needs virtualization. I have not established a production-scale performance benchmark.</P>
+        <P>Duplicate detection also has a known gap: it drops the query string, so every YouTube video URL normalizes to the same key and a second video is reported as already saved. The fix is a per-host list of meaningful parameters, changed in the database function and its client mirror together.</P>
       </Section>
     </CaseStudy>
   );

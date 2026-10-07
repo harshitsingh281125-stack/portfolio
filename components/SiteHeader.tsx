@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { Download } from "lucide-react";
+import { ArrowDown } from "lucide-react";
+import { buttonClass } from "@/components/Button";
 import { resume, routes, site } from "@/lib/site";
 
 export function SiteHeader() {
   return (
-    <header className="site-header section-border">
+    <header className="site-header">
       <div className="page-width header-inner">
         <Link href="/" className="site-brand" aria-label={`${site.name}, home`}>
-          <span className="brand-monogram" aria-hidden="true">H</span><span>Harshit Singh</span>
+          {site.name}
         </Link>
         <nav aria-label="Primary" className="primary-nav">
           <Link href="/#company">Experience</Link>
@@ -16,8 +17,8 @@ export function SiteHeader() {
           <Link href="/#contact">Contact</Link>
         </nav>
         {resume.enabled ? (
-          <a href={resume.href} className="pill-button header-download" download>
-            <Download size={16} aria-hidden="true" /><span>Download résumé</span>
+          <a href={resume.href} className={`header-cta ${buttonClass("primary", "sm")}`} download>
+            Résumé <ArrowDown size={14} strokeWidth={2} aria-hidden="true" />
           </a>
         ) : null}
       </div>

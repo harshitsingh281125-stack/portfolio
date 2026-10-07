@@ -1,6 +1,6 @@
 import { ogContentType, ogImage, ogSize } from "@/lib/og";
 
-export const alt = "Prep — case study";
+export const alt = "Prep case study";
 export const size = ogSize;
 export const contentType = ogContentType;
 

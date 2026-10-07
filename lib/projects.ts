@@ -11,7 +11,18 @@ export type Project = {
   login?: { email: string; password: string };
   entry?: { href: string; label: string };
   stack: string[];
-  thumb: { src: string; width: number; height: number; alt: string; caption: string };
+  /** Application captures, first one shown by default. Provenance: public/work/README.md. */
+  screens: Screen[];
+};
+
+export type Screen = {
+  /** Short tab label. */
+  label: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
 };
 
 export const projects: Project[] = [
@@ -28,13 +39,24 @@ export const projects: Project[] = [
     demo: demos.prep,
     login: demoLogins.prep,
     stack: ["Next.js", "TypeScript", "Supabase", "pgvector"],
-    thumb: {
-      src: "/work/prep-app.png",
-      width: 1280,
-      height: 800,
-      alt: "Prep's roadmap setup screen with example role, timeline, study hours, and weak-area selections.",
-      caption: "Roadmap setup · example input in the live app",
-    },
+    screens: [
+      {
+        label: "Roadmap setup",
+        src: "/work/prep-app.png",
+        width: 1280,
+        height: 800,
+        alt: "Prep's roadmap setup screen with example role, timeline, study hours, and weak-area selections.",
+        caption: "Roadmap setup · example input in the live app",
+      },
+      {
+        label: "AI usage",
+        src: "/work/prep-usage.png",
+        width: 1280,
+        height: 800,
+        alt: "Prep's AI usage screen: the daily call cap, cost per roadmap, cache hit-rate, token counts, fallback rate, and a paid-tier cost projection.",
+        caption: "AI usage · live app, demo account",
+      },
+    ],
   },
   {
     slug: "devlinks",
@@ -49,16 +71,27 @@ export const projects: Project[] = [
     demo: demos.devlinks,
     entry: {
       href: `${demos.devlinks.url}${demos.devlinks.publicEntry}`,
-      label: "Open collection",
+      label: "Open roadmap",
     },
     stack: ["React", "TypeScript", "RTK Query", "Supabase"],
-    thumb: {
-      src: "/work/devlinks-app.png",
-      width: 1280,
-      height: 900,
-      alt: "The live React Debugging collection in DevLinks, with an author profile and cards for saved developer resources.",
-      caption: "Public collection · live application",
-    },
+    screens: [
+      {
+        label: "Roadmap",
+        src: "/work/devlinks-app.png",
+        width: 1280,
+        height: 900,
+        alt: "The live React Debugging collection in DevLinks shown as a roadmap: eight numbered study steps, a progress panel, and the first step marked next up.",
+        caption: "Public roadmap · live application",
+      },
+      {
+        label: "Landing",
+        src: "/work/devlinks-home.png",
+        width: 1280,
+        height: 800,
+        alt: "The DevLinks landing page with a live demo that shows how a pasted link is matched for duplicates, typed, and tagged.",
+        caption: "Landing page · live application",
+      },
+    ],
   },
 ];
 

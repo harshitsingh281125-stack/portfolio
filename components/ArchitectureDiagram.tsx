@@ -79,7 +79,7 @@ export function ArchitectureDiagram() {
             match_resources, runs a cosine search over the 202-document corpus and
             keeps only rows scoring at or above 0.64. On a hit, the reasoning tier
             is given those documents numbered, and its schema can return only a
-            1-based reference and a reason — never a URL. The validator resolves
+            1-based reference and a reason, never a URL. The validator resolves
             that reference back to the original row, so the rendered link is
             always one of ours, labelled rag. On a miss, the answer falls back to
             ungrounded generation labelled ai and flagged unverified, and if that
@@ -92,7 +92,7 @@ export function ArchitectureDiagram() {
             </marker>
           </defs>
 
-          <Step x={20} y={10} w={320} label="topic name + week title" sub="lib/rag/query.ts — pure, unit-tested" />
+          <Step x={20} y={10} w={320} label="topic name + week title" sub="lib/rag/query.ts, pure and unit-tested" />
           <Arrow x1={180} y1={66} x2={180} y2={96} />
 
           <Step x={20} y={100} w={320} label="gateway.embed({ purpose: 'query' })" sub="1536-d vector · metered like any call" />
@@ -119,9 +119,9 @@ export function ArchitectureDiagram() {
           <Step x={396} y={276} w={284} label="ungrounded generation" sub="unverified: true" />
           <Arrow x1={538} y1={332} x2={538} y2={370} />
           <text x={546} y={357} className={EDGE_LABEL}>fails twice</text>
-          <Step x={396} y={374} w={284} label="seeded template" sub="the last rung — always answers" />
+          <Step x={396} y={374} w={284} label="seeded template" sub="the last rung, always answers" />
 
-          <Step x={20} y={370} w={320} label="complete({ tier: 'reasoning' })" sub="schema returns { ref, why } — no url field" />
+          <Step x={20} y={370} w={320} label="complete({ tier: 'reasoning' })" sub="schema returns { ref, why }, no url field" />
           <Arrow x1={180} y1={426} x2={180} y2={456} />
 
           <Step x={20} y={460} w={320} label="validateGroundedDetail()" sub="resolves ref &#8594; our own row" />
@@ -146,7 +146,7 @@ export function ArchitectureDiagram() {
       </div>
 
       <figcaption className="mt-3 font-mono text-meta text-content-faint">
-        The path as built. Three rungs, each labelled in the response — the UI
+        The path as built. Three rungs, each labelled in the response, so the UI
         says which one answered.
       </figcaption>
     </figure>

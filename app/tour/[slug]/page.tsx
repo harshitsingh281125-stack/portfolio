@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft, Play } from "lucide-react";
+import { Button } from "@/components/Button";
 import { TourEmbed } from "@/components/TourEmbed";
 import { tourBySlug, tours } from "@/lib/tours";
 import { caseStudy } from "@/lib/site";
@@ -22,8 +24,6 @@ export async function generateMetadata({
   return pageMeta({ title: tour.title, description: tour.blurb, path: `/tour/${tour.slug}` });
 }
 
-const LINK =
-  "text-content underline underline-offset-2 decoration-edge-strong hover:decoration-content";
 
 export default async function TourPage({
   params,
@@ -40,11 +40,19 @@ export default async function TourPage({
   const project = tour.project === "prep" ? "Prep" : "DevLinks";
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <h1 className="max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
+    <div className="page-width py-12 sm:py-20">
+      {caseStudy[tour.project] ? (
+        <Link
+          href={`/work/${tour.project}`}
+          className="inline-flex min-h-11 items-center gap-1.5 text-[14px] text-content-muted transition-colors hover:text-content sm:min-h-0"
+        >
+          <ArrowLeft size={15} aria-hidden="true" /> {project}
+        </Link>
+      ) : null}
+      <h1 className="mt-4 max-w-[20em] text-display-sm font-semibold text-content sm:text-display">
         {tour.title}
       </h1>
-      <p className="mt-4 max-w-prose text-ui text-content-muted">
+      <p className="mt-5 max-w-prose text-[1.0625rem] leading-[1.6] text-content-muted">
         An illustrated walkthrough with sample data. These scenes explain the
         product flow; they are not a recording of a live session.
       </p>
@@ -53,21 +61,17 @@ export default async function TourPage({
 
       <nav
         aria-label="Related"
-        className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-edge pt-6 text-ui"
+        className="mt-12 flex flex-wrap gap-3"
       >
         {caseStudy[tour.project] ? (
-          <Link href={`/work/${tour.project}`} className={LINK}>
-            The {project} case study
-          </Link>
+          <Button href={`/work/${tour.project}`}>The {project} case study</Button>
         ) : null}
         {sibling ? (
-          <Link href={`/tour/${sibling.slug}`} className={LINK}>
-            {sibling.title}
-          </Link>
+          <Button href={`/tour/${sibling.slug}`}>
+            <Play size={14} strokeWidth={2} aria-hidden="true" /> {sibling.title}
+          </Button>
         ) : null}
-        <Link href="/" className={LINK}>
-          Everything else
-        </Link>
+        <Button href="/">Everything else</Button>
       </nav>
     </div>
   );

@@ -26,7 +26,7 @@ export function pageMeta({
   /** ISO date, for articles. */
   publishedTime?: string;
 }): Metadata {
-  const full = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
+  const full = title ? `${title} | ${site.name}` : `${site.name}, ${site.title}`;
   return {
     ...(title ? { title } : {}),
     description,

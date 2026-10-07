@@ -13,46 +13,27 @@
    ========================================================================== */
 
 :root {
-  --surface:        #F7F8F8;
+  color-scheme: light;
+  --surface:        #F5F1EC;
   --panel:          #FFFFFF;
-  --border:         #DCE0E1;
-  --border-strong:  #C4CACC;
-  --content:        #1A1F22;
-  --content-muted:  #5B6569;
-  --content-faint:  #667175;
+  --border:         #E3DED6;
+  --border-strong:  #D3CEC6;
+  --content:        #111111;
+  --content-muted:  #4A4945;
+  --content-faint:  #5E5C57;
   --verified:       #0F6B3D;
   --verified-soft:  rgba(15, 107, 61, 0.10);
   --unverified:     #8A5A00;
   --unverified-soft:rgba(138, 90, 0, 0.10);
-  --behind:         #A8201A;
-  --behind-soft:    rgba(168, 32, 26, 0.09);
-  --accent:         #1B4FD8;
-  --accent-soft:    rgba(27, 79, 216, 0.10);
-  --accent-line:    rgba(27, 79, 216, 0.35);
+  --behind:         #B42318;
+  --behind-soft:    rgba(180, 35, 24, 0.08);
+  --accent:         #B93D00;
+  --accent-soft:    rgba(217, 74, 0, 0.10);
+  --accent-line:    rgba(185, 61, 0, 0.35);
   --on-accent:      #FFFFFF;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --surface:        #101416;
-    --panel:          #181D20;
-    --border:         #262C30;
-    --border-strong:  #394247;
-    --content:        #E8ECEE;
-    --content-muted:  #9BA5AA;
-    --content-faint:  #8A9499;
-    --verified:       #4CC98A;
-    --verified-soft:  rgba(76, 201, 138, 0.13);
-    --unverified:     #E5A93C;
-    --unverified-soft:rgba(229, 169, 60, 0.13);
-    --behind:         #F0736A;
-    --behind-soft:    rgba(240, 115, 106, 0.13);
-    --accent:         #8AB0F5;
-    --accent-soft:    rgba(138, 176, 245, 0.14);
-    --accent-line:    rgba(138, 176, 245, 0.40);
-    --on-accent:      #101416;
-  }
-}
+/* Light only since 2026-09-30, matching the site (PLAN.md §1.1). */
 
 /* Legacy names from the Prep tours, bound to the values above. */
 :root {
@@ -72,13 +53,13 @@
 body {
   background: var(--surface);
   color: var(--content);
-  font: 400 14px/1.5 "IBM Plex Sans", system-ui, sans-serif;
+  font: 400 14px/1.5 "Geist", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   margin: 0;
   padding: 24px 20px 40px;
 }
 
-.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+.mono { font-family: "Geist Mono", ui-monospace, monospace; }
 .wrap { max-width: 880px; margin: 0 auto; }
 
 /* ---- Header ---- */
@@ -87,10 +68,10 @@ header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
   width: 36px; height: 36px; border-radius: 9px;
   background: var(--panel); border: 1px solid var(--border-strong); color: var(--content);
   display: grid; place-items: center;
-  font: 600 15px "IBM Plex Mono", monospace; flex: none;
+  font: 600 15px "Geist Mono", monospace; flex: none;
 }
 .eyebrow {
-  font: 500 11px "IBM Plex Mono", monospace; text-transform: uppercase;
+  font: 500 11px "Geist Mono", monospace; text-transform: uppercase;
   letter-spacing: 0.06em; color: var(--content-faint);
 }
 header h1 { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; margin: 1px 0 0; text-wrap: balance; }
@@ -99,7 +80,7 @@ header .sub { color: var(--content-muted); font-size: 13px; margin-top: 1px; }
 /* ---- Stage ---- */
 .stage {
   position: relative; height: 430px; overflow: hidden;
-  background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
 }
 .scene {
   position: absolute; inset: 0; padding: 24px 26px;
@@ -130,9 +111,9 @@ header .sub { color: var(--content-muted); font-size: 13px; margin-top: 1px; }
 .step:hover { border-color: var(--border-strong); }
 .step.active { border-color: var(--accent-line); color: var(--content); background: var(--accent-soft); }
 .step.done { color: var(--content-muted); }
-.step .n { font: 600 10px "IBM Plex Mono", monospace; color: inherit; }
+.step .n { font: 600 10px "Geist Mono", monospace; color: inherit; }
 .step .l {
-  font: 500 10px "IBM Plex Mono", monospace; text-transform: uppercase;
+  font: 500 10px "Geist Mono", monospace; text-transform: uppercase;
   letter-spacing: 0.05em; display: block; margin-top: 1px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
@@ -148,14 +129,14 @@ header .sub { color: var(--content-muted); font-size: 13px; margin-top: 1px; }
 .ctl {
   display: inline-flex; align-items: center; gap: 7px;
   border-radius: 9px; padding: 7px 13px; cursor: pointer;
-  font: 600 12.5px "IBM Plex Sans", sans-serif;
+  font: 600 12.5px "Geist", sans-serif;
   background: var(--panel); border: 1px solid var(--border-strong); color: var(--content);
 }
 .ctl:hover { background: var(--surface); }
 .ctl.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .ctl.primary:hover { filter: brightness(1.08); background: var(--accent); }
 .counter {
-  font: 500 12px "IBM Plex Mono", monospace; color: var(--content-faint);
+  font: 500 12px "Geist Mono", monospace; color: var(--content-faint);
   margin-left: auto; letter-spacing: 0.02em;
 }
 .ctl:focus-visible, .step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -170,7 +151,7 @@ header .sub { color: var(--content-muted); font-size: 13px; margin-top: 1px; }
 }
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
-  font: 500 11px "IBM Plex Mono", monospace; letter-spacing: 0.02em;
+  font: 500 11px "Geist Mono", monospace; letter-spacing: 0.02em;
   padding: 4px 9px; border-radius: 6px;
   background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--accent);
 }

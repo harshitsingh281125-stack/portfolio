@@ -1,6 +1,6 @@
 # Portfolio — plan
 
-**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). Two content commits shipped on top of it the same day — `68c5b6c` (the tour link back on the cards) and `426d0c4` (the expanded work cards and the rebuilt résumé section), deployed on push, smoke-checked on production, and **not** put through the gate: no axe or Lighthouse run behind either. What remains of Phase 7 is manual: M4, M5's PDF correction, M8, and a real-browser pass. **Prep's 2026-09-28 redesign is carried into the site's Prep screenshot and both Prep tours (§4.5)**, after Prep deployed it (PR #9, 2026-09-30) and the screenshot was re-captured from production (M9).
+**Status:** Phases 0–6 complete (Phase 6 on 2026-09-21), plus a recruiter-facing design pass (6b, §4.2) the same day and the chip removal (6c, §4.3) on 2026-09-23 — both in `f331865`. **Phase 7 is live** at `portfolio-nine-delta-zngdfg4251.vercel.app` (2026-09-24, §4.4). Two content commits shipped on top of it the same day — `68c5b6c` (the tour link back on the cards) and `426d0c4` (the expanded work cards and the rebuilt résumé section), deployed on push, smoke-checked on production, and **not** put through the gate: no axe or Lighthouse run behind either. What remains of Phase 7 is manual: M4, M5's PDF correction, M8, and a real-browser pass. **Prep's 2026-09-28 redesign is carried into the site's Prep screenshot and both Prep tours (§4.5)**, after Prep deployed it (PR #9, 2026-09-30) and the screenshot was re-captured from production (M9). **The site's own UI was redesigned on 2026-09-30 (§4.6)**: warm linen palette (light only), Geist in place of four faces, entrance and scroll motion, every page and all four tours; gated locally, not yet deployed. **DevLinks' redesign, roadmaps and tag work are carried in, and both cards now show two screens (§4.7, 2026-10-01)**; the DevLinks roadmap capture followed on 2026-10-07 (M10).
 **Owner:** Harshit Singh · **Built by:** phases, one at a time, each with a QA gate (mirrors `Prep/phases.md`).
 
 ---
@@ -51,39 +51,35 @@ One rule, and it is the whole identity:
 > **Saturated color appears only on elements that carry evidence.** Everything else is ink on paper.
 
 Links are ink with an underline. Buttons are ink. There is no decorative blue, no gradient, no
-brand wash. The page is monochrome until a claim shows its provenance — then, and only then, green
-or amber. Color means exactly what it means inside Prep (`color.md › Best practices`: *"Avoid using
+brand wash. The page is monochrome until a claim shows its provenance. Since §4.6 that is where the
+one accent lives: the cobalt `--accent` is the colour of a source link (`ProvenanceBadge`), a rule
+tag and the focus ring, and nothing else. Color means exactly what it means inside Prep (`color.md › Best practices`: *"Avoid using
 the same color to mean different things."*).
 
 All values computed with a WCAG contrast script, not estimated. Body text targets **4.5:1**, large
 and bold text **3:1** (`accessibility.md › Color contrast`).
 
-**Light** — surface `#F7F8F8`, panel `#FFFFFF`, border `#DCE0E1`
+Revised twice on 2026-09-30 (§4.6): first to a neutral grey ramp with automatic dark mode, then,
+on the owner's review ("it's all black"; the preview was following a dark system setting), to
+**warm linen**, taken from Intercom's DESIGN.md in awesome-design-md, and **light only**.
+Recomputed with the same script.
 
-| Token | Hex | On surface | On panel |
-|---|---|---|---|
-| `--content` — prose, headlines | `#1A1F22` | 15.63:1 | 16.63:1 |
-| `--content-muted` — captions, 14px | `#5B6569` | 5.62:1 | 5.98:1 |
-| `--content-faint` — 13px mono meta | `#667175` | 4.72:1 | 5.02:1 |
-| `--signal-verified` | `#0F6B3D` | 6.19:1 | — |
-| `--signal-unverified` | `#8A5A00` | 5.57:1 | — |
-| `--signal-behind` | `#A8201A` | 6.84:1 | — |
-| `--accent` — used ~3×/page, not for links | `#1B4FD8` | 6.25:1 | — |
+**Warm linen** — surface `#F5F1EC`, panel (cards) `#FFFFFF`, sunken `#EBE7E1`, border `#E3DED6`, strong `#D3CEC6`
 
-**Dark** — surface `#101416`, panel `#181D20`, border `#262C30`
+| Token | Hex | On surface | On panel | On sunken |
+|---|---|---|---|---|
+| `--content` — headlines, buttons | `#111111` | 16.79:1 | 18.88:1 | 15.33:1 |
+| `--content-muted` — body | `#4A4945` | 8.01:1 | 9.01:1 | 7.32:1 |
+| `--content-faint` — labels, meta | `#5E5C57` | 5.94:1 | 6.68:1 | 5.42:1 |
+| `--verified` | `#0F6B3D` | 5.85:1 | 6.58:1 | — |
+| `--unverified` | `#8A5A00` | 5.27:1 | 5.93:1 | — |
+| `--behind` | `#B42318` | 5.85:1 | 6.57:1 | — |
+| `--accent` — burnt orange | `#B93D00` | 5.01:1 | 5.63:1 | 4.57:1 |
 
-| Token | Hex | On surface | On panel |
-|---|---|---|---|
-| `--content` | `#E8ECEE` | 15.58:1 | 14.30:1 |
-| `--content-muted` | `#9BA5AA` | 7.37:1 | 6.76:1 |
-| `--content-faint` | `#8A9499` | 5.98:1 | — |
-| `--signal-verified` | `#4CC98A` | 8.85:1 | — |
-| `--signal-unverified` | `#E5A93C` | 8.88:1 | — |
-| `--signal-behind` | `#F0736A` | 6.50:1 | — |
-| `--accent` | `#8AB0F5` | 8.48:1 | — |
-
-Every pair passes. The first draft's faint-meta grey (`#6D787C`) came in at **4.26:1** and was
-darkened to `#667175` before it reached this document.
+Intercom's own subtle grey (`#7B7B78`, 3.78:1) and its Fin Orange (`#FF5600`; `#D94A00` measured
+3.79:1) both fail on the linen, so the faint grey and the accent were darkened along the same hue
+until they passed. The accent sets the second line of the home headline, source links, rule tags,
+the focus ring and selection; nowhere else.
 
 The signal colours are no longer printed as chips (§4.3). They survive inside the two product
 diagrams, where `verified` / `unverified` are states **in Prep**, not judgements on this site — and
@@ -93,59 +89,46 @@ those two diagrams.
 
 ### 1.2 Type
 
-Three faces, one job each. A face with no job gets cut.
+Two faces, one job each (revised in §4.6; the three-face system is below it, for the record).
 
-| Role | Face | Why it, and not the default |
+| Role | Face | Why |
 |---|---|---|
-| **Prose** — case-study body, notes | **Source Serif 4** (variable, open) | Case studies are 1,200+ word reads. A screen-optimised text serif is a functional choice for long-form, and it separates the site from every Inter-everything dev portfolio. Not a display serif, not a fashion choice. |
-| **Interface** — nav, buttons, labels, cards | **IBM Plex Sans** | Already the face of both existing tours. Reusing it is what makes the restyled tours feel native rather than embedded. |
-| **Evidence** — numbers, file paths, badges, verbs | **IBM Plex Mono** | His own vernacular: `POST`, `GATE`, `RLS`, `RULE 5`, `vector(1536)`. Data that came from a file should look like it came from a file. |
-
-Scale (rem, 16px root). Body prose sits at **17px/1.65** — above the 13px desktop minimum with room
-to spare (`typography.md › Specifications`).
+| **Everything read** — headlines, prose, interface | **Geist** (variable) | One family carries the voice from an 84px hero to 13px labels. Weight and tracking make the hierarchy, not a second family: display at 600 with −0.045 to −0.055em tracking, body at 400, never above 600. |
+| **Evidence** — file paths, stack tags, program output | **Geist Mono** | Data that came from a file should look like it came from a file. Nothing else is mono: labels are sentence-case sans, not uppercase mono. |
 
 ```
-display   40 / 1.1   Source Serif 4  600   -0.02em    page titles
-h2        27 / 1.25  Source Serif 4  600   -0.01em    case-study sections
-h3        20 / 1.35  IBM Plex Sans   600              sub-sections
-prose     17 / 1.65  Source Serif 4  400              body
-ui        15 / 1.5   IBM Plex Sans   400/500          nav, buttons, cards
-meta      13 / 1.45  IBM Plex Mono   500   0.02em     badges, paths, counts
+hero      40–84 / 1.0   Geist 600   −0.055em   home headline (clamp)
+display   48 / 1.05     Geist 600   −0.045em   page titles (34px below 640px)
+section   32–44 / 1.08  Geist 600   −0.045em   home section titles (clamp)
+h2        24 / 1.25     Geist 600   −0.025em   case-study sections
+h3        18 / 1.4      Geist 600   −0.01em    decisions, sub-sections
+prose     17 / 1.7      Geist 400              body
+ui        15 / 1.5      Geist 400/500          nav, buttons, cards
+meta      13 / 1.45     Geist 400/500          labels
+mono      12–12.5       Geist Mono 400/500     paths, tags, output
 ```
 
-Everything scales with the browser's font-size setting (rem throughout, no `px` on text). Layouts
-must survive 200% zoom with hierarchy intact.
+rem throughout, so the browser's font-size setting works; layouts survive 200% zoom.
 
-**How the three faces load** (settled in Phase 2, by measurement, and not to be "tidied" back).
-Source Serif 4 is the **variable** cut — one file covering 400 and 600 — and it is the **only**
-preloaded face; IBM Plex Sans and Mono carry `preload: false`. Five preloaded font files were
-arriving as one bandwidth-bound clump, the serif landed last, and since the serif sets the body
-prose it took LCP with it: the Prep page opened at Lighthouse **90** with **83% of LCP spent in
-render delay**. Preloading only the serif and taking its variable cut moved that page to **96** and
-halved total blocking time. The cost is real and accepted: nav, buttons and badges show a fallback
-for a beat longer, and the home page paid 3 points (98 → 95) because its mono evidence chips now
-swap later. Both pages clear the ≥95 gate.
+**Loading.** Geist is the only preloaded face and gates LCP; Geist Mono carries `preload: false`
+because it sets nothing above the fold. This keeps the rule Phase 2 settled by measurement (one
+preloaded face, variable, so one file covers every weight) with a different face in the slot.
 
-**Revised in 6b: the serif is self-hosted and cut to size.** `app/fonts/SourceSerif4-opsz20.woff2`
-is Source Serif 4's opsz build instanced with fonttools at `opsz=20` (the font's default) and
-`wght=400:600`, the only weights the site sets: **32KB**, against 51KB for the file next/font/google
-served. Still the only preloaded face. Measured against a same-day rebuild of the pre-6b commit,
-`/work/prep` went from 88–91 to 98–99. OFL 1.1 with no Reserved Font Name; the licence ships beside
-it, and the recipe is in `app/layout.tsx`.
+Screenshot QA on this machine should pass `--font-render-hinting=none`: headless Chromium's
+default full hinting snaps glyph advances to whole pixels and makes any face look loosely spaced
+(this was once misdiagnosed as a font-file fault).
 
-*A wrong turn worth recording.* The review first reported loose serif spacing ("A PI", "W hy") and
-blamed the font file. It was **headless Chromium's default full hinting**, which snaps each glyph
-advance to whole pixels — `r` drawn 9px wide against a true 7.19px. With
-`--font-render-hinting=none` every cut, including the original, renders tight. Screenshot-based QA
-on this machine should pass that flag, or it will keep finding this.
-
-`display` drops to **30px** (`display-sm`) below 640px: at 40px the home headline ran eight lines
-on a 390px phone and filled the first screen before any project appeared. Headings use
-`text-wrap: balance`.
+*Superseded.* Until §4.6 the site set three faces — Source Serif 4 for prose (self-hosted, cut
+with fonttools to 32KB), IBM Plex Sans for interface and IBM Plex Mono for evidence — and a later
+commit (`21bd56c`) added Fraunces for display. The serif file and its licence were removed with it.
 
 ### 1.3 Layout
 
-One column, `max-width: 68ch` for prose, widening to a 2-column grid only above 1024px where the
+**Shape rule (§4.6):** controls are pills (buttons, tags, nav hovers); containers are 12px
+(cards, decision blocks, wells, the tour stage); an image inside a container is 8px. Elevation is
+a hairline ring plus two small stacked shadows (`shadow-card`), never one heavy drop.
+
+One column, `max-width: 66ch` for prose, widening to a 2-column grid only above 1024px where the
 case study gains a sticky decision-index rail. Reading order is the DOM order.
 
 ```
@@ -192,7 +175,10 @@ CASE STUDY  ≥1024px
 ### 1.4 The signature element
 
 **The Decision block.** Lifted verbatim from the structure of his own READMEs ("The decision worth
-defending"), rendered as the one piece of custom typography on the site:
+defending"), rendered as the one piece of custom typography on the site. Since §4.6 it is a card:
+the decision's name, then **Chose** and **Over** side by side (Over on the sunken grey), then
+**Because** as prose, the folded reasoning, and the source link in a footer strip. The original
+sketch, for the record:
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -213,8 +199,23 @@ boldness is spent in one place (`branding.md`: *"Ensure branding always defers t
 
 ### 1.5 Motion
 
-**One orchestrated moment: the tour stage.** No scroll-triggered fades, no reveal-on-scroll, no
-parallax, no typewriter hero. Everything outside the tour is static.
+**Revised 2026-09-30 at the owner's request (§4.6): the site now moves.** The tour stage is still
+the one orchestrated moment; around it, motion that says something:
+
+- **Entrance.** A page's opening elements (`.rise`) come up 28px in sequence on load, 90-120ms
+  apart, 1s on an ease-out curve. Tells the reader where to start.
+- **Scroll reveal.** Section titles, the work columns, project cards, decision blocks and note
+  groups (`[data-reveal]`) fade up 24px once, the first time they enter the viewport, staggered
+  where they sit side by side. One `IntersectionObserver` for the page (`components/Reveal.tsx`),
+  no scroll listeners. Content is only hidden when an inline script has confirmed the observer can
+  run, and anything already scrolled past is shown at once.
+- **Feedback.** Arrows nudge in their own direction on hover, project cards lift 4px, the
+  screenshot inside lifts 6px, buttons press to 98%.
+- **State.** The case-study rail marks the decision being read (`RailSpy`, `aria-current`).
+
+Transform and opacity only. All of it is behind `prefers-reduced-motion: no-preference`; under
+reduce, nothing is hidden and nothing moves (the QA runner's stillness check covers it). The cost
+is measured: the entrance starts from opacity 0, which moved LCP from ~2.0s to 2.0-2.6s.
 
 `motion.md › Best practices`: *"Don't add motion for the sake of adding motion."* A portfolio whose
 every section fades in as you scroll is motion as decoration, which Apple's own Delight principle
@@ -241,8 +242,8 @@ What makes it this person's and not a template:
 2. **The Decision block** copies the rhetorical structure he already writes in (`chose / over /
    because`), so the site sounds like the repos it is describing.
 3. **Rule tags** (`RULE 9`) come from his own numbered `Rules.md`, and link to it.
-4. **IBM Plex** is not an aesthetic pick — it is the face his two tours are already built in, which
-   is what lets them be restyled instead of rebuilt.
+4. ~~**IBM Plex**~~ — superseded in §4.6 by Geist, in the tours as well as the site, so the tours
+   still read as native rather than embedded.
 
 Checked against the skill's named template traps, and clear of all three: not warm-cream +
 high-contrast serif + terracotta; not near-black + acid accent; not a hairline broadsheet. There
@@ -640,6 +641,124 @@ this site that *depicts* Prep's UI was brought in line; nothing that is the site
   motion still. `tsc`, lint and `next build` clean. Links: GitHub 429 ×2 cleared on a spaced retry,
   LeetCode 403 and LinkedIn 999 as always. **Not run:** Lighthouse, and the DevLinks routes (untouched).
 
+### 4.6 Site redesign, 2026-09-30
+
+The owner's brief: the site "looks AI-generated", redesign the whole UI. Worked from three
+references: the taste skill (its redesign protocol, AI-tells list and pre-flight check), Vercel's
+Web Interface Guidelines, and the Vercel entry in awesome-design-md for the visual system.
+
+**Why it read as generated.** Commits `21bd56c` and `4e75e0a` had moved the site onto warm cream
+paper (`#F3EFE6`), a clay accent (`#A63A0C`), espresso text and a Fraunces italic headline, with a
+mono uppercase eyebrow over every section, green status dots in the hero, a dark band that flipped
+the theme mid-page, and middle dots as the default separator. §1.6 names "warm-cream +
+high-contrast serif + terracotta" as a template trap; the build had walked into it without this
+plan recording the change. Every one of those is also on the taste skill's list of tells.
+
+**What changed** (visual layer only: copy, section order, routes, anchor ids and nav labels are
+unchanged, per the skill's redesign-preserve rules):
+
+- **Tokens** (§1.1): first a neutral grey ramp with automatic dark mode; replaced the same day by
+  warm linen, light only (see the second pass below).
+- **Type** (§1.2): Geist + Geist Mono replace Source Serif 4, IBM Plex Sans/Mono and Fraunces. Four
+  faces to two; labels are sentence-case sans, not uppercase mono.
+- **Shape** (§1.3): pills for controls, 12px containers, 8px images, `shadow-card` elevation.
+- **Home.** Hero is a two-tone headline (same face, second clause in faint grey), a 19-word lede and
+  two actions; the status dots became a four-cell facts band under it. Production work sits in the
+  page's own theme as two columns split by a hairline, which also retired `EqualCardHeights` (no card
+  edges, nothing to keep level). Projects are two cards with the screenshot rising out of a grey
+  well; check-marked decisions, stack tags, and one primary action. Résumé keeps its sticky intro.
+- **Case studies.** Breadcrumb, 64px title, at-a-glance as a three-cell panel, and the Decision block
+  rebuilt (§1.4). Diagrams fold into a `Disclosure`; tour links are a pair of buttons.
+- **Notes.** The index is grouped by project in two columns; a note has a breadcrumb, a card back to
+  its case study, and up to four sibling notes from the same project.
+- **Tours.** `tour.css` retokened to the same values and all four documents moved to Geist.
+  `devlinks-trace`'s phone frame went 1100 → 1130 (its tallest scene measured 1112 in the new,
+  8px narrower frame); every other tour and scene was re-measured and fits.
+- **OG images and favicon** retokened (to linen in the second pass); the OG renderer now vendors Geist woff under `assets/og/`.
+- **Em-dashes removed from all visible copy**, site and tours, per the skill's ban: each rewritten
+  with a colon, semicolon, comma or full stop by hand rather than swapped mechanically. Number
+  ranges use a hyphen. Titles use `|` as the separator.
+
+- **A dead citation found and fixed on the way.** The link check returned 404 for the two Prep
+  citations with a `[id]` route folder: GitHub answers a literal bracket with a 404, and browsers
+  send brackets unencoded. `blob()` now percent-encodes `[` and `]` (only those, since
+  `memory.md?plain=1` carries a real query); both links verified 200 encoded.
+- **Gate** (local production build): `tsc`, lint, `next build` clean. axe **0** on all 13 routes
+  across light, dark, 320px, 200% zoom and reduced motion, and inside all 4 tour documents; no
+  horizontal scroll; reduced-motion stillness 0 everywhere. Links: 7 GitHub 429s cleared on a spaced
+  retry, the two bracket 404s above fixed, LeetCode 403 and LinkedIn 999 as always. Lighthouse,
+  **one run per route** (so a single sample, not the spread §4.1 asks for): performance 99 home,
+  99 Prep, 98 DevLinks, 99 notes, 99 a note; 100 on accessibility, best practices and SEO on all
+  five; LCP 1.9-2.1s, CLS 0. **Not run:** a real Safari/Firefox pass (still open from Phase 7), and
+  the 404 page and tour routes under Lighthouse. **Not deployed:** production still serves the
+  previous design until this is pushed.
+
+**Second pass, same day, after the owner's review.** Kept: the layout and content placement.
+Changed: the colour, "it's all black". The preview had followed a dark system setting into the
+dark theme. The owner chose **warm linen** from four light options (warm linen, sage paper, the
+previous cream, clean white), and asked for animation.
+
+- Palette to warm linen, light only, in the site, the four tours (`tour.css`'s dark block removed),
+  the OG cards and the favicon (§1.1). The home headline's second line is set in the accent.
+- Motion added (§1.5): entrance, scroll reveal, hover feedback, rail state.
+- `scripts/qa.mjs` now waits for finite animations to finish before running axe. The first run
+  after the motion landed reported two contrast failures on the facts labels, caught mid-fade.
+- **Gate** (local production build): `tsc`, lint, `next build` clean. axe **0** on all 13 routes in
+  every mode and inside all 4 tours; no horizontal scroll; reduced-motion stillness 0. Links: 6
+  GitHub 429s all 200 on a spaced retry, LeetCode 403 and LinkedIn 999 as always. Lighthouse, one
+  run per route: performance 97 home, 98 Prep, 98 DevLinks, 98 notes, 99 a note; 100 on the
+  other three categories throughout; LCP 2.0-2.6s (the entrance's cost, above), CLS 0.
+
+### 4.7 Two screens per project, and DevLinks carried over, 2026-10-01
+
+DevLinks shipped a redesign (2026-09-30), a public feed, roadmap collections and page-declared tag
+suggestions (its `0ec3ff8`). Everything here that depicts DevLinks was out of date, and the owner
+asked for new screens for both projects, choosing **a second screen per card** and **React
+Debugging shown as a roadmap**.
+
+- **Cards: `thumb` → `screens`.** `lib/projects.ts` holds an ordered list per project;
+  `components/ScreenSwitcher.tsx` renders them in the existing grey well with pill tabs under it
+  (WAI-ARIA tabs: arrows, Home/End, roving tabindex). All images are in the HTML and stacked in one
+  grid cell, so switching is a cross-fade with no layout shift. The caption line moved from the card
+  body into the tab bar and follows the active screen.
+- **Prep's second screen is `/usage`**, captured read-only from production with the published demo
+  account: every write except sign-in blocked, none attempted. The account had no roadmaps, recall
+  cards or progress (M4's caveat still holds), so the data screens were empty states, and generating
+  a roadmap would have written production data and spent AI quota, which §4.5's capture rule
+  avoids. The page shows **"AI off"**: the live setting at capture time, not something this site set.
+- **DevLinks' screens are the public React Debugging roadmap and the landing page**, both anonymous.
+  The roadmap needs React Debugging switched to `is_roadmap` on production in a study order (M10).
+  DevLinks' seed data now carries the same flag and order (`demoData.ts`, `seed.sql`,
+  `scripts/seed-demo.ts`), checked by a parity test and against a real Postgres 16.
+- **Both DevLinks tours.** Only the mockups of DevLinks' own screens were redrawn
+  (`devlinks-in-motion` scenes 1-5: the save bar, the save dialog's preview card, neutral tags, the
+  amber duplicate notice, the public roadmap), as §4.5 did for Prep. Every value was re-run through
+  the real code: react.dev now serves a site-wide `og:description`, so the example's tags are
+  `react, hooks`, not `react, performance, caching`. `devlinks-trace`'s five line-range citations
+  were re-checked against DevLinks `main`; four had moved (its `metadata.ts` lost a 29-line regex
+  parser to `html.ts`) and `TAG_RULES` now ends at L353.
+- **Claims corrected.** The request diagram's "84 tag rules" (now 127, after the page's own tags);
+  the DevLinks case study's tag decision (now the page's own tags, then rules) and a new **Roadmap
+  order** decision (5 Decision blocks); "Before broader use" now names the YouTube normalization gap
+  and the feed's single query. The tagging note keeps its 24 September text and gains a dated
+  **Update** section rather than being rewritten.
+- **Phone clipping found and fixed (B3, predicted).** Measuring the redrawn scenes showed three over
+  the shared 520px phone stage, and then that **`prep-in-motion` had four scenes clipped on phones
+  already**, and that every mobile constant had been measured at 350px while a 320px viewport gives
+  a 280px frame. Both in-motion tours now set their own phone stage at two widths, and all four
+  tours' phone constants were re-measured in the 280px frame: `devlinks-in-motion` 940 → 1280,
+  `devlinks-trace` 1130 → 1170, `prep-in-motion` 975 → 1290, `prep-under-the-hood` 1375 → 1480,
+  reduced-motion phone heights to 4120 / 4400 / 4980 (unchanged) / 6700.
+- **Legacy stills** re-cut by `scripts/thumbs.mjs`. All four changed: the DevLinks ones show the
+  redrawn PUBLISH scene, the Prep ones had not been re-cut since §4.6's linen retoken. Light and dark
+  now render identically, since the tours are light-only.
+- **Gate** (local production build): `tsc`, lint, `next build` clean. axe **0** on all 13 routes in
+  every mode and inside all 4 tours; no horizontal scroll; reduced-motion stillness 0. Links: 10
+  GitHub 429s all 200 on a spaced retry (including the new `pageTags.ts`, roadmap migration and
+  `RoadmapEditor.tsx` citations), LeetCode 403 and LinkedIn 999 as always. **Not run:** Lighthouse,
+  and a full gate after M10's recapture: the swap is one image of the same dimensions, followed by a
+  build and an axe pass on `/` only.
+
 ### Open items the phases depend on
 
 | # | Item | Why it matters |
@@ -663,6 +782,7 @@ Ordered by when they block me.
 | ~~M6~~ | ~~**Domain**~~ | Phase 7 | **Decided** (§6.6): shipping on `*.vercel.app`, no custom domain. Superseded by O1 — there is still no Vercel project. |
 | M7 | *(optional)* **Record a 30s fallback video** per app | Phase 6 | Insurance for when a deploy is cold or the AI key is exhausted. |
 | ~~M9~~ | ~~**Deploy Prep's redesign, then re-capture `prep-app.png` from production**~~ **Done** 2026-09-30: Prep PR #9 merged and deployed (verified: production CSS carries Newsreader, Instrument Sans and `--ink`), screenshot re-captured from production. | pushing §4.5 | The card says "example input in the live app". Until Prep's redesign is on `prep-seven-theta.vercel.app`, the screenshot and the tours show a UI the live demo link does not. Order: commit + push Prep → confirm the deploy → re-run the capture against production (README in `public/work/`) → then commit this site. |
+| ~~M10~~ | ~~**Switch DevLinks' React Debugging to a roadmap on production, then re-capture `devlinks-app.png`**~~ **Done** 2026-10-07: the owner ran the SQL in the Supabase editor; the public page rendered all 8 steps in the seeded order, and `devlinks-app.png` was re-captured from production (anonymous, writes blocked). | shipping §4.7 | The DevLinks card's first screen and its "Open roadmap" link describe a roadmap. Until the seeded collection is `is_roadmap = true` on `dev-links-rouge.vercel.app`, the public page is a plain list and the card still shows the 24 September capture. Needs the Supabase SQL editor (no service-role key is kept locally). Order: run the SQL → confirm the public page renders numbered steps → re-run the capture (README in `public/work/`) → then commit this site. |
 | M8 | *(optional)* **Tidy both repo landing pages** | Phase 7 | GitHub description and topics. The `INTERVIEW_PREP.md` worry is moot — it is **untracked** in DevLinks and was never pushed, along with `PORTFOLIO_REVIEW.md` and `.codex`. A reviewer who clicks through lands on the README, so it is part of the site. |
 
 ---
@@ -680,7 +800,7 @@ Ordered by when they block me.
 | 7 | **No photo** (my call, delegated). The layout is type-led; a portrait here would be an accessory with no job, and LinkedIn already carries the face. Reversible — it would live in the contact block. |
 | 8 | Screenshots: capture locally with Playwright against both apps' existing `.env.local`. |
 | 9 | Notes topics confirmed as written in §3.5. |
-| 10 | **Theme toggle cut.** `prefers-color-scheme` only, per `dark-mode.md` and the "remove one accessory" pass in §1.6. |
+| 10 | **Theme toggle cut.** `prefers-color-scheme` only, per `dark-mode.md` and the "remove one accessory" pass in §1.6. **Superseded 2026-09-30 (§4.6):** light only, by the owner's call; there is no dark theme to switch to. |
 
 Everything is first person throughout, so no pronouns for the owner appear anywhere on the site.
 
@@ -693,7 +813,7 @@ Not phases. Things found while building a phase that are real but out of its sco
 |---|---|---|
 | ~~**B1**~~ | **Closed in Phase 6.** `ArchitectureDiagram` on `/work/prep` is a 700-unit SVG scaled into a 288px phone, putting its labels near 5px. `MetadataTraceDiagram` got a focusable horizontal scroller in Phase 3; Prep's did not. Same fix, one component. | Phase 3 |
 | **B2** | `PP/src/server/metadata.ts` has two uncommitted stray comments in the working tree (lines ~234 and ~240). They are below every range this site cites, so no provenance link is affected, but the repo should be clean before anyone browses it. | Phase 3 |
-| **B3** | The tour iframe heights are four measured constants per tour. They are correct today and will be wrong the first time a scene's text changes, and nothing fails loudly when they are — the symptom is a quietly clipped control. A build-time check that renders each tour and asserts the constant still fits would close it. | Phase 4 |
+| **B3** | The tour iframe heights are four measured constants per tour. They are correct today and will be wrong the first time a scene's text changes, and nothing fails loudly when they are — the symptom is a quietly clipped control. A build-time check that renders each tour and asserts the constant still fits would close it. **Happened (§4.7):** `prep-in-motion` had four scenes clipped on phones and every phone constant was short at 280px, unnoticed through two redesigns. Still open; the measuring script is in §4.7's run and would be the start of the check. | Phase 4 |
 
 ## 7. Risks
 
@@ -702,5 +822,5 @@ Not phases. Things found while building a phase that are real but out of its sco
 | **A third Next + Tailwind + Supabase-adjacent repo reads as samey** | The design layer is where this is won — the provenance system, the Decision block and the four tours are things a template cannot produce. |
 | **Case studies are long; recruiters skim** | Your chosen "full depth behind a read more": scannable summary up top, decision log expandable underneath. A recruiter gets 30 seconds of signal, an engineer gets everything. **Built in 6b** (§4.2) — it had not been in the first build. |
 | **A demo is down when someone clicks it** | M2 + M4, and optionally M7's video. |
-| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written, and **re-measured from the runners at Phase 1**: Prep is **364** (`vitest run` -> 283, `playwright test --list` -> 81 — the suite grew past the 79 recorded here); 202 = 48 + 35 + 35 + 84, confirmed by `grep -c 'https\?://' supabase/migrations/*.sql`; 84 `TAG_RULES`; 10 tables. DevLinks' unit suite is **596**, not the 487 in `PORTFOLIO_REVIEW.md`. Anything unverifiable carries no citation, and since §4.3 no badge either — so it must not be stated as if it were checkable. |
+| **The site over-claims and a reviewer checks** | Already addressed: every resume number was verified against the repos before this plan was written, and **re-measured from the runners at Phase 1**: Prep is **364** (`vitest run` -> 283, `playwright test --list` -> 81 — the suite grew past the 79 recorded here); 202 = 48 + 35 + 35 + 84, confirmed by `grep -c 'https\?://' supabase/migrations/*.sql`; 84 `TAG_RULES` (DevLinks; **127** since 2026-10-01, §4.7); 10 tables. DevLinks' unit suite is **596**, not the 487 in `PORTFOLIO_REVIEW.md` (**650** since 2026-10-01). Anything unverifiable carries no citation, and since §4.3 no badge either — so it must not be stated as if it were checkable. |
 | **Scope creep into a sixth and seventh section** | The phase table is the contract. New ideas go to a backlog section, not into a phase. |

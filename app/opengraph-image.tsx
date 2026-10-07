@@ -1,6 +1,6 @@
 import { ogContentType, ogImage, ogSize } from "@/lib/og";
 
-export const alt = "Harshit Singh — Frontend engineer";
+export const alt = "Harshit Singh, frontend engineer";
 export const size = ogSize;
 export const contentType = ogContentType;
 

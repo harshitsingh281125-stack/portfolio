@@ -123,7 +123,8 @@ export function MetadataTraceDiagram() {
             request is made, so a public URL that redirects to an internal address
             is blocked on the hop rather than on the entrance. A response that is
             not a redirect is parsed for its title, description and image, tagged
-            by the 84 deterministic rules, and returned as a 200.
+            with the tags the page declares and then by 127 deterministic rules,
+            and returned as a 200.
           </desc>
 
           <defs>
@@ -144,7 +145,7 @@ export function MetadataTraceDiagram() {
             x={115}
             y={10}
             label="POST /api/metadata"
-            sub="body.url — a string a stranger typed"
+            sub="body.url, a string a stranger typed"
           />
           <Arrow x1={270} y1={66} x2={270} y2={96} />
 
@@ -246,10 +247,10 @@ export function MetadataTraceDiagram() {
               y={570}
               className="fill-[var(--verified)] font-mono text-[12px] font-medium"
             >
-              200 &#183; parse &#183; 84 tag rules
+              200 &#183; parse + tag
             </text>
             <text x={484} y={588} className="fill-[var(--verified)] font-mono text-[11px]">
-              og:title, description, image
+              page&#8217;s tags, then 127 rules
             </text>
           </g>
         </svg>

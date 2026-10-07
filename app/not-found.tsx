@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/Button";
 import { caseStudy, routes } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Not found",
   robots: { index: false },
 };
-
-const LINK =
-  "text-content underline underline-offset-2 decoration-edge-strong hover:decoration-content";
 
 /**
  * The site's rule is that it never hands anyone a dead link. This page is for
@@ -18,45 +16,23 @@ const LINK =
  */
 export default function NotFound() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
-      <p className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
-        404
-      </p>
-      <h1 className="mt-3 max-w-prose font-serif text-display-sm sm:text-display font-semibold text-content">
+    <div className="page-width py-20 sm:py-32">
+      <p className="font-mono text-meta text-content-faint">404</p>
+      <h1 className="mt-4 max-w-[16em] text-display-sm font-semibold text-content sm:text-display">
         There is nothing at this address.
       </h1>
-      <p className="mt-5 max-w-prose prose-serif text-content-muted">
+      <p className="mt-6 max-w-prose text-[1.0625rem] leading-[1.6] text-content-muted">
         Nothing on this site links here, so the address was probably mistyped or
         is out of date. These pages do exist:
       </p>
-      <ul className="mt-8 flex flex-col gap-3 text-ui">
-        <li>
-          <Link href="/" className={LINK}>
-            Home
-          </Link>
-        </li>
-        {caseStudy.prep ? (
-          <li>
-            <Link href="/work/prep" className={LINK}>
-              Prep, the case study
-            </Link>
-          </li>
-        ) : null}
-        {caseStudy.devlinks ? (
-          <li>
-            <Link href="/work/devlinks" className={LINK}>
-              DevLinks, the case study
-            </Link>
-          </li>
-        ) : null}
-        {routes.notes ? (
-          <li>
-            <Link href="/notes" className={LINK}>
-              Notes
-            </Link>
-          </li>
-        ) : null}
-      </ul>
+      <div className="mt-10 flex flex-wrap gap-3">
+        <Button href="/" variant="primary">
+          Home <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+        </Button>
+        {caseStudy.prep ? <Button href="/work/prep">Prep case study</Button> : null}
+        {caseStudy.devlinks ? <Button href="/work/devlinks">DevLinks case study</Button> : null}
+        {routes.notes ? <Button href="/notes">Notes</Button> : null}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ArrowUpRight, Check, FileCode2, Plus, X } from "lucide-react";
 
 /**
  * A claim on this site cites the file it came from (PLAN.md §0). The citation
@@ -27,26 +28,29 @@ export function ProvenanceBadge({
 }) {
   if (!source) return null;
 
-  const text = (
-    <span className="font-mono text-meta text-content-faint [overflow-wrap:anywhere]">
-      {source}
-    </span>
-  );
-
   if (!href) {
     return (
-      <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">{text}</span>
+      <span className="inline-flex items-center gap-1.5 font-mono text-[12.5px] text-content-faint [overflow-wrap:anywhere]">
+        <FileCode2 size={14} aria-hidden="true" className="shrink-0" />
+        {source}
+      </span>
     );
   }
 
+  // The accent is spent here and almost nowhere else (§1.1): it marks the
+  // one kind of link that proves something.
   return (
     <a
       href={href}
-      className="inline-flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-meta text-content-faint underline underline-offset-2 decoration-edge-strong hover:decoration-content"
+      className="group inline-flex items-center gap-1.5 font-mono text-[12.5px] text-accent [overflow-wrap:anywhere]"
       target="_blank"
       rel="noreferrer"
     >
-      {source}
+      <FileCode2 size={14} aria-hidden="true" className="shrink-0" />
+      <span className="underline decoration-transparent underline-offset-[3px] transition-[text-decoration-color] group-hover:decoration-current">
+        {source}
+      </span>
+      <ArrowUpRight size={13} aria-hidden="true" className="shrink-0" />
     </a>
   );
 }
@@ -84,8 +88,8 @@ export function Claim({
 }
 
 /**
- * The signature element (PLAN.md §1.4). Three mono labels in a fixed column,
- * a serif consequence, a provenance footer. Used 4x on Prep, 3x on DevLinks,
+ * The signature element (PLAN.md §1.4). What was chosen beside what it beat,
+ * the consequence under them, a provenance footer. Used 4x on Prep, 5x on DevLinks,
  * and nowhere else — the boldness is spent in one place.
  */
 export function Decision({
@@ -118,61 +122,60 @@ export function Decision({
     <aside
       id={id}
       aria-label={name ? `Decision: ${name}` : "Engineering decision"}
-      className="my-8 scroll-mt-8 rounded-lg border border-edge bg-panel p-5 sm:p-6"
+      data-reveal
+      className="my-10 overflow-hidden rounded-card bg-panel shadow-card"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-edge pb-3">
-        <h3 className="text-ui font-semibold text-content">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-5 sm:px-6 sm:pt-6">
+        <h3 className="text-h3 font-semibold text-content">
           {name ?? "Engineering decision"}
         </h3>
         {rule ? (
-          <span className="font-mono text-meta font-medium text-accent">{rule}</span>
+          <span className="rounded-full bg-accent-soft px-2.5 py-0.5 font-mono text-[12px] font-medium text-accent">{rule}</span>
         ) : null}
       </div>
 
-      <dl className="mt-4 grid grid-cols-[4.5rem_1fr] gap-x-4 gap-y-3 sm:grid-cols-[5.5rem_1fr]">
-        <dt className="font-mono text-meta uppercase tracking-wide text-content-faint">
-          Chose
-        </dt>
-        <dd className="font-mono text-ui text-content">{chose}</dd>
-
-        <dt className="font-mono text-meta uppercase tracking-wide text-content-faint">
-          Over
-        </dt>
-        <dd className="font-mono text-ui text-content-muted">{over}</dd>
-
-        <dt className="font-mono text-meta uppercase tracking-wide text-content-faint">
-          Because
-        </dt>
-        <dd className="prose-serif text-content">{because}</dd>
+      <dl className="mx-5 mt-5 grid overflow-hidden rounded-image border border-edge sm:mx-6 sm:grid-cols-2">
+        <div className="p-4">
+          <dt className="flex items-center gap-1.5 text-meta font-medium text-content">
+            <Check size={14} strokeWidth={2.25} aria-hidden="true" /> Chose
+          </dt>
+          <dd className="mt-1.5 text-ui text-content">{chose}</dd>
+        </div>
+        <div className="border-t border-edge bg-sunken p-4 sm:border-l sm:border-t-0">
+          <dt className="flex items-center gap-1.5 text-meta font-medium text-content-faint">
+            <X size={14} strokeWidth={2.25} aria-hidden="true" /> Over
+          </dt>
+          <dd className="mt-1.5 text-ui text-content-muted">{over}</dd>
+        </div>
       </dl>
 
-      {/* Chose / Over / Because is the decision; this is the argument for it.
-          Folded, so a skimmer reads four decisions in the time one used to
-          take, and an engineer is one click from all of it. Find-in-page
-          still reaches folded text: Chrome opens a <details> on a match. */}
-      {children ? (
-        <details className="group mt-4">
-          <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-2 text-ui font-medium text-content sm:min-h-0 [&::-webkit-details-marker]:hidden">
-            <span
-              aria-hidden="true"
-              className="font-mono text-meta text-content-faint transition-transform group-open:rotate-90"
-            >
-              &rsaquo;
-            </span>
-            <span className="underline decoration-edge-strong underline-offset-2 hover:decoration-content">
+      <div className="px-5 pt-5 sm:px-6">
+        <p className="text-meta font-medium text-content-faint">Because</p>
+        <p className="prose-body mt-1.5 text-content">{because}</p>
+
+        {/* Chose / Over / Because is the decision; this is the argument for it.
+            Folded, so a skimmer reads four decisions in the time one used to
+            take, and an engineer is one click from all of it. Find-in-page
+            still reaches folded text: Chrome opens a <details> on a match. */}
+        {children ? (
+          <details className="group mt-4">
+            <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-ui font-medium text-content sm:min-h-9">
+              <Plus size={16} aria-hidden="true" className="disclosure-icon text-content-faint" />
               <span className="group-open:hidden">The full reasoning</span>
               <span className="hidden group-open:inline">Hide the reasoning</span>
-            </span>
-          </summary>
-          <div className="mt-2 prose-serif text-content-muted">{children}</div>
-        </details>
-      ) : null}
+            </summary>
+            <div className="pb-2 pt-1">{children}</div>
+          </details>
+        ) : null}
+      </div>
 
       {href || source ? (
-        <div className="mt-5 border-t border-edge pt-3">
+        <div className="mt-5 border-t border-edge bg-sunken px-5 py-3.5 sm:px-6">
           <ProvenanceBadge status="verified" href={href} source={source} />
         </div>
-      ) : null}
+      ) : (
+        <div className="h-5" />
+      )}
     </aside>
   );
 }

@@ -63,14 +63,14 @@ export function TourEmbed({
         <div
           style={heights}
           className={
-            "overflow-hidden rounded-lg border border-edge bg-panel " +
+            "overflow-hidden rounded-card bg-panel shadow-card " +
             "h-[var(--tour-mh)] min-[821px]:h-[var(--tour-h)] " +
             "motion-reduce:h-[var(--tour-rmh)] motion-reduce:min-[821px]:h-[var(--tour-rh)]"
           }
         >
           {frame}
         </div>
-        <figcaption className="mt-3 max-w-prose text-ui text-content-muted">
+        <figcaption className="mt-4 max-w-prose text-ui text-content-muted">
           {tour.blurb}
         </figcaption>
       </figure>
@@ -82,7 +82,7 @@ export function TourEmbed({
       <div
         style={heights}
         className={
-          "overflow-hidden rounded-lg border border-edge bg-panel motion-reduce:hidden " +
+          "overflow-hidden rounded-card bg-panel shadow-card motion-reduce:hidden " +
           "h-[var(--tour-mh)] min-[821px]:h-[var(--tour-h)]"
         }
       >
@@ -90,14 +90,12 @@ export function TourEmbed({
       </div>
 
       {/* Shown only when the tour is not. */}
-      <div className="hidden rounded-lg border border-edge bg-panel p-5 motion-reduce:block sm:p-6">
-        <p className="font-mono text-meta font-medium uppercase tracking-wide text-content-faint">
-          Tour
-        </p>
-        <p className="prose-serif mt-2 text-content">{tour.title}</p>
+      <div className="hidden rounded-card bg-panel p-5 shadow-card motion-reduce:block sm:p-6">
+        <p className="text-meta font-medium text-content-faint">Tour</p>
+        <p className="mt-2 text-h3 font-semibold text-content">{tour.title}</p>
         <p className="mt-2 max-w-prose text-ui text-content-muted">
           {tour.blurb} Your system asks for reduced motion, so it is not played
-          here &mdash; it opens as {tour.slug.includes("trace") ? "steps" : "scenes"}{" "}
+          here. It opens as {tour.slug.includes("trace") ? "steps" : "scenes"}{" "}
           you scroll at your own pace.
         </p>
         <p className="mt-4">
@@ -105,11 +103,11 @@ export function TourEmbed({
         </p>
       </div>
 
-      <figcaption className="mt-3 max-w-prose text-ui text-content-muted motion-reduce:hidden">
+      <figcaption className="mt-4 max-w-prose text-ui text-content-muted motion-reduce:hidden">
         {tour.blurb}{" "}
         <Link
           href={`/tour/${tour.slug}`}
-          className="text-content underline underline-offset-2 decoration-edge-strong hover:decoration-content"
+          className="text-link"
         >
           Open it full-bleed
         </Link>

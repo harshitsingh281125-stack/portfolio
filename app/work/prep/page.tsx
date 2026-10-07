@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CaseStudy, P, Section } from "@/components/CaseStudy";
+import { CaseStudy, Disclosure, P, Section, WalkthroughLinks } from "@/components/CaseStudy";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { Decision, ProvenanceBadge } from "@/components/Provenance";
 import { blob, demoLogins, demos, repos } from "@/lib/site";
@@ -93,11 +93,13 @@ export default function PrepCaseStudy() {
       </Decision>
 
       <Section id="architecture" heading="Retrieval and fallback">
-        <details className="mt-4 rounded-lg border border-edge p-4">
-          <summary className="cursor-pointer text-ui text-content">View the request-flow diagram</summary>
+        <Disclosure label="View the request-flow diagram">
           <ArchitectureDiagram />
-        </details>
-        <P><Link href="/tour/prep-under-the-hood" className={LINK}>Illustrated request walkthrough</Link> &middot; <Link href="/tour/prep-in-motion" className={LINK}>Illustrated product walkthrough</Link></P>
+        </Disclosure>
+        <WalkthroughLinks links={[
+          { href: "/tour/prep-under-the-hood", label: "Request walkthrough" },
+          { href: "/tour/prep-in-motion", label: "Product walkthrough" },
+        ]} />
       </Section>
 
       <Section id="differently" heading="Testing and current limitations">

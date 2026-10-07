@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
-import { Download } from "lucide-react";
-import { EqualCardHeights } from "@/components/EqualCardHeights";
+import { ArrowDown, Plus } from "lucide-react";
+import { buttonClass } from "@/components/Button";
 import { education, experience, skills } from "@/lib/experience";
 import { resume } from "@/lib/site";
+import { d } from "@/lib/motion";
 
 /**
  * **Emphasis** in the experience copy, so a skimmer reads the claim and not the
@@ -15,49 +16,65 @@ function emphasise(text: string): ReactNode[] {
   );
 }
 
+/**
+ * The two products sit side by side without card chrome, split by a hairline.
+ * Without a card edge there is no pair of boxes to keep level, so an open
+ * disclosure simply makes its own column longer.
+ */
 export function Experience() {
   return (
-    <section id="company" className="company-section" aria-labelledby="company-heading">
+    <section id="company" className="section" aria-labelledby="company-heading">
       <div className="page-width">
-        <div className="company-intro">
-          <div>
-            <p className="eyebrow">{experience.company} &middot; {experience.period}</p>
-            <h2 id="company-heading">Production work</h2>
-          </div>
-          <p>As a frontend engineer, I own web and mobile features across healthcare and marketplace products, with backend work where the feature needs it.</p>
-        </div>
-        <div className="company-products">
-          {experience.work.map((product) => (
-            <article key={product.name} className="company-card">
-              <p className="eyebrow">{product.category}</p>
+        <h2 id="company-heading" className="section-title" data-reveal>Production work</h2>
+        <p className="company-head" data-reveal style={d(60)}>
+          <strong>{experience.role}, {experience.company}</strong>
+          <span>{experience.period}</span>
+        </p>
+        <p className="section-lede" data-reveal style={d(120)}>
+          I own web and mobile features across healthcare and marketplace products, with backend
+          work where the feature needs it.
+        </p>
+
+        <div className="work-grid">
+          {experience.work.map((product, i) => (
+            <article key={product.name} className="work-item" data-reveal style={d(i * 120)}>
+              <p className="work-category">{product.category}</p>
               <h3>{product.name}</h3>
-              <p className="company-description">{product.summary}</p>
+              <p className="work-summary">{product.summary}</p>
               {product.stack ? (
-                <p className="company-stack" aria-label={`${product.name} technology stack`}>
-                  {product.stack.join(" · ")}
-                </p>
+                <ul className="tag-list" aria-label={`${product.name} technology stack`}>
+                  {product.stack.map((item) => <li key={item}>{item}</li>)}
+                </ul>
               ) : null}
               <details className="work-details">
-                <summary>Scope &amp; contributions</summary>
-                {product.product ? <p className="work-product">{emphasise(product.product)}</p> : null}
-                {product.details ? <p>{product.details}</p> : null}
-                {product.extension ? <p>{product.extension}</p> : null}
-                {product.groups?.map((group) => (
-                  <div key={group.title} className="work-group">
-                    <h4>{group.title}</h4>
-                    <ul>
-                      {group.points.map((point) => (
-                        <li key={point}>{emphasise(point)}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                <summary>
+                  Scope and contributions
+                  <Plus size={18} className="disclosure-icon" aria-hidden="true" />
+                </summary>
+                <div className="work-body">
+                  {product.product ? <p className="work-product">{emphasise(product.product)}</p> : null}
+                  {product.details ? <p>{product.details}</p> : null}
+                  {product.extension ? <p>{product.extension}</p> : null}
+                  {product.groups?.map((group) => (
+                    <div key={group.title} className="work-group">
+                      <h4>{group.title}</h4>
+                      <ul>
+                        {group.points.map((point) => (
+                          <li key={point}>{emphasise(point)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </details>
             </article>
           ))}
         </div>
-        <EqualCardHeights selector=".company-card" />
-        <p className="company-maintenance"><strong>Maintaining existing systems.</strong> {experience.maintenance}</p>
+
+        <div className="maintenance" data-reveal>
+          <h3>Maintaining existing systems</h3>
+          <p>{experience.maintenance}</p>
+        </div>
       </div>
     </section>
   );
@@ -65,39 +82,56 @@ export function Experience() {
 
 export function Resume() {
   return (
-    <section id="resume" className="resume-section page-width" aria-labelledby="resume-heading">
-      <div className="resume-intro">
-        <h2 id="resume-heading">Résumé</h2>
-        <p>Experience, technical skills, and education.</p>
-        {resume.enabled ? <a href={resume.href} className="pill-button accent-button" download><Download size={18} aria-hidden="true" /> Download résumé (PDF)</a> : null}
-      </div>
-      <div className="resume-details">
-        <div>
-          <h3 className="resume-label">Experience</h3>
-          <div className="resume-job">
-            <p className="eyebrow">{experience.period}</p>
-            <div>
-              <h4>{experience.role} &middot; {experience.company}</h4>
-              <p>{experience.location}</p>
-              <p>{experience.summary}</p>
+    <section id="resume" className="section" aria-labelledby="resume-heading">
+      <div className="page-width resume">
+        <div className="resume-intro" data-reveal>
+          <h2 id="resume-heading" className="section-title">Résumé</h2>
+          <p>Experience, technical skills, and education.</p>
+          {resume.enabled ? (
+            <a href={resume.href} className={buttonClass("primary")} download>
+              Résumé <ArrowDown size={16} strokeWidth={2} aria-hidden="true" />
+            </a>
+          ) : null}
+        </div>
+
+        <div className="resume-blocks">
+          <div data-reveal>
+            <h3 className="resume-label">Experience</h3>
+            <div className="resume-row">
+              <p className="resume-text tabular-nums">{experience.period}</p>
+              <div>
+                <h4>{experience.role}, {experience.company}</h4>
+                <p className="resume-text">{experience.location}</p>
+                <p className="resume-text">{experience.summary}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <h3 className="resume-label">Reviews &amp; releases</h3>
-          <p>{experience.collaboration}</p>
-        </div>
-        <div className="resume-skills">
-          {skills.map((group) => (
-            <div key={group.label}>
-              <h3 className="resume-label">{group.label}</h3>
-              <p>{group.items.join(", ")}</p>
+          <div data-reveal>
+            <h3 className="resume-label">Reviews and releases</h3>
+            <p className="resume-text">{experience.collaboration}</p>
+          </div>
+          <div data-reveal>
+            <h3 className="resume-label">Skills</h3>
+            <div className="skills-grid">
+              {skills.map((group) => (
+                <div key={group.label}>
+                  <h4>{group.label}</h4>
+                  <p className="resume-text">{group.items.join(", ")}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div>
-          <h3 className="resume-label">Education</h3>
-          <p>{education.degree}<br />{education.school} &middot; {education.period}<br />{education.cgpa}</p>
+          </div>
+          <div data-reveal>
+            <h3 className="resume-label">Education</h3>
+            <div className="resume-row">
+              <p className="resume-text tabular-nums">{education.period}</p>
+              <div>
+                <h4>{education.degree}</h4>
+                <p className="resume-text">{education.school}</p>
+                <p className="resume-text">{education.cgpa}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

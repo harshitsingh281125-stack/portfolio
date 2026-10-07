@@ -57,7 +57,7 @@ export const notes: Note[] = [
   {
     slug: "tags-from-the-url",
     title: "Getting useful tags from a URL and a title",
-    dek: "DevLinks suggests tags with a small rule table. It works for familiar topics and misses what it doesn’t know.",
+    dek: "DevLinks suggests tags with a small rule table. It works for familiar topics and misses what it doesn’t know, so it now reads the page’s own tags first.",
     date: "2026-09-24",
     kicker: "DevLinks · Tag suggestions",
     related: { href: "/work/devlinks#d-rules", label: "Tag suggestions, on the DevLinks case study" },
